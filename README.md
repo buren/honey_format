@@ -1,4 +1,4 @@
-# HoneyFormat
+# HoneyFormat [![Build Status](https://travis-ci.org/buren/honey_format.svg)](https://travis-ci.org/buren/honey_format)
 
 Convert CSV to object with one command.
 
@@ -16,7 +16,7 @@ user.username   # => "buren"
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'honey-import'
+gem 'honey_format'
 ```
 
 And then execute:
@@ -26,7 +26,7 @@ $ bundle
 
 Or install it yourself as:
 ```
-$ gem install honey-import
+$ gem install honey_format
 ```
 
 ## Usage
@@ -74,7 +74,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/buren/honey-import. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/buren/honey_format. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 
 ## License
