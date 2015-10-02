@@ -2,6 +2,8 @@
 
 Convert CSV to object with one command.
 
+Perfect for small files of test data or small import scripts.
+
 ```ruby
 csv_string = "Id, Username\n 1, buren"
 csv = HoneyFormat::CSV.new(csv_string)
@@ -64,7 +66,26 @@ csv = HoneyCSV.new(csv_string, header: ['Id', 'Username'])
 csv.rows.first.username # => "buren"
 ```
 
-_Note_: This gem, as you can imagine, adds some overhead to parsing a CSV string. Make sure to benchmark before using this for something performance sensitive.
+## Benchmark
+
+_Note_: This gem, adds some overhead to parsing a CSV string. I've included some benchmarks below, your mileage may vary..
+
+Benchmarks for a 21MB file with 10 columns (MBP 2013 OSX 10.10).
+
+```
+Calculating -------------------------------------
+          stdlib CSV     1.000  i/100ms
+    HoneyFormat::CSV     1.000  i/100ms
+-------------------------------------------------
+          stdlib CSV      0.317  (± 0.0%) i/s -      4.000  in  12.636647s
+    HoneyFormat::CSV      0.335  (± 0.0%) i/s -      4.000  in  12.061301s
+
+Comparison:
+    HoneyFormat::CSV:        0.3 i/s
+          stdlib CSV:        0.3 i/s - 1.06x slower
+```
+
+Run the benchmark as a regular ruby file: `ruby benchmark.rb`.
 
 ## Development
 
