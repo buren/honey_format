@@ -4,7 +4,7 @@ require 'csv'
 require 'bundler/setup'
 require 'honey_format'
 
-csv = File.read('21mb.csv')
+csv = File.read('benchmark.csv')
 
 Benchmark.ips do |x|
   x.time = 10

@@ -38,12 +38,12 @@ let(:diabolical_cols) {
 }
 
   describe 'missing header' do
-    it 'should fail when CSV header is missing' do
+    it 'should fail' do
       expect { described_class.new('') }.to raise_error(HoneyFormat::MissingCSVHeaderError)
     end
   end
 
-  describe 'header option' do
+  describe 'with specified header' do
     it 'returns correct csv object' do
       csv_string = "1, buren"
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
@@ -57,7 +57,7 @@ let(:diabolical_cols) {
       expect(result).to eq(%w(email ids))
     end
 
-    it 'fails when all headers not in valid_columns' do
+    it 'fails when all header column names not in valid_columns array' do
       expect do
         described_class.new(csv_string, valid_columns: [:asd]).header
       end.to raise_error(HoneyFormat::CSVHeaderColumnError)
@@ -88,7 +88,7 @@ let(:diabolical_cols) {
     end
   end
 
-  describe '#body' do
+  describe '#rows' do
     it 'can parse a CSV' do
       csv = described_class.new(csv_string).rows
       expect(csv.first.email).to eq('test@example.com')
@@ -121,5 +121,14 @@ let(:diabolical_cols) {
       expect(result.leid).to eq('some-value')
       expect(result.euid).to eq('some-other-value')
     end
+  end
+
+  it 'can handle alternative delimiters' do
+    csv = <<-CSV
+    email; ids
+    test@example.com; 42
+    CSV
+    result = described_class.new(csv, delimiter: ';').header
+    expect(result).to eq(%w(email ids))
   end
 end

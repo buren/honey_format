@@ -7,8 +7,8 @@ module HoneyFormat
   class CSV
     attr_reader :header, :columns
 
-    def initialize(csv, header: nil, valid_columns: :all)
-      csv = ::CSV.parse(csv)
+    def initialize(csv, delimiter: ',', header: nil, valid_columns: :all)
+      csv = ::CSV.parse(csv, col_sep: delimiter)
       @head = build_header(header || csv.shift)
       @csv_body = csv
       @columns = build_columns(@head, valid_columns)
