@@ -55,7 +55,7 @@ Validate CSV header
 csv_string = "Id, Username\n 1, buren"
 # Invalid
 HoneyCSV.new(csv_string, valid_columns: [:something, :username])
-# => #<HoneyFormat::CSVHeaderColumnError: key :id ("Id") not in [:something, :username]>
+# => #<HoneyFormat::MissingCSVHeaderColumnError: key :id ("Id") not in [:something, :username]>
 
 # Valid
 csv = HoneyCSV.new(csv_string, valid_columns: [:id, :username])
