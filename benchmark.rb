@@ -11,7 +11,7 @@ Benchmark.ips do |x|
   x.warmup = 2
 
   x.report("stdlib CSV") { CSV.parse(csv) }
-  x.report("HoneyFormat::CSV") { HoneyFormat::CSV.new(csv) }
+  x.report("HoneyFormat::CSV") { HoneyFormat::CSV.new(csv).rows }
 
   x.compare!
 end

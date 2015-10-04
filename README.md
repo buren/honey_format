@@ -96,12 +96,12 @@ Calculating -------------------------------------
           stdlib CSV     1.000  i/100ms
     HoneyFormat::CSV     1.000  i/100ms
 -------------------------------------------------
-          stdlib CSV      0.317  (± 0.0%) i/s -      4.000  in  12.636647s
-    HoneyFormat::CSV      0.335  (± 0.0%) i/s -      4.000  in  12.061301s
+          stdlib CSV      0.313  (± 0.0%) i/s -      4.000  in  12.805196s
+    HoneyFormat::CSV      0.231  (± 0.0%) i/s -      3.000  in  13.064147s
 
 Comparison:
-    HoneyFormat::CSV:        0.3 i/s
-          stdlib CSV:        0.3 i/s - 1.06x slower
+          stdlib CSV:        0.3 i/s
+    HoneyFormat::CSV:        0.2 i/s - 1.35x slower
 ```
 
 Run the benchmark as a regular ruby file: `ruby benchmark.rb`.
