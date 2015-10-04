@@ -39,6 +39,7 @@ By default assumes a header in the CSV file.
 csv_string = "Id, Username\n 1, buren"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.header # => ["Id", "Username"]
+csv.column # => [:id, :username]
 
 include HoneyFormat
 # If included you can use the HoneyCSV shorthand
@@ -66,6 +67,23 @@ csv_string = "1, buren"
 csv = HoneyCSV.new(csv_string, header: ['Id', 'Username'])
 csv.rows.first.username # => "buren"
 ```
+
+If your header contains special chars and/or chars that can't be part of Ruby method names,
+things get a little awkward..
+```ruby
+csv_string = "ÅÄÖ\nSwedish characters"
+user = HoneyCSV.new(csv_string).rows.first
+# Note that these chars aren't "downcased",
+# "ÅÄÖ".downcase # => "ÅÄÖ"
+user.ÅÄÖ # => "Swedish characters"
+
+#
+csv_string = "First-Name\nJacob"
+user = HoneyCSV.new(csv_string).rows.first
+user.public_send(:"first-name") # => "Jacob"
+```
+
+If you want to see more usage examples check out the `spec/` directory.
 
 ## Benchmark
 

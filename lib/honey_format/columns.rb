@@ -4,30 +4,43 @@ module HoneyFormat
 
     attr_reader :header
 
-    def initialize(header, valid_columns)
+    def initialize(header, valid: :all)
       @header = build_header(header)
-      @columns = build_columns(@header, valid_columns)
+      @columns = build_columns(@header, valid)
     end
 
     def each
       @columns.each { |column| yield(column) }
     end
 
+    private
+
     def build_header(header)
-      header || fail(MissingCSVHeaderError, "CSV header can't be empty.")
+      if header.nil? || header.empty?
+        fail(MissingCSVHeaderError, "CSV header can't be empty.")
+      end
       Clean.row(header)
     end
 
     def build_columns(keys, valid_columns)
-      keys.map do |raw_col|
-        raw_col || fail(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
+      keys.map do |raw|
+        raw_col = Clean.column(raw)
+        validate_column_presence!(raw_col)
+
         col = raw_col.downcase.gsub(/ /, '').to_sym
-        validate_column!(raw_col, col, valid_columns)
+
+        validate_column_name!(raw_col, col, valid_columns)
         col
       end
     end
 
-    def validate_column!(raw_col, col, valid_columns)
+    def validate_column_presence!(col)
+      if col.nil? || col.empty?
+        fail(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
+      end
+    end
+
+    def validate_column_name!(raw_col, col, valid_columns)
       return if valid_columns == :all
 
       valid_columns.include?(col) ||
