@@ -43,7 +43,8 @@ csv.header # => ["Id", "Username"]
 include HoneyFormat
 # If included you can use the HoneyCSV shorthand
 csv = HoneyCSV.new(csv_string)
-user = csv.rows # => [#<struct id="1", username="buren">]
+rows = csv.rows # => [#<struct id="1", username="buren">]
+user = rows.first
 user.id         # => "1"
 user.username   # => "buren"
 ```
