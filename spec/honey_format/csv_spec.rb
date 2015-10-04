@@ -58,9 +58,17 @@ let(:diabolical_cols) {
     end
 
     it 'fails when all header column names not in valid_columns array' do
+      expected_error = HoneyFormat::InvalidCSVHeaderColumnError
       expect do
         described_class.new(csv_string, valid_columns: [:asd]).header
-      end.to raise_error(HoneyFormat::CSVHeaderColumnError)
+      end.to raise_error(expected_error)
+    end
+
+    it 'fails when all header column names not in valid_columns array' do
+      expected_error = HoneyFormat::MissingCSVHeaderColumnError
+      expect do
+        described_class.new(', ids').header
+      end.to raise_error(expected_error)
     end
 
     it 'can validate and return when all headers are valid in valid_columns' do
@@ -93,6 +101,12 @@ let(:diabolical_cols) {
       csv = described_class.new(csv_string).rows
       expect(csv.first.email).to eq('test@example.com')
       expect(csv.first.ids).to eq('42')
+    end
+
+    it 'raises error if row length does not match header length' do
+      expect do
+        described_class.new("id\n1,2").rows
+      end.to raise_error(HoneyFormat::InvalidCSVRowLengthError)
     end
   end
 
