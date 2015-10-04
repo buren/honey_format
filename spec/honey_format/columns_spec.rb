@@ -1,10 +1,17 @@
 require 'spec_helper'
 
 describe HoneyFormat::Columns do
-  let(:missing_header_klass) { HoneyFormat::MissingCSVHeaderError }
   let(:missing_column_klass) { HoneyFormat::MissingCSVHeaderColumnError }
 
   describe '#initialize' do
+    it 'fails when column empty' do
+      expect do
+        described_class.new(['Id', ''])
+      end.to raise_error(missing_column_klass)
+    end
+  end
+
+  describe '#to_a' do
     it 'can build columns' do
       result = described_class.new(['id', 'username']).to_a
       expect(result).to eq([:id, :username])
@@ -22,41 +29,17 @@ describe HoneyFormat::Columns do
 
     it 'can have column with dashes' do
       result = described_class.new(['first-name']).to_a
-      expect(result).to eq([:"first-name"])
+      expect(result).to eq([:first_name])
     end
 
-    it 'fails when column empty' do
-      expect do
-        described_class.new(['Id', ''])
-      end.to raise_error(missing_column_klass)
+    it 'can have spec chars column names' do
+      result = described_class.new(['ÅÄÖ']).to_a.first
+      expect(result).to eq(:ÅÄÖ)
     end
 
-    it 'fails when all header column names not in valid_columns array' do
-      expected_error = HoneyFormat::InvalidCSVHeaderColumnError
-      expect do
-        described_class.new(['id'], valid: [:asd]).header
-      end.to raise_error(expected_error)
-    end
-
-    it 'fails when all header column names not in valid_columns array' do
-      expected_error = HoneyFormat::MissingCSVHeaderColumnError
-      expect do
-        described_class.new([nil, 'ids']).header
-      end.to raise_error(expected_error)
-    end
-  end
-
-  describe '#header' do
-    it 'fails when nil' do
-      expect do
-        described_class.new(nil)
-      end.to raise_error(missing_header_klass)
-    end
-
-    it 'fails when empty' do
-      expect do
-        described_class.new([])
-      end.to raise_error(missing_header_klass)
+    it 'can have ruby syntax chars as column names' do
+      result = described_class.new(['ids(list of things)']).to_a.first
+      expect(result).to eq(:"ids(listofthings)")
     end
   end
 end

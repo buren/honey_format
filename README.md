@@ -1,4 +1,4 @@
-# HoneyFormat [![Build Status](https://travis-ci.org/buren/honey_format.svg)](https://travis-ci.org/buren/honey_format) [![Code Climate](https://codeclimate.com/github/buren/honey_format/badges/gpa.svg)](https://codeclimate.com/github/buren/honey_format)
+# HoneyFormat [![Build Status](https://travis-ci.org/buren/honey_format.svg)](https://travis-ci.org/buren/honey_format) [![Code Climate](https://codeclimate.com/github/buren/honey_format/badges/gpa.svg)](https://codeclimate.com/github/buren/honey_format) ![Docs badge](https://inch-ci.org/github/buren/honey_format.svg?branch=master)
 
 Convert CSV to object with one command.
 
@@ -56,6 +56,7 @@ csv_string = "Id, Username\n 1, buren"
 # Invalid
 HoneyCSV.new(csv_string, valid_columns: [:something, :username])
 # => #<HoneyFormat::CSVHeaderColumnError: key :id ("Id") not in [:something, :username]>
+
 # Valid
 csv = HoneyCSV.new(csv_string, valid_columns: [:id, :username])
 csv.rows.first.username # => "buren"
@@ -77,7 +78,6 @@ user = HoneyCSV.new(csv_string).rows.first
 # "ÅÄÖ".downcase # => "ÅÄÖ"
 user.ÅÄÖ # => "Swedish characters"
 
-#
 csv_string = "First-Name\nJacob"
 user = HoneyCSV.new(csv_string).rows.first
 user.public_send(:"first-name") # => "Jacob"
@@ -89,22 +89,33 @@ If you want to see more usage examples check out the `spec/` directory.
 
 _Note_: This gem, adds some overhead to parsing a CSV string. I've included some benchmarks below, your mileage may vary..
 
-Benchmarks for a 21MB file with 10 columns (MBP 2013 OSX 10.10).
+Benchmarks, using the `benchmark-ips` gem, CSV with 11 columns in MBP 2013 OSX 10.10.
+
+124KB (~1000 lines )
 
 ```
 Calculating -------------------------------------
-          stdlib CSV     1.000  i/100ms
-    HoneyFormat::CSV     1.000  i/100ms
+          stdlib CSV     6.000  i/100ms
+    HoneyFormat::CSV     5.000  i/100ms
 -------------------------------------------------
-          stdlib CSV      0.313  (± 0.0%) i/s -      4.000  in  12.805196s
-    HoneyFormat::CSV      0.231  (± 0.0%) i/s -      3.000  in  13.064147s
+          stdlib CSV     64.236  (± 4.7%) i/s -    642.000
+    HoneyFormat::CSV     52.762  (± 5.7%) i/s -    530.000
 
 Comparison:
-          stdlib CSV:        0.3 i/s
-    HoneyFormat::CSV:        0.2 i/s - 1.35x slower
+          stdlib CSV:       64.2 i/s
+    HoneyFormat::CSV:       52.8 i/s - 1.22x slower
 ```
 
-Run the benchmark as a regular ruby file: `ruby benchmark.rb`.
+20MB (~180k lines)
+
+```
+Comparison:
+          stdlib CSV:        0.3 i/s
+    HoneyFormat::CSV:        0.3 i/s - 1.26x slower
+```
+
+See `bin/benchmark` for details.
+Run benchmark: `bin/benchmark`.
 
 ## Development
 

@@ -51,6 +51,16 @@ let(:diabolical_cols) {
     end
   end
 
+  describe '#each_row' do
+    it 'yields each row' do
+      csv = described_class.new("email, ids\ntest@example.com, 42")
+      csv.each_row do |row|
+        expect(row.email).to eq('test@example.com')
+        expect(row.ids).to eq('42')
+      end
+    end
+  end
+
   describe '#header' do
     it 'returns a CSVs header' do
       result = described_class.new(csv_string).header
@@ -71,10 +81,18 @@ let(:diabolical_cols) {
   end
 
   describe '#rows' do
-    it 'can parse a CSV' do
+    it 'returns CSV rows' do
       csv = described_class.new(csv_string).rows
       expect(csv.first.email).to eq('test@example.com')
       expect(csv.first.ids).to eq('42')
+    end
+
+    it 'returns CSV rows and ignores empty lines' do
+      csv = described_class.new("#{csv_string}\n\n\ntest1@example.com,73").rows
+      expect(csv.first.email).to eq('test@example.com')
+      expect(csv.first.ids).to eq('42')
+      expect(csv.to_a.last.email).to eq('test1@example.com')
+      expect(csv.to_a.last.ids).to eq('73')
     end
 
     it 'works for a diabolical example' do

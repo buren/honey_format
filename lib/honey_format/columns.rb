@@ -1,37 +1,40 @@
 module HoneyFormat
+  # Represents columns.
   class Columns
-    include Enumerable
-
-    attr_reader :header
-
-    def initialize(header, valid: :all)
-      @header = build_header(header)
-      @columns = build_columns(@header, valid)
+    # @return [Columns] a new instance of Columns.
+    # @param [Array] header array of strings.
+    # @param [Array] valid array of symbols representing valid columns.
+    # @raise [MissingCSVHeaderColumnError] raised when header is missing
+    # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
+    def initialize(header, valid = :all)
+      @columns = build_columns(header, valid)
     end
 
-    def each
-      @columns.each { |column| yield(column) }
+    # Returns columns as array.
+    # @return [Array] of columns.
+    def to_a
+      @columns
     end
 
     private
 
-    def build_header(header)
-      if header.nil? || header.empty?
-        fail(MissingCSVHeaderError, "CSV header can't be empty.")
+    def build_columns(header, valid)
+      header.map do |column|
+        Sanitize.string!(column)
+        validate_column_presence!(column)
+
+        column = symnolize_string!(column)
+
+        validate_column_name!(column, valid)
+        column
       end
-      Clean.row(header)
     end
 
-    def build_columns(keys, valid_columns)
-      keys.map do |raw|
-        raw_col = Clean.column(raw)
-        validate_column_presence!(raw_col)
-
-        col = raw_col.downcase.gsub(/ /, '').to_sym
-
-        validate_column_name!(raw_col, col, valid_columns)
-        col
-      end
+    def symnolize_string!(column)
+      column.downcase!
+      column.gsub!(/ /, '')
+      column.gsub!(/-/, '_')
+      column.to_sym
     end
 
     def validate_column_presence!(col)
@@ -40,13 +43,13 @@ module HoneyFormat
       end
     end
 
-    def validate_column_name!(raw_col, col, valid_columns)
-      return if valid_columns == :all
+    def validate_column_name!(column, valid)
+      return if valid == :all
 
-      valid_columns.include?(col) ||
+      valid.include?(column) ||
         begin
-          err_msg = "column :#{col} (\"#{raw_col}\") not in #{valid_columns.inspect}"
-          fail(InvalidCSVHeaderColumnError, err_msg)
+          err_msg = "column :#{column} not in #{valid.inspect}"
+          fail(UnknownCSVHeaderColumnError, err_msg)
         end
     end
   end

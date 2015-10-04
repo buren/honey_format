@@ -8,5 +8,10 @@ describe HoneyFormat::Rows do
       result = described_class.new([row], [:id]).to_a.first.id
       expect(result).to eq(expected)
     end
+
+    it 'returns an array of Row instances' do
+      result = described_class.new([[nil]], [:id]).to_a
+      expect(result).to be_empty
+    end
   end
 end

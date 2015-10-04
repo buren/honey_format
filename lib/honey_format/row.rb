@@ -1,14 +1,25 @@
 module HoneyFormat
-  class InvalidColumnsForRow  < ArgumentError; end
-  class InvalidRowLengthError < ArgumentError; end
-
+  # Holds data for a single row.
   class Row
+    # Returns a new instance of Row.
+    # @return [Row] a new instance of Row.
+    # @param [Array] columns an array of symbols.
+    # @raise [EmptyColumnsError] raised when there are no columns.
+    # @example Create new row
+    #     Row.new!([:id])
     def initialize(columns)
       validate_columns!(columns)
       @klass = Struct.new(*columns)
       @columns = columns
     end
 
+    # Returns a Struct.
+    # @return [Struct] a new instance of Row.
+    # @param row [Array] the row array.
+    # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
+    # @example Build new row
+    #     r = Row.new!([:id])
+    #     r.build(['1']).id #=> '1'
     def build(row)
       @klass.new(*row)
     rescue ArgumentError, 'struct size differs'
@@ -20,7 +31,7 @@ module HoneyFormat
     def validate_columns!(columns)
       if columns.empty?
         err_msg = 'Expected array with at least one element, but was empty.'
-        fail(InvalidColumnsForRow, err_msg)
+        fail(EmptyColumnsError, err_msg)
       end
     end
 

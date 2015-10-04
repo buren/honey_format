@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe HoneyFormat::Row do
-  let(:invalid_col_klass) { HoneyFormat::InvalidColumnsForRow }
+  let(:invalid_col_klass) { HoneyFormat::EmptyColumnsError }
   let(:invalid_row_length_klass) { HoneyFormat::InvalidRowLengthError }
 
   describe '#initialize' do
@@ -20,10 +20,17 @@ describe HoneyFormat::Row do
       expect(result).to eq(expected)
     end
 
-    it 'builds struct from "weird" symbol' do
+    it 'can have spec chars column names' do
       expected = 'value'
-      row = described_class.new(:"first-name")
-      result = row.build(expected).public_send(:"first-name")
+      row = described_class.new(:ÅÄÖ)
+      result = row.build(expected).ÅÄÖ
+      expect(result).to eq(expected)
+    end
+
+    it 'can have spec chars column names' do
+      expected = 'value'
+      row = described_class.new(:"ids(list of things)")
+      result = row.build(expected).public_send(:"ids(list of things)")
       expect(result).to eq(expected)
     end
 
