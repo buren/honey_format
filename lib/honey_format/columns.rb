@@ -8,7 +8,8 @@ module HoneyFormat
     # @param [Array] valid array of symbols representing valid columns.
     # @raise [MissingCSVHeaderColumnError] raised when header is missing
     # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
-    def initialize(header, valid = :all)
+    def initialize(header, valid: :all, converter: ConvertHeaderValue)
+      @converter = converter
       @columns = build_columns(header, valid)
     end
 
@@ -25,7 +26,7 @@ module HoneyFormat
         Sanitize.string!(column)
         validate_column_presence!(column)
 
-        column = ConvertHeaderValue.call(column)
+        column = @converter.call(column)
 
         validate_column_name!(column, valid)
         column

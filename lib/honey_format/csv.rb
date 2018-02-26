@@ -14,10 +14,10 @@ module HoneyFormat
     # @raise [MissingCSVHeaderError] raised when header is missing (empty or nil).
     # @raise [MissingCSVHeaderColumnError] raised when header column is missing.
     # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
-    def initialize(csv, delimiter: ',', header: nil, valid_columns: :all)
+    def initialize(csv, delimiter: ',', header: nil, valid_columns: :all, header_converter: ConvertHeaderValue)
       csv = ::CSV.parse(csv, col_sep: delimiter)
       @csv_body = csv
-      @header = Header.new(header || csv.shift, valid: valid_columns)
+      @header = Header.new(header || csv.shift, valid: valid_columns, converter: header_converter)
     end
 
     # @return [Array] of strings for sanitized header.
