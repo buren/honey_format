@@ -10,23 +10,18 @@ module HoneyFormat
     # @param [Array] valid array of symbols representing valid columns.
     # @raise [MissingCSVHeaderError] raised when header is missing (empty or nil).
     def initialize(header, valid: :all, converter: ConvertHeaderValue)
-      @column_names = build_header(header)
-      @columns = Columns.new(@column_names, valid: valid, converter: converter)
+      if header.nil? || header.empty?
+        fail(MissingCSVHeaderError, "CSV header can't be empty.")
+      end
+
+      @column_names = header
+      @columns = Columns.new(header, valid: valid, converter: converter)
     end
 
     # Returns columns as array.
     # @return [Array] of columns.
     def columns
       @columns.to_a
-    end
-
-    private
-
-    def build_header(header)
-      if header.nil? || header.empty?
-        fail(MissingCSVHeaderError, "CSV header can't be empty.")
-      end
-      Sanitize.array!(header)
     end
   end
 end
