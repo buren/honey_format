@@ -1,3 +1,5 @@
+require 'honey_format/convert_header_value'
+
 module HoneyFormat
   # Represents columns.
   class Columns
@@ -23,19 +25,11 @@ module HoneyFormat
         Sanitize.string!(column)
         validate_column_presence!(column)
 
-        column = symbolize_string!(column)
+        column = ConvertHeaderValue.call(column)
 
         validate_column_name!(column, valid)
         column
       end
-    end
-
-    def symbolize_string!(column)
-      column.strip!
-      column.downcase!
-      column.gsub!(/ /, '_')
-      column.gsub!(/-/, '_')
-      column.to_sym
     end
 
     def validate_column_presence!(col)

@@ -46,5 +46,22 @@ describe HoneyFormat::Columns do
       result = described_class.new(['ids(list of things)']).to_a.first
       expect(result).to eq(:"ids(list_of_things)")
     end
+
+    [
+      ['first name (user)', :'first_name(user)'],
+      ['first name [user]', :'first_name[user]'],
+      ['first name {user}', :'first_name{user}'],
+      ['Billing City', :billing_city],
+      ['Total Order Value (ex VAT)', :'total_order_value(ex_vat)'],
+      ['VAT#', :'vat#'],
+      ['   first_name  ', :first_name]
+    ].each do |data|
+      input, expected = data
+
+      it "converts #{input} to #{expected}" do
+        result = described_class.new([input]).to_a
+        expect(result).to eq([expected])
+      end
+    end
   end
 end
