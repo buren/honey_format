@@ -23,10 +23,8 @@ module HoneyFormat
 
     def build_columns(header, valid)
       header.map do |column|
-        Sanitize.string!(column)
-        validate_column_presence!(column)
-
         column = @converter.call(column)
+        validate_column_presence!(column)
 
         validate_column_name!(column, valid)
         column
