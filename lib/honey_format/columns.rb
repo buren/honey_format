@@ -23,16 +23,17 @@ module HoneyFormat
         Sanitize.string!(column)
         validate_column_presence!(column)
 
-        column = symnolize_string!(column)
+        column = symbolize_string!(column)
 
         validate_column_name!(column, valid)
         column
       end
     end
 
-    def symnolize_string!(column)
+    def symbolize_string!(column)
+      column.strip!
       column.downcase!
-      column.gsub!(/ /, '')
+      column.gsub!(/ /, '_')
       column.gsub!(/-/, '_')
       column.to_sym
     end

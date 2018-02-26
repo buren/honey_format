@@ -16,9 +16,9 @@ CSV
 }
 
 let(:diabolical_cols) {
-  [:emailaddress,
-   :firstname,
-   :lastname,
+  [:email_address,
+   :first_name,
+   :last_name,
    :member_rating,
    :optin_time,
    :optin_ip,
