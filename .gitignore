@@ -8,3 +8,4 @@
 /spec/reports/
 /tmp/
 benchmark.csv
+.byebug_history
