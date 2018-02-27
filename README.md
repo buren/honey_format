@@ -13,6 +13,8 @@ user.id         # => "1"
 user.username   # => "buren"
 ```
 
+:information_source: Supports Ruby >= 2.3
+
 ## Installation
 
 Add this line to your application's Gemfile:
