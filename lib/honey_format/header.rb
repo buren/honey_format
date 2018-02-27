@@ -14,8 +14,8 @@ module HoneyFormat
         fail(MissingCSVHeaderError, "CSV header can't be empty.")
       end
 
-      @column_names = header
-      @columns = Columns.new(header, valid: valid, converter: converter)
+      @column_names = Sanitize.array(header)
+      @columns = Columns.new(@column_names, valid: valid, converter: converter)
     end
 
     # Returns columns as array.
