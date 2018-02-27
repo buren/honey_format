@@ -23,7 +23,7 @@ module HoneyFormat
 
     def build_columns(header, valid)
       header.map do |column|
-        column = @converter.call(column)
+        column = @converter.call(column.dup)
         validate_column_presence!(column)
 
         validate_column_name!(column, valid)
