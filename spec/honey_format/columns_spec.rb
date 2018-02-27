@@ -16,30 +16,5 @@ describe HoneyFormat::Columns do
       result = described_class.new(['id', 'username']).to_a
       expect(result).to eq([:id, :username])
     end
-
-    it 'removes whitespace and downcases columns' do
-      result = described_class.new(['I    D', 'U  Se R na Me']).to_a
-      expect(result).to eq([:id, :username])
-    end
-
-    it 'can have column with underscores' do
-      result = described_class.new(['first_name']).to_a
-      expect(result).to eq([:first_name])
-    end
-
-    it 'can have column with dashes' do
-      result = described_class.new(['first-name']).to_a
-      expect(result).to eq([:first_name])
-    end
-
-    it 'can have spec chars column names' do
-      result = described_class.new(['ÅÄÖ']).to_a.first
-      expect(result).to eq(:ÅÄÖ)
-    end
-
-    it 'can have ruby syntax chars as column names' do
-      result = described_class.new(['ids(list of things)']).to_a.first
-      expect(result).to eq(:"ids(listofthings)")
-    end
   end
 end

@@ -1,6 +1,6 @@
 # HoneyFormat [![Build Status](https://travis-ci.org/buren/honey_format.svg)](https://travis-ci.org/buren/honey_format) [![Code Climate](https://codeclimate.com/github/buren/honey_format/badges/gpa.svg)](https://codeclimate.com/github/buren/honey_format) ![Docs badge](https://inch-ci.org/github/buren/honey_format.svg?branch=master)
 
-Convert CSV to object with one command.
+Convert CSV to an array of objects with with ease.
 
 Perfect for small files of test data or small import scripts.
 
@@ -12,6 +12,8 @@ user = csv.rows # => [#<struct id="1", username="buren">]
 user.id         # => "1"
 user.username   # => "buren"
 ```
+
+:information_source: Supports Ruby >= 2.3, has no dependencies other than Ruby stdlib.
 
 ## Installation
 
