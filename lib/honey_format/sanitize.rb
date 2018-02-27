@@ -2,8 +2,8 @@ module HoneyFormat
   # Utility class for sanitizing various simple data types.
   class Sanitize
     # Returns array of cleaned strings.
-    # @return [Array] the cleaned array of strings.
-    # @param [Array] row the array of strings to be cleaned.
+    # @return [Array<String>] the cleaned array of strings.
+    # @param [Array<String>] row the array of strings to be cleaned.
     # @example Sanitize array
     #     Sanitize.array!(["  a "]) #=> ["a"]
     def self.array!(row)
