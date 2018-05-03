@@ -43,31 +43,35 @@ csv = HoneyFormat::CSV.new(csv_string)
 csv.header # => ["Id", "Username"]
 csv.column # => [:id, :username]
 
-include HoneyFormat
-# If included you can use the HoneyCSV shorthand
-csv = HoneyCSV.new(csv_string)
 rows = csv.rows # => [#<struct id="1", username="buren">]
 user = rows.first
 user.id         # => "1"
 user.username   # => "buren"
 ```
 
+```ruby
+csv_string = "Id, Username\n 1, buren"
+uppercase_strings = ->(o) { o.is_a?(String) ? o.upcase : o  }
+csv = HoneyFormat::CSV.new(csv_string, row_builder: uppercase_strings)
+csv.rows # => [#<struct id="1", username="BUREN">]
+```
+
 Validate CSV header
 ```ruby
 csv_string = "Id, Username\n 1, buren"
 # Invalid
-HoneyCSV.new(csv_string, valid_columns: [:something, :username])
+HoneyFormat::CSV.new(csv_string, valid_columns: [:something, :username])
 # => #<HoneyFormat::MissingCSVHeaderColumnError: key :id ("Id") not in [:something, :username]>
 
 # Valid
-csv = HoneyCSV.new(csv_string, valid_columns: [:id, :username])
+csv = HoneyFormat::CSV.new(csv_string, valid_columns: [:id, :username])
 csv.rows.first.username # => "buren"
 ```
 
 Define header
 ```ruby
 csv_string = "1, buren"
-csv = HoneyCSV.new(csv_string, header: ['Id', 'Username'])
+csv = HoneyFormat::CSV.new(csv_string, header: ['Id', 'Username'])
 csv.rows.first.username # => "buren"
 ```
 
@@ -75,13 +79,13 @@ If your header contains special chars and/or chars that can't be part of Ruby me
 things get a little awkward..
 ```ruby
 csv_string = "ÅÄÖ\nSwedish characters"
-user = HoneyCSV.new(csv_string).rows.first
+user = HoneyFormat::CSV.new(csv_string).rows.first
 # Note that these chars aren't "downcased",
 # "ÅÄÖ".downcase # => "ÅÄÖ"
 user.ÅÄÖ # => "Swedish characters"
 
 csv_string = "First-Name\nJacob"
-user = HoneyCSV.new(csv_string).rows.first
+user = HoneyFormat::CSV.new(csv_string).rows.first
 user.public_send(:"first-name") # => "Jacob"
 ```
 
