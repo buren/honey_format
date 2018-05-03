@@ -13,6 +13,14 @@ describe HoneyFormat::Row do
   end
 
   describe '#build' do
+    it 'calls the injected builder' do
+      expected = 'changed'
+      builder = ->(row) { row.id = expected }
+      row = described_class.new(:id, builder: builder)
+      result = row.build('value').id
+      expect(result).to eq(expected)
+    end
+
     it 'builds struct from single symbol' do
       expected = 'value'
       row = described_class.new(:id)

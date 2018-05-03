@@ -7,10 +7,11 @@ module HoneyFormat
     # @raise [EmptyColumnsError] raised when there are no columns.
     # @example Create new row
     #     Row.new!([:id])
-    def initialize(columns)
+    def initialize(columns, builder: nil)
       validate_columns!(columns)
       @klass = Struct.new(*columns)
       @columns = columns
+      @builder = builder
     end
 
     # Returns a Struct.
@@ -21,7 +22,7 @@ module HoneyFormat
     #     r = Row.new!([:id])
     #     r.build(['1']).id #=> '1'
     def build(row)
-      @klass.new(*row)
+      @klass.new(*row).tap { |o| @builder && @builder.call(o) }
     rescue ArgumentError, 'struct size differs'
       fail_for_struct_size_diff!(row)
     end
