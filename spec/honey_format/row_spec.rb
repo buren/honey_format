@@ -15,7 +15,7 @@ describe HoneyFormat::Row do
   describe '#build' do
     it 'calls the injected builder' do
       expected = 'changed'
-      builder = ->(row) { row.id = expected }
+      builder = ->(row) { row.id = expected; row }
       row = described_class.new(:id, builder: builder)
       result = row.build('value').id
       expect(result).to eq(expected)

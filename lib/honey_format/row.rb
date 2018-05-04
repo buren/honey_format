@@ -1,6 +1,12 @@
 module HoneyFormat
   # Holds data for a single row.
   class Row
+    class RowBuilder < Struct
+      def self.call(row)
+        new(*row)
+      end
+    end
+
     # Returns a new instance of Row.
     # @return [Row] a new instance of Row.
     # @param [Array] columns an array of symbols.
@@ -9,9 +15,9 @@ module HoneyFormat
     #     Row.new!([:id])
     def initialize(columns, builder: nil)
       validate_columns!(columns)
-      @klass = Struct.new(*columns)
+      @row_builder = RowBuilder.new(*columns)
+      @builder = builder || ->(row) { row }
       @columns = columns
-      @builder = builder
     end
 
     # Returns a Struct.
@@ -19,10 +25,11 @@ module HoneyFormat
     # @param row [Array] the row array.
     # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
     # @example Build new row
-    #     r = Row.new!([:id])
+    #     r = Row.new([:id])
     #     r.build(['1']).id #=> '1'
     def build(row)
-      @klass.new(*row).tap { |o| @builder && @builder.call(o) }
+      built_row = @row_builder.call(row)
+      @builder.call(built_row)
     rescue ArgumentError, 'struct size differs'
       fail_for_struct_size_diff!(row)
     end
@@ -30,10 +37,10 @@ module HoneyFormat
     private
 
     def validate_columns!(columns)
-      if columns.empty?
-        err_msg = 'Expected array with at least one element, but was empty.'
-        fail(EmptyColumnsError, err_msg)
-      end
+      return unless columns.empty?
+
+      err_msg = 'Expected array with at least one element, but was empty.'
+      fail(EmptyColumnsError, err_msg)
     end
 
     def fail_for_struct_size_diff!(row)
