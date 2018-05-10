@@ -35,7 +35,7 @@ module HoneyFormat
     # @return [Array] of rows.
     # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
     def rows
-      @rows.to_a
+      @rows
     end
 
     # @yield [row] block to receive the row.
