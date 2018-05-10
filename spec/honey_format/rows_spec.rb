@@ -23,4 +23,15 @@ describe HoneyFormat::Rows do
       expect(rows.to_csv).to eq("first,thing\nsecond,thing\n")
     end
   end
+
+  describe 'quacks like an Enumerable' do
+    it 'has working #map method' do
+      matrix = [%w[first thing], %w[second thing]]
+      rows = described_class.new(matrix, [:col1, :col2])
+
+      rows = rows.map { |row| row.col1 }
+
+      expect(rows).to eq(%w[first second])
+    end
+  end
 end

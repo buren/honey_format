@@ -3,12 +3,18 @@ require 'honey_format/row'
 module HoneyFormat
   # Represents rows.
   class Rows
+    include Enumerable
+
     # Returns array of cleaned strings.
     # @return [Rows] new instance of Rows.
     # @param [Array] rows the array of rows.
     # @param [Array] columns the array of column symbols.
     def initialize(rows, columns, builder: nil)
       @rows = prepare_rows(Row.new(columns, builder: builder), rows)
+    end
+
+    def each(&block)
+      @rows.each(&block)
     end
 
     # Returns rows as array.
