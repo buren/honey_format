@@ -23,5 +23,10 @@ module HoneyFormat
     def columns
       @columns.to_a
     end
+
+    # @return [String] CSV-string representation.
+    def to_csv
+      columns.to_csv
+    end
   end
 end

@@ -17,6 +17,11 @@ module HoneyFormat
       @rows
     end
 
+    # @return [String] CSV-string representation.
+    def to_csv
+      to_a.map(&:to_csv).join
+    end
+
     private
 
     def prepare_rows(builder, rows)

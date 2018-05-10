@@ -23,4 +23,12 @@ describe HoneyFormat::Header do
       expect(described_class.new([value]).column_names).to eq([value])
     end
   end
+
+  describe '#to_csv' do
+    it 'returns the header as a CSV-string' do
+      header = described_class.new(%w[name email])
+
+      expect(header.to_csv).to eq("name,email\n")
+    end
+  end
 end

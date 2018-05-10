@@ -5,11 +5,24 @@ module HoneyFormat
       def self.call(row)
         new(*row)
       end
+
+      # @return [String] CSV-string representation.
+      def to_csv
+        members.map do |column_name|
+          column = public_send(column_name)
+          if column.respond_to?(:to_csv)
+            column.to_csv
+          else
+            column.to_s
+          end
+        end.join(',') + "\n"
+      end
     end
 
     # Returns a new instance of Row.
     # @return [Row] a new instance of Row.
     # @param [Array] columns an array of symbols.
+    # @param builder [#call, #to_csv] optional row builder
     # @raise [EmptyColumnsError] raised when there are no columns.
     # @example Create new row
     #     Row.new!([:id])

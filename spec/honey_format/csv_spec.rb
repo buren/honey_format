@@ -111,4 +111,29 @@ let(:diabolical_cols) {
     result = described_class.new(csv, delimiter: ';').header
     expect(result).to eq(%w(email ids))
   end
+
+  describe '#to_csv' do
+    it 'returns a CSV-string' do
+      csv_string = "1, buren"
+      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      expect(csv.to_csv).to eq("Id,Username\n1,buren\n")
+    end
+
+    it 'returns a CSV-string with values changed by custom row builder' do
+      csv_string = "1, buren"
+      upcase_builder = Class.new do
+        def self.call(row)
+          row.username = row.username.upcase
+          row
+        end
+      end
+
+      csv = described_class.new(
+        csv_string,
+        header: ['Id', 'Username'],
+        row_builder: upcase_builder
+      )
+      expect(csv.to_csv).to eq("Id,Username\n1,BUREN\n")
+    end
+  end
 end
