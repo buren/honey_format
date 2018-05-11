@@ -17,9 +17,9 @@ module HoneyFormat
     # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
     def initialize(csv, delimiter: ',', header: nil, valid_columns: :all, header_converter: ConvertHeaderValue, row_builder: nil)
       csv = ::CSV.parse(csv, col_sep: delimiter)
-      @csv_body = csv
-      @header = Header.new(header || csv.shift, valid: valid_columns, converter: header_converter)
-      @row_builder = row_builder
+      header_row = header || csv.shift
+      @header = Header.new(header_row, valid: valid_columns, converter: header_converter)
+      @rows = Rows.new(csv, columns, builder: row_builder)
     end
 
     # @return [Array] of strings for sanitized header.
@@ -35,12 +35,17 @@ module HoneyFormat
     # @return [Array] of rows.
     # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
     def rows
-      @rows ||= Rows.new(@csv_body, columns, builder: @row_builder).to_a
+      @rows
     end
 
     # @yield [row] block to receive the row.
     def each_row
       rows.each { |row| yield(row) }
+    end
+
+    # @return [String] CSV-string representation.
+    def to_csv
+      header.to_csv + @rows.to_csv
     end
   end
 end

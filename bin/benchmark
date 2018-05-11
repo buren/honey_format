@@ -5,12 +5,12 @@ require 'honey_format'
 require 'benchmark/ips'
 require 'csv'
 
-# Assumes that you have a file "benchmark.csv" in your current directory
-csv = File.read('benchmark-20mb.csv')
+path = ARGV.first || fail(ArgumentError, '<path_to_csv> argument must be provided')
+csv = File.read(path)
 
 Benchmark.ips do |x|
-  x.time = 10
-  x.warmup = 2
+  x.time = 30
+  x.warmup = 5
 
   x.report('stdlib CSV')       { CSV.parse(csv) }
   x.report('HoneyFormat::CSV') { HoneyFormat::CSV.new(csv).rows }

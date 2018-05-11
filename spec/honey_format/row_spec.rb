@@ -63,4 +63,13 @@ describe HoneyFormat::Row do
       expect(row.build([expected]).username).to eq(nil)
     end
   end
+
+  describe '#to_csv' do
+    it 'returns the row as a CSV-string' do
+      header = described_class.new(%i[col1 col2])
+      columns = %w[first second]
+
+      expect(header.build(columns).to_csv).to eq("first,second\n")
+    end
+  end
 end

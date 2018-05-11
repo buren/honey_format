@@ -1,15 +1,12 @@
+require 'honey_format/row_builder'
+
 module HoneyFormat
   # Holds data for a single row.
   class Row
-    class RowBuilder < Struct
-      def self.call(row)
-        new(*row)
-      end
-    end
-
     # Returns a new instance of Row.
     # @return [Row] a new instance of Row.
     # @param [Array] columns an array of symbols.
+    # @param builder [#call, #to_csv] optional row builder
     # @raise [EmptyColumnsError] raised when there are no columns.
     # @example Create new row
     #     Row.new!([:id])

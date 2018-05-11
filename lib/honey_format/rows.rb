@@ -3,6 +3,8 @@ require 'honey_format/row'
 module HoneyFormat
   # Represents rows.
   class Rows
+    include Enumerable
+
     # Returns array of cleaned strings.
     # @return [Rows] new instance of Rows.
     # @param [Array] rows the array of rows.
@@ -11,10 +13,23 @@ module HoneyFormat
       @rows = prepare_rows(Row.new(columns, builder: builder), rows)
     end
 
+    # @yield [row] The given block will be passed every row.
+    # @yieldparam [Row] a row in the CSV file.
+    # @return [Enumerator]
+    #   If no block is given, an enumerator object will be returned.
+    def each(&block)
+      @rows.each(&block)
+    end
+
     # Returns rows as array.
     # @return [Array] of rows.
     def to_a
       @rows
+    end
+
+    # @return [String] CSV-string representation.
+    def to_csv
+      to_a.map(&:to_csv).join
     end
 
     private
