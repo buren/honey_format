@@ -1,3 +1,5 @@
+require 'honey_format/convert_header_value'
+
 module HoneyFormat
   # Represents a header
   class Header
