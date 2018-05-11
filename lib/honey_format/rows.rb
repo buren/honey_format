@@ -13,6 +13,10 @@ module HoneyFormat
       @rows = prepare_rows(Row.new(columns, builder: builder), rows)
     end
 
+    # @yield [row] The given block will be passed every row.
+    # @yieldparam [Row] a row in the CSV file.
+    # @return [Enumerator]
+    #   If no block is given, an enumerator object will be returned.
     def each(&block)
       @rows.each(&block)
     end

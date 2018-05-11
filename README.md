@@ -49,11 +49,20 @@ user.id         # => "1"
 user.username   # => "buren"
 ```
 
+Custom row builder
 ```ruby
 csv_string = "Id, Username\n 1, buren"
-uppercase_strings = ->(o) { o.is_a?(String) ? o.upcase : o  }
-csv = HoneyFormat::CSV.new(csv_string, row_builder: uppercase_strings)
+upcase_builder = ->(o) { o.is_a?(String) ? o.upcase : o  }
+csv = HoneyFormat::CSV.new(csv_string, row_builder: upcase_builder)
 csv.rows # => [#<struct id="1", username="BUREN">]
+```
+
+Output CSV
+```ruby
+csv_string = "Id, Username\n 1, buren"
+csv = HoneyFormat::CSV.new(csv_string)
+csv.rows.each { |row| row.id = nil }
+csv.to_csv # => "Id, Username\n, buren\n"
 ```
 
 Validate CSV header

@@ -1,5 +1,7 @@
 module HoneyFormat
+  # Header column converter
   module ConvertHeaderValue
+    # Replace map
     REPLACE_MAP = [
       [/ \(/, '('],
       [/ \[/, '['],
