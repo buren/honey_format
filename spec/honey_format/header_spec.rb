@@ -17,10 +17,10 @@ describe HoneyFormat::Header do
     end
   end
 
-  describe '#column_names' do
+  describe '#original' do
     it 'can return original column names' do
       value = 'My id (string)'
-      expect(described_class.new([value]).column_names).to eq([value])
+      expect(described_class.new([value]).original).to eq([value])
     end
   end
 

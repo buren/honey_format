@@ -22,14 +22,14 @@ module HoneyFormat
       @rows = Rows.new(csv, columns, builder: row_builder)
     end
 
-    # @return [Array] of strings for sanitized header.
+    # @return [Array<String>] of strings for sanitized header.
     def header
-      @header.column_names
+      @header.original
     end
 
-    # @return [Array] of column identifiers.
+    # @return [Array<Symbol>] of column identifiers.
     def columns
-      @header.columns
+      @header.to_a
     end
 
     # @return [Array] of rows.
