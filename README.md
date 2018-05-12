@@ -49,11 +49,30 @@ user.id         # => "1"
 user.username   # => "buren"
 ```
 
-Custom row builder
+Minimal custom row builder
 ```ruby
 csv_string = "Id, Username\n 1, buren"
-upcase_builder = ->(o) { o.is_a?(String) ? o.upcase : o  }
-csv = HoneyFormat::CSV.new(csv_string, row_builder: upcase_builder)
+upcaser = ->(row) { row.username.upcase!; row }
+csv = HoneyFormat::CSV.new(csv_string, row_builder: upcaser)
+csv.rows # => [#<struct id="1", username="BUREN">]
+```
+
+Complete custom row builder
+```ruby
+class Anonymizer
+  def self.call(row)
+    # Return an object you want to represent the row
+    row.tap do |r|
+      r.name = '<anon>'
+      r.email = '<anon>'
+      r.ssn = '<anon>'
+      r.payment_id = '<scrubbed>'
+    end
+  end
+end
+
+csv_string = "Id, Username\n 1, buren"
+csv = HoneyFormat::CSV.new(csv_string, row_builder: Anonymizer)
 csv.rows # => [#<struct id="1", username="BUREN">]
 ```
 
@@ -63,6 +82,11 @@ csv_string = "Id, Username\n 1, buren"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.rows.each { |row| row.id = nil }
 csv.to_csv # => "Id, Username\n,buren\n"
+```
+
+You can of course set the delimiter
+```ruby
+HoneyFormat::CSV.new(csv_string, delimiter: ';')
 ```
 
 Validate CSV header
@@ -85,17 +109,29 @@ csv.rows.first.username # => "buren"
 ```
 
 If your header contains special chars and/or chars that can't be part of Ruby method names,
-things get a little awkward..
+things can get a little awkward..
 ```ruby
 csv_string = "ÅÄÖ\nSwedish characters"
 user = HoneyFormat::CSV.new(csv_string).rows.first
-# Note that these chars aren't "downcased",
+# Note that these chars aren't "downcased" in Ruby 2.3 and older versions of Ruby,
 # "ÅÄÖ".downcase # => "ÅÄÖ"
 user.ÅÄÖ # => "Swedish characters"
+# while on Ruby > 2.3
+user.åäö
 
-csv_string = "First-Name\nJacob"
+csv_string = "First^Name\nJacob"
 user = HoneyFormat::CSV.new(csv_string).rows.first
-user.public_send(:"first-name") # => "Jacob"
+user.public_send(:"first^name") # => "Jacob"
+```
+
+Pass your own header converter
+```ruby
+map = { 'First^Name' => :first_name }
+converter = ->(column) { map.fetch(column, column) }
+
+csv_string = "First^Name\nJacob"
+user = HoneyFormat::CSV.new(csv_string, header_converter: converter).rows.first
+user.first_name # => "Jacob"
 ```
 
 If you want to see more usage examples check out the `spec/` directory.
