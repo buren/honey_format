@@ -49,27 +49,18 @@ module HoneyFormat
     def build_columns(header, valid)
       header.map do |column|
         column = @converter.call(column.dup)
-        validate_column_presence!(column)
 
-        validate_column_name!(column, valid)
-        column
-      end
-    end
+        if column.nil? || column.empty?
+          fail(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
+        end
 
-    def validate_column_presence!(col)
-      if col.nil? || col.empty?
-        fail(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
-      end
-    end
-
-    def validate_column_name!(column, valid)
-      return if valid == :all
-
-      valid.include?(column) ||
-        begin
+        unless valid == :all || valid.include?(column)
           err_msg = "column :#{column} not in #{valid.inspect}"
           fail(UnknownCSVHeaderColumnError, err_msg)
         end
+
+        column
+      end
     end
   end
 end
