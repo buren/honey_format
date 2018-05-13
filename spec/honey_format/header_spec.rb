@@ -1,26 +1,46 @@
 require 'spec_helper'
 
 describe HoneyFormat::Header do
-  let(:missing_header_klass) { HoneyFormat::MissingCSVHeaderError }
-
   describe '#initialize' do
     it 'fails when header is nil' do
       expect do
         described_class.new(nil)
-      end.to raise_error(missing_header_klass)
+      end.to raise_error(HoneyFormat::MissingCSVHeaderError)
     end
 
     it 'fails when header is empty' do
       expect do
         described_class.new([])
-      end.to raise_error(missing_header_klass)
+      end.to raise_error(HoneyFormat::MissingCSVHeaderError)
+    end
+
+    it 'fails when a header column is empty' do
+      expect do
+        described_class.new(['first', ''])
+      end.to raise_error(HoneyFormat::MissingCSVHeaderColumnError)
+    end
+
+    context 'when given am array of valid header columns' do
+      it 'fails when an invalid column is found' do
+        expect do
+          described_class.new(%w[first third], valid: %w[first second])
+        end.to raise_error(HoneyFormat::UnknownCSVHeaderColumnError)
+      end
     end
   end
 
-  describe '#column_names' do
+  describe 'quacks like an enumerable' do
+    it 'can #map' do
+      header = described_class.new(%w[first])
+
+      expect(header.map { 'watman' }).to eq(%w[watman])
+    end
+  end
+
+  describe '#original' do
     it 'can return original column names' do
       value = 'My id (string)'
-      expect(described_class.new([value]).column_names).to eq([value])
+      expect(described_class.new([value]).original).to eq([value])
     end
   end
 
