@@ -20,11 +20,17 @@ describe HoneyFormat::Header do
       end.to raise_error(HoneyFormat::MissingCSVHeaderColumnError)
     end
 
-    context 'when given am array of valid header columns' do
-      it 'fails when an invalid column is found' do
+    context 'when given a valid argument' do
+      it 'fails when a column is found that is not in valid argument' do
         expect do
           described_class.new(%w[first third], valid: %w[first second])
         end.to raise_error(HoneyFormat::UnknownCSVHeaderColumnError)
+      end
+
+      it 'does not fail when all columns are valid' do
+        cols = %w[first second]
+        header = described_class.new(cols, valid: cols)
+        expect(header.to_a).to eq(cols.map(&:to_sym))
       end
     end
   end

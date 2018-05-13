@@ -5,12 +5,18 @@ module HoneyFormat
   class Header
     include Enumerable
 
-    # @return [Columns] a new instance of Columns.
-    # @param [Array] header array of strings.
-    # @param [Array] valid array of symbols representing valid columns.
+    # Instantiate a Header
+    # @return [Header] a new instance of Header.
+    # @param [Array<String>] header array of strings.
+    # @param [Array<Symbol>] valid array of symbols representing valid columns if empty all columns will be considered valid.
+    # @param converter [#call] header converter that implements a #call method that takes one column (string) argument.
     # @raise [MissingCSVHeaderColumnError] raised when header is missing
     # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
-    def initialize(header, valid: :all, converter: ConvertHeaderValue)
+    # @example Instantiate a header with a customer converter
+    #     converter = ->(col) { col == 'username' ? 'handle' : col }
+    #     header = HoneyFormat::Header.new(['name', 'username'], converter: converter)
+    #     header.to_a # => ['name', 'handle']
+    def initialize(header, valid: [], converter: ConvertHeaderValue)
       if header.nil? || header.empty?
         raise(MissingCSVHeaderError, "CSV header can't be empty.")
       end
@@ -39,6 +45,7 @@ module HoneyFormat
       @columns
     end
 
+    # Header as CSV-string
     # @return [String] CSV-string representation.
     def to_csv
       @columns.to_csv
@@ -46,7 +53,13 @@ module HoneyFormat
 
     private
 
+    # Convert original header
+    # @param [Array<String>] header the original header
+    # @param [Array<Symbol>] valid list of valid column names if empty all are considered valid.
+    # @return [Array<String>] converted columns
     def build_columns(header, valid)
+      valid = valid.map(&:to_sym)
+
       header.map do |column|
         column = @converter.call(column.dup)
 
@@ -54,7 +67,7 @@ module HoneyFormat
           raise(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
         end
 
-        unless valid == :all || valid.include?(column)
+        if valid.any? && !valid.include?(column)
           err_msg = "column :#{column} not in #{valid.inspect}"
           raise(UnknownCSVHeaderColumnError, err_msg)
         end
