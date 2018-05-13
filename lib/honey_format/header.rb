@@ -12,7 +12,7 @@ module HoneyFormat
     # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
     def initialize(header, valid: :all, converter: ConvertHeaderValue)
       if header.nil? || header.empty?
-        fail(MissingCSVHeaderError, "CSV header can't be empty.")
+        raise(MissingCSVHeaderError, "CSV header can't be empty.")
       end
 
       @original_header = Sanitize.array(header)
@@ -51,12 +51,12 @@ module HoneyFormat
         column = @converter.call(column.dup)
 
         if column.nil? || column.empty?
-          fail(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
+          raise(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
         end
 
         unless valid == :all || valid.include?(column)
           err_msg = "column :#{column} not in #{valid.inspect}"
-          fail(UnknownCSVHeaderColumnError, err_msg)
+          raise(UnknownCSVHeaderColumnError, err_msg)
         end
 
         column

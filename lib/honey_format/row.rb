@@ -37,7 +37,7 @@ module HoneyFormat
       return unless columns.empty?
 
       err_msg = 'Expected array with at least one element, but was empty.'
-      fail(EmptyColumnsError, err_msg)
+      raise(EmptyColumnsError, err_msg)
     end
 
     def fail_for_struct_size_diff!(row)
@@ -46,7 +46,7 @@ module HoneyFormat
         "for columns #{@columns.length}",
         "row: #{row.inspect}"
       ].join(', ')
-      fail(InvalidRowLengthError, err_msg)
+      raise(InvalidRowLengthError, err_msg)
     end
   end
 end
