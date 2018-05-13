@@ -11,9 +11,13 @@ module HoneyFormat
     # @example Create new row
     #     Row.new!([:id])
     def initialize(columns, builder: nil)
-      validate_columns!(columns)
+      if columns.empty?
+        err_msg = 'Expected array with at least one element, but was empty.'
+        raise(EmptyColumnsError, err_msg)
+      end
+
       @row_builder = RowBuilder.new(*columns)
-      @builder = builder || ->(row) { row }
+      @builder = builder
       @columns = columns
     end
 
@@ -26,21 +30,9 @@ module HoneyFormat
     #     r.build(['1']).id #=> '1'
     def build(row)
       built_row = @row_builder.call(row)
+      return built_row unless @builder
       @builder.call(built_row)
     rescue ArgumentError, 'struct size differs'
-      fail_for_struct_size_diff!(row)
-    end
-
-    private
-
-    def validate_columns!(columns)
-      return unless columns.empty?
-
-      err_msg = 'Expected array with at least one element, but was empty.'
-      raise(EmptyColumnsError, err_msg)
-    end
-
-    def fail_for_struct_size_diff!(row)
       err_msg = [
         "Row length #{row.length}",
         "for columns #{@columns.length}",
