@@ -32,11 +32,14 @@ module HoneyFormat
       built_row = @row_builder.call(row)
       return built_row unless @builder
       @builder.call(built_row)
-    rescue ArgumentError, 'struct size differs'
+    rescue ArgumentError => e
+      raise unless e.message == 'struct size differs'
+
       err_msg = [
         "Row length #{row.length}",
-        "for columns #{@columns.length}",
-        "row: #{row.inspect}"
+        "column length #{@columns.length}",
+        "row: #{row.inspect}",
+        "orignal message: '#{e.message}'"
       ].join(', ')
       raise(InvalidRowLengthError, err_msg)
     end
