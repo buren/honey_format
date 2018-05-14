@@ -1,8 +1,14 @@
+# v0.8.0
+
+* _[Feature]_ Add `#size` and `#length` methods to `Header` and `Rows` objects
+* _[Bugfix]_ Improved Row error handling for when row size differs from header column
+
+
 # v0.7.0
 
-- Don't sanitize each row :rocket: (improves performance from ~1.4x times slower than raw CSV to ~1.1)
-- Fold `Columns` class into `Header`
-- Remove `Sanitize` class
+* Don't sanitize each row :rocket: (improves performance from ~1.4x times slower than raw CSV to ~1.1)
+* Fold `Columns` class into `Header`
+* Remove `Sanitize` class
 
 # v0.6.0
 
