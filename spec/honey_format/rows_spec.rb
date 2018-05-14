@@ -15,6 +15,18 @@ describe HoneyFormat::Rows do
     end
   end
 
+  it 'can return the rows size' do
+    rows = described_class.new(%w[first second], %i[name])
+
+    expect(rows.size).to eq(2)
+  end
+
+  it 'can return the rows length' do
+    rows = described_class.new(%w[first second], %i[name])
+
+    expect(rows.length).to eq(2)
+  end
+
   describe '#to_csv' do
     it 'returns the rows as a CSV-string' do
       matrix = [%w[first thing], %w[second thing]]
