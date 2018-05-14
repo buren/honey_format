@@ -1,3 +1,9 @@
+# v0.7.0
+
+- Don't sanitize each row :rocket: (improves performance from ~1.4x times slower than raw CSV to ~1.1)
+- Fold `Columns` class into `Header`
+- Remove `Sanitize` class
+
 # v0.6.0
 
 * Add `CSV#to_csv` ([PR#2](https://github.com/buren/honey_format/pull/2))
