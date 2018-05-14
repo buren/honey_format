@@ -4,7 +4,7 @@ describe HoneyFormat::CSV do
   let(:csv_string) {
 <<-CSV
 email, ids
-test@example.com, 42
+test@example.com,42
 CSV
   }
 
@@ -45,7 +45,7 @@ let(:diabolical_cols) {
 
   describe 'with specified header' do
     it 'returns correct csv object' do
-      csv_string = "1, buren"
+      csv_string = "1,buren"
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
       expect(csv.rows.first.username).to eq('buren')
     end
@@ -53,7 +53,7 @@ let(:diabolical_cols) {
 
   describe '#each_row' do
     it 'yields each row' do
-      csv = described_class.new("email, ids\ntest@example.com, 42")
+      csv = described_class.new("email, ids\ntest@example.com,42")
       csv.each_row do |row|
         expect(row.email).to eq('test@example.com')
         expect(row.ids).to eq('42')
@@ -114,13 +114,13 @@ let(:diabolical_cols) {
 
   describe '#to_csv' do
     it 'returns a CSV-string' do
-      csv_string = "1, buren"
+      csv_string = "1,buren"
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
       expect(csv.to_csv).to eq("Id,Username\n1,buren\n")
     end
 
     it 'returns a CSV-string with values changed by custom row builder' do
-      csv_string = "1, buren"
+      csv_string = "1,buren"
       upcase_builder = Class.new do
         def self.call(row)
           row.username = row.username.upcase

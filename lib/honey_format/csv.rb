@@ -1,6 +1,5 @@
 require 'csv'
 
-require 'honey_format/sanitize'
 require 'honey_format/rows'
 require 'honey_format/header'
 

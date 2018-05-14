@@ -149,15 +149,15 @@ $ bin/benchmark file.csv
 204KB (1k lines)
 
 ```
-      stdlib CSV:   48.9 i/s
-HoneyFormat::CSV:   34.5 i/s - 1.41x  slower
+      stdlib CSV:       51.9 i/s
+HoneyFormat::CSV:       49.6 i/s - 1.05x  slower
 ```
 
 19MB (100k lines)
 
 ```
-      stdlib CSV:   0.4 i/s
-HoneyFormat::CSV:   0.3 i/s - 1.41x  slower
+      stdlib CSV:        0.4 i/s
+HoneyFormat::CSV:        0.4 i/s - 1.11x  slower
 ```
 
 ## Development

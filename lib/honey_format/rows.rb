@@ -39,7 +39,7 @@ module HoneyFormat
       rows.each do |row|
         # ignore empty rows - the Ruby CSV library can return empty lines as [nil]
         next if row.nil? || row.empty? || row == [nil]
-        built_rows << builder.build(Sanitize.array!(row))
+        built_rows << builder.build(row)
       end
       built_rows
     end
