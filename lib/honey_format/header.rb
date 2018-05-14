@@ -45,6 +45,13 @@ module HoneyFormat
       @columns
     end
 
+    # Return the number of header columns
+    # @return [Integer] the number of header columns
+    def length
+      @columns.length
+    end
+    alias_method :size, :length
+
     # Header as CSV-string
     # @return [String] CSV-string representation.
     def to_csv

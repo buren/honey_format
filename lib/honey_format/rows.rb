@@ -27,6 +27,13 @@ module HoneyFormat
       @rows
     end
 
+    # Return the number of rows
+    # @return [Integer] the number of rows
+    def length
+      @rows.length
+    end
+    alias_method :size, :length
+
     # @return [String] CSV-string representation.
     def to_csv
       to_a.map(&:to_csv).join

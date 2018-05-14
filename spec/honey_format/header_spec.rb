@@ -43,6 +43,18 @@ describe HoneyFormat::Header do
     end
   end
 
+  it 'can return the header size' do
+    header = described_class.new(%w[first second])
+
+    expect(header.size).to eq(2)
+  end
+
+  it 'can return the header length' do
+    header = described_class.new(%w[first second])
+
+    expect(header.length).to eq(2)
+  end
+
   describe '#original' do
     it 'can return original column names' do
       value = 'My id (string)'
