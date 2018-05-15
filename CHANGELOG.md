@@ -1,3 +1,7 @@
+# v0.8.1
+
+* _[Bugfix]_ Properly quote cells with special CSV-characters in them. ([PR#7](https://github.com/buren/honey_format/pull/7))
+
 # v0.8.0
 
 * _[Feature]_ Add `#size` and `#length` methods to `Header` and `Rows` objects
