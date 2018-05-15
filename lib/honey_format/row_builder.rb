@@ -10,14 +10,16 @@ module HoneyFormat
     # Represent row as CSV
     # @return [String] CSV-string representation.
     def to_csv
-      members.map do |column_name|
+      row = members.map do |column_name|
         column = public_send(column_name)
         if column.respond_to?(:to_csv)
           column.to_csv
         else
           column.to_s
         end
-      end.join(',') + "\n"
+      end
+
+      ::CSV.generate_line(row)
     end
   end
 end
