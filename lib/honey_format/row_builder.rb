@@ -1,5 +1,3 @@
-require 'csv'
-
 module HoneyFormat
   # Default row builder
   class RowBuilder < Struct
