@@ -119,6 +119,15 @@ let(:diabolical_cols) {
       expect(csv.to_csv).to eq("Id,Username\n1,buren\n")
     end
 
+    it 'returns a valid CSV-string even if values needs special quoting' do
+      csv_string = '1,"jacob ""buren"" burenstam"'
+      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      expected = <<~CSV
+      Id,Username\n1,"jacob ""buren"" burenstam"
+      CSV
+      expect(csv.to_csv).to eq(expected)
+    end
+
     it 'returns a CSV-string with values changed by custom row builder' do
       csv_string = "1,buren"
       upcase_builder = Class.new do
