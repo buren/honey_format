@@ -1,3 +1,7 @@
+# v0.8.2
+
+* _[Bugfix]_ `#to_csv` now outputs nil values as empty string instead of `""`
+
 # v0.8.1
 
 * _[Bugfix]_ Properly quote cells with special CSV-characters in them. ([PR#7](https://github.com/buren/honey_format/pull/7))
