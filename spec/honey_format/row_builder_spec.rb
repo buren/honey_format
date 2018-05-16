@@ -21,11 +21,32 @@ describe HoneyFormat::RowBuilder do
       expect(person.to_csv).to eq("buren,28\n")
     end
 
+    it 'handles empty cell' do
+      struct = described_class.call(%i[name age])
+      person = struct.new('jacob')
+
+      expect(person.to_csv).to eq("jacob,\n")
+    end
+
     it 'handles strings containing a CSV-delimiter character' do
       struct = described_class.call(%i[name age])
       person = struct.new('jacob,buren', 28)
 
       expect(person.to_csv).to eq("\"jacob,buren\",28\n")
+    end
+
+    it 'handles strings containing a quote characters' do
+      struct = described_class.call(%i[name age])
+      person = struct.new('jacob "buren" burenstam', 28)
+
+      expect(person.to_csv).to eq("\"jacob \"\"buren\"\" burenstam\",28\n")
+    end
+
+    it 'handles strings containing a quote character' do
+      struct = described_class.call(%i[name age])
+      person = struct.new('jacob buren" burenstam', 28)
+
+      expect(person.to_csv).to eq("\"jacob buren\"\" burenstam\",28\n")
     end
 
     it 'handles strings containing a new line character' do
