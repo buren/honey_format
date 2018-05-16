@@ -12,11 +12,10 @@ module HoneyFormat
     def to_csv
       row = members.map do |column_name|
         column = public_send(column_name)
-        if column.respond_to?(:to_csv)
-          column.to_csv
-        else
-          column.to_s
-        end
+        next column.to_csv if column.respond_to?(:to_csv)
+        next if column.nil?
+
+        column.to_s
       end
 
       ::CSV.generate_line(row)
