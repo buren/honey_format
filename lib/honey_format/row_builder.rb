@@ -36,7 +36,14 @@ module HoneyFormat
       @builder.call(row)
     rescue ArgumentError => e
       raise unless e.message == 'struct size differs'
+      raise_invalid_row_length!(e, row)
+    end
 
+    private
+
+    # Raises invalid row length error
+    # @raise [Errors::InvalidRowLengthError]
+    def raise_invalid_row_length!(e, row)
       err_msg = [
         "Row length #{row.length}",
         "column length #{@columns.length}",
