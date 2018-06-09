@@ -1,4 +1,8 @@
-# v0.9.2
+# v0.10.0
+
+* Add support for filtering what rows are included in `#to_csv` [[#PR11](https://github.com/buren/honey_format/pull/11)]
+
+# v0.9.0
 
 :warning: This release contains some backwards compatible changes.
 
