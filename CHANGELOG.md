@@ -1,3 +1,7 @@
+# HEAD
+
+* Swap `RowBuilder` <> `Row` class names [[#PR12](https://github.com/buren/honey_format/pull/12)]
+
 # v0.10.0
 
 * Add support for filtering what rows are included in `#to_csv` [[#PR11](https://github.com/buren/honey_format/pull/11)]
