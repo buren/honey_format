@@ -1,4 +1,4 @@
-# HEAD
+# v0.9.2
 
 :warning: This release contains some backwards compatible changes.
 
