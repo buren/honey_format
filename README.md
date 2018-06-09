@@ -2,7 +2,18 @@
 
 Convert CSV to an array of objects with with ease.
 
-Perfect for small files of test data or small import scripts.
+## Features
+
+- Proper objects for CSV header and rows
+- Convert column values with custom row builder
+- Convert header column names
+- Customize what columns and rows are included in CSV output
+- Has no dependencies other than Ruby stdlib
+- Supports Ruby >= 2.3
+
+## Examples
+
+See [examples/](https://github.com/buren/honey_format/tree/master/examples) for more examples.
 
 ```ruby
 csv_string = "Id,Username\n1,buren"
@@ -12,8 +23,6 @@ user = csv.rows # => [#<struct id="1", username="buren">]
 user.id         # => "1"
 user.username   # => "buren"
 ```
-
-:information_source: Supports Ruby >= 2.3, has no dependencies other than Ruby stdlib.
 
 ## Installation
 
