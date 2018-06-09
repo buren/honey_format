@@ -10,6 +10,9 @@ module HoneyFormat
     # @return [Rows] new instance of Rows.
     # @param [Array] rows the array of rows.
     # @param [Array] columns the array of column symbols.
+    # @raise [RowError] super class of errors raised when there is a row error.
+    # @raise [EmptyRowColumnsError] raised when there are no columns.
+    # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
     def initialize(rows, columns, builder: nil)
       @rows = prepare_rows(Row.new(columns, builder: builder), rows)
     end
@@ -35,11 +38,26 @@ module HoneyFormat
     end
     alias_method :size, :length
 
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
+    # @yield [row] each row - return truthy if you want the row to be included in the output
+    # @yieldparam [Row] row
     # @return [String] CSV-string representation.
-    def to_csv(columns: nil)
+    # @example with selected columns
+    #   rows.to_csv(columns: [:id, :country])
+    # @example with selected rows
+    #   rows.to_csv { |row| row.country == 'Sweden' }
+    # @example with both selected columns and rows
+    #   csv.to_csv(columns: [:id, :country]) { |row| row.country == 'Sweden' }
+    def to_csv(columns: nil, &block)
       # Convert columns to Set for performance
       columns = Set.new(columns) if columns
-      to_a.map { |row| row.to_csv(columns: columns) }.join
+      csv_rows = []
+      each do |row|
+        if !block || block.call(row)
+          csv_rows << row.to_csv(columns: columns)
+        end
+      end
+      csv_rows.join
     end
 
     private

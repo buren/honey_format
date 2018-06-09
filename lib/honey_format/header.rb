@@ -10,6 +10,7 @@ module HoneyFormat
     # @param [Array<String>] header array of strings.
     # @param [Array<Symbol, String>] valid array representing the valid columns, if empty all columns will be considered valid.
     # @param converter [#call] header converter that implements a #call method that takes one column (string) argument.
+    # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
     # @example Instantiate a header with a customer converter
@@ -32,7 +33,7 @@ module HoneyFormat
     end
 
     # @yield [row] The given block will be passed for every column.
-    # @yieldparam [Row] a colmn in the CSV header.
+    # @yieldparam [Row] a column in the CSV header.
     # @return [Enumerator]
     #   If no block is given, an enumerator object will be returned.
     def each(&block)

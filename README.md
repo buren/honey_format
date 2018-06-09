@@ -91,6 +91,13 @@ csv = HoneyFormat::CSV.new(csv_string)
 csv.to_csv(columns: [:id, :country]) # => "id,country\nburen,Sweden\n"
 ```
 
+Output a subset of rows to CSV
+```ruby
+csv_string = "Name, Country\nburen,Sweden\njacob,Denmark"
+csv = HoneyFormat::CSV.new(csv_string)
+csv.to_csv { |row| row.country == 'Sweden' } # => "name,country\nburen,Sweden\n"
+```
+
 You can of course set the delimiter
 ```ruby
 HoneyFormat::CSV.new(csv_string, delimiter: ';')

@@ -36,10 +36,17 @@ describe HoneyFormat::Rows do
     end
 
     it 'returns the rows as a CSV-string with selected columns' do
-      matrix = [%w[name age country], %w[buren 28 Sweden]]
+      matrix = [%w[buren 28 Sweden]]
       rows = described_class.new(matrix, %i[name age country])
 
-      expect(rows.to_csv(columns: %i[country age])).to eq("age,country\n28,Sweden\n")
+      expect(rows.to_csv(columns: %i[country age])).to eq("28,Sweden\n")
+    end
+
+    it 'returns the rows as a CSV-string with selected rows' do
+      matrix = [%w[buren Sweden], %w[jacob Denmark]]
+      rows = described_class.new(matrix, %i[name country])
+
+      expect(rows.to_csv { |row| row.country == 'Sweden' }).to eq("buren,Sweden\n")
     end
   end
 

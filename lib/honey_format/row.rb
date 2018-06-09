@@ -7,7 +7,9 @@ module HoneyFormat
     # @return [Row] a new instance of Row.
     # @param [Array] columns an array of symbols.
     # @param builder [#call, #to_csv] optional row builder
+    # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when there are no columns.
+    # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
     # @example Create new row
     #     Row.new!([:id])
     def initialize(columns, builder: nil)
@@ -22,7 +24,7 @@ module HoneyFormat
     end
 
     # Returns a Struct.
-    # @return [Struct] a new instance of Row.
+    # @return [Object] a new instance of built row.
     # @param row [Array] the row array.
     # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
     # @example Build new row
