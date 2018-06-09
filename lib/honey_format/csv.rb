@@ -27,7 +27,7 @@ module HoneyFormat
       @header.original
     end
 
-    # CSV columns
+    # CSV columns converted from the original CSV header
     # @return [Array<Symbol>] of column identifiers.
     def columns
       @header.to_a
