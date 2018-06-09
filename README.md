@@ -8,6 +8,7 @@ Convert CSV to an array of objects with with ease.
 - Convert column values with custom row builder
 - Convert header column names
 - Customize what columns and rows are included in CSV output
+- [CLI](#cli)
 - Has no dependencies other than Ruby stdlib
 - Supports Ruby >= 2.3
 
@@ -184,6 +185,18 @@ end
 You can see all [available errors here](https://www.rubydoc.info/gems/honey_format/HoneyFormat/Errors).
 
 If you want to see more usage examples check out the `spec/` directory.
+
+## CLI
+
+```
+Usage: honey_format [file.csv] [options]
+        --csv=input.csv              CSV file
+        --columns=id,name            Select columns.
+        --output=output.csv          CSV output (STDOUT otherwise)
+        --delimiter=,                CSV delimiter (default: ,)
+    -h, --help                       How to use
+        --version                    Show version
+```
 
 ## Benchmark
 
