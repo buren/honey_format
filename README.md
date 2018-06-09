@@ -81,7 +81,14 @@ Output CSV
 csv_string = "Id, Username\n 1, buren"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.rows.each { |row| row.id = nil }
-csv.to_csv # => "Id, Username\n,buren\n"
+csv.to_csv # => "id,username\n, buren\n"
+```
+
+Output a subset of columns to CSV
+```ruby
+csv_string = "Id, Username, Country\n1,buren,Sweden"
+csv = HoneyFormat::CSV.new(csv_string)
+csv.to_csv(columns: [:id, :country]) # => "id,country\nburen,Sweden\n"
 ```
 
 You can of course set the delimiter
