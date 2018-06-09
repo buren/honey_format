@@ -39,7 +39,7 @@ let(:diabolical_cols) {
 
   describe 'missing header' do
     it 'should fail' do
-      expect { described_class.new('') }.to raise_error(HoneyFormat::MissingCSVHeaderError)
+      expect { described_class.new('') }.to raise_error(HoneyFormat::MissingHeaderError)
     end
   end
 

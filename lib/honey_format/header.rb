@@ -10,15 +10,15 @@ module HoneyFormat
     # @param [Array<String>] header array of strings.
     # @param [Array<Symbol, String>] valid array representing the valid columns, if empty all columns will be considered valid.
     # @param converter [#call] header converter that implements a #call method that takes one column (string) argument.
-    # @raise [MissingCSVHeaderColumnError] raised when header is missing
-    # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
+    # @raise [MissingHeaderColumnError] raised when header is missing
+    # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
     # @example Instantiate a header with a customer converter
     #     converter = ->(col) { col == 'username' ? 'handle' : col }
     #     header = HoneyFormat::Header.new(['name', 'username'], converter: converter)
     #     header.to_a # => ['name', 'handle']
     def initialize(header, valid: [], converter: ConvertHeaderValue)
       if header.nil? || header.empty?
-        raise(MissingCSVHeaderError, "CSV header can't be empty.")
+        raise(MissingHeaderError, "CSV header can't be empty.")
       end
 
       @original_header = header
@@ -102,7 +102,7 @@ module HoneyFormat
       return if valid.include?(column)
 
       err_msg = "column :#{column} not in #{valid.inspect}"
-      raise(UnknownCSVHeaderColumnError, err_msg)
+      raise(UnknownHeaderColumnError, err_msg)
     end
 
     def maybe_raise_missing_column!(column)
@@ -113,7 +113,7 @@ module HoneyFormat
         "When you pass your own converter make sure that it never returns nil or an empty string.",
         'Instead generate unique columns names.'
       ]
-      raise(MissingCSVHeaderColumnError, parts.join(' '))
+      raise(MissingHeaderColumnError, parts.join(' '))
     end
   end
 end

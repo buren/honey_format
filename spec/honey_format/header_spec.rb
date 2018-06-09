@@ -5,19 +5,19 @@ describe HoneyFormat::Header do
     it 'fails when header is nil' do
       expect do
         described_class.new(nil)
-      end.to raise_error(HoneyFormat::MissingCSVHeaderError)
+      end.to raise_error(HoneyFormat::MissingHeaderError)
     end
 
     it 'fails when header is empty' do
       expect do
         described_class.new([])
-      end.to raise_error(HoneyFormat::MissingCSVHeaderError)
+      end.to raise_error(HoneyFormat::MissingHeaderError)
     end
 
     it 'fails when a header column is empty' do
       expect do
         described_class.new(['first', ''], converter: proc { |v| v })
-      end.to raise_error(HoneyFormat::MissingCSVHeaderColumnError)
+      end.to raise_error(HoneyFormat::MissingHeaderColumnError)
      end
 
     it 'generates names for missing/empty header columns' do
@@ -29,7 +29,7 @@ describe HoneyFormat::Header do
       it 'fails when a column is found that is not in valid argument' do
         expect do
           described_class.new(%w[first third], valid: %w[first second])
-        end.to raise_error(HoneyFormat::UnknownCSVHeaderColumnError)
+        end.to raise_error(HoneyFormat::UnknownHeaderColumnError)
       end
 
       it 'does not fail when all columns are valid' do

@@ -9,11 +9,15 @@ module HoneyFormat
     # @return [CSV] a new instance of CSV.
     # @param [String] csv string.
     # @param [Array<Symbol>] valid_columns valid array of symbols representing valid columns if empty all will be considered valid.
-    # @param [Array<String>] header optional argument for CSV header
-    # @param [#call] row_builder will be called for each parsed row
-    # @raise [MissingCSVHeaderError] raised when header is missing (empty or nil).
-    # @raise [MissingCSVHeaderColumnError] raised when header column is missing.
-    # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
+    # @param [Array<String>] header optional argument for CSV header.
+    # @param [#call] row_builder will be called for each parsed row.
+    # @raise [HeaderError] super class of errors raised when there is a CSV header error.
+    # @raise [MissingHeaderError] raised when header is missing (empty or nil).
+    # @raise [MissingHeaderColumnError] raised when header column is missing.
+    # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
+    # @raise [RowError] super class of errors raised when there is a row error.
+    # @raise [EmptyRowColumnsError] raised when row columns are empty.
+    # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
     def initialize(csv, delimiter: ',', header: nil, valid_columns: [], header_converter: ConvertHeaderValue, row_builder: nil)
       csv = ::CSV.parse(csv, col_sep: delimiter)
       header_row = header || csv.shift

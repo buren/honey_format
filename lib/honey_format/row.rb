@@ -7,13 +7,13 @@ module HoneyFormat
     # @return [Row] a new instance of Row.
     # @param [Array] columns an array of symbols.
     # @param builder [#call, #to_csv] optional row builder
-    # @raise [EmptyColumnsError] raised when there are no columns.
+    # @raise [EmptyRowColumnsError] raised when there are no columns.
     # @example Create new row
     #     Row.new!([:id])
     def initialize(columns, builder: nil)
       if columns.empty?
         err_msg = 'Expected array with at least one element, but was empty.'
-        raise(EmptyColumnsError, err_msg)
+        raise(EmptyRowColumnsError, err_msg)
       end
 
       @row_builder = RowBuilder.new(*columns)

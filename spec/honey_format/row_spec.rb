@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe HoneyFormat::Row do
-  let(:invalid_col_klass) { HoneyFormat::EmptyColumnsError }
+  let(:invalid_col_klass) { HoneyFormat::EmptyRowColumnsError }
   let(:invalid_row_length_klass) { HoneyFormat::InvalidRowLengthError }
 
   describe '#initialize' do
