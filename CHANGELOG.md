@@ -1,5 +1,6 @@
-# HEAD
+# v0.11.0
 
+* Add CLI: `honey_format` executable
 * Swap `RowBuilder` <> `Row` class names [[#PR12](https://github.com/buren/honey_format/pull/12)]
 
 # v0.10.0
