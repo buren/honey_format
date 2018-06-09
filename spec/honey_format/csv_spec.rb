@@ -63,13 +63,13 @@ let(:diabolical_cols) {
 
   describe '#header' do
     it 'returns a CSVs header' do
-      result = described_class.new(csv_string).header
-      expect(result).to eq(%w(email ids))
+      result = described_class.new(csv_string).columns
+      expect(result).to eq(%i(email ids))
     end
 
     it 'can validate and return when all headers are valid in valid_columns' do
-      result = described_class.new(csv_string, valid_columns: [:email, :ids]).header
-      expect(result).to eq(%w(email ids))
+      result = described_class.new(csv_string, valid_columns: [:email, :ids]).columns
+      expect(result).to eq(%i(email ids))
     end
   end
 
@@ -108,8 +108,8 @@ let(:diabolical_cols) {
     email; ids
     test@example.com; 42
     CSV
-    result = described_class.new(csv, delimiter: ';').header
-    expect(result).to eq(%w(email ids))
+    result = described_class.new(csv, delimiter: ';').columns
+    expect(result).to eq(%i(email ids))
   end
 
   describe '#to_csv' do

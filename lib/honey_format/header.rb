@@ -21,7 +21,7 @@ module HoneyFormat
         raise(MissingCSVHeaderError, "CSV header can't be empty.")
       end
 
-      @original_header = header.map { |col| col ? col.strip : nil }
+      @original_header = header
       @converter = converter
       @columns = build_columns(@original_header, valid)
     end
