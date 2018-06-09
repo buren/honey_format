@@ -173,10 +173,10 @@ Errors
 begin
   HoneyFormat::CSV.new(csv_string)
 rescue HoneyFormat::HeaderError => e
-  puts 'there is a problem with the header'
+  puts 'there was a problem with the header'
   raise(e)
 rescue HoneyFormat::RowError => e
-  puts 'there is a problem with a row'
+  puts 'there was a problem with a row'
   raise(e)
 end
 ```

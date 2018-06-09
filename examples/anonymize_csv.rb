@@ -10,9 +10,7 @@ puts '== EXAMPLE: Anonymize by removing columns from output =='
 puts
 puts '== CSV START =='
 csv = HoneyFormat::CSV.new(csv_string)
-csv.to_csv(columns: [:age, :country]).tap do |string|
-  puts string
-end
+puts csv.to_csv(columns: %i[age country])
 puts '== CSV END =='
 puts
 puts
@@ -29,7 +27,5 @@ class Anonymizer
   end
 end
 csv = HoneyFormat::CSV.new(csv_string, row_builder: Anonymizer.new)
-csv.to_csv.tap do |string|
-  puts string
-end
+puts csv.to_csv
 puts '== CSV END =='
