@@ -87,17 +87,27 @@ module HoneyFormat
       end
     end
 
+    # Convert the column value
+    # @param [Object] column the CSV header column value
+    # @param [Integer] index the CSV header column index
+    # @return [Object] the converted object
     def convert_column(column, index)
       return @converter.call(column) if converter_arity == 1
       @converter.call(column, index)
     end
 
+    # Returns the converter#call method arity
+    # @return [Integer] the converter#call method arity
     def converter_arity
       # procs and lambdas respond to #arity
       return @converter.arity if @converter.respond_to?(:arity)
       @converter.method(:call).arity
     end
 
+    # Raises an error if header column is unknown
+    # @param [Object] column the CSV header column
+    # @param [Array<Symbol, String>] valid CSV columns
+    # @raise [Errors::UnknownHeaderColumnError]
     def maybe_raise_unknown_column!(column, valid)
       return if valid.empty?
       return if valid.include?(column)
@@ -106,6 +116,9 @@ module HoneyFormat
       raise(Errors::UnknownHeaderColumnError, err_msg)
     end
 
+    # Raises an error if header column is missing/empty
+    # @param [Object] column the CSV header column
+    # @raise [Errors::MissingHeaderColumnError]
     def maybe_raise_missing_column!(column)
       return if column && !column.empty?
 
