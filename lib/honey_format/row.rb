@@ -18,15 +18,22 @@ module HoneyFormat
       attributes = members
       attributes = columns & attributes if columns
 
-      row = attributes.map do |column_name|
-        column = public_send(column_name)
-        next column.to_csv if column.respond_to?(:to_csv)
-        next if column.nil?
-
-        column.to_s
-      end
+      row = attributes.map { |column| to_csv_value(column) }
 
       ::CSV.generate_line(row)
+    end
+
+    private
+
+    # Returns the column in CSV format
+    # @param [Symbol] column name
+    # @return [String] column value as CSV string
+    def to_csv_value(column)
+      value = public_send(column)
+      return if value.nil?
+      return value.to_csv if value.respond_to?(:to_csv)
+
+      value.to_s
     end
   end
 end
