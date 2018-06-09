@@ -44,7 +44,7 @@ module HoneyFormat
     end
 
     # @yield [row] The given block will be passed for every row.
-    # @yieldparam [Row] a colmn in the CSV header.
+    # @yieldparam [Row] a column in the CSV header.
     # @return [Enumerator] If no block is given, an enumerator object will be returned.
     def each_row
       return rows.each unless block_given?
