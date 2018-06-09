@@ -1,3 +1,14 @@
+# HEAD
+
+:warning: This release contains some backwards compatible changes.
+
+* Add support for missing header values [[#PR10](https://github.com/buren/honey_format/pull/10)]
+* Don't mutate original CSV header [[#PR10](https://github.com/buren/honey_format/pull/10)]
+* Output converted columns, instead of original, when `#to_csv` is called [[#PR10](https://github.com/buren/honey_format/pull/10)]
+* Update error class names [[#PR10](https://github.com/buren/honey_format/pull/10)]
+  - There are now two super classes for errors `HeaderError` and `RowError`
+  - All errors are under an `Errors` namespace, which `HoneyFormat` includes
+
 # v0.8.2
 
 * _[Bugfix]_ `#to_csv` now outputs nil values as empty string instead of `""`
