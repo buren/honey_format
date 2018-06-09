@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+# for dev purposes
+require 'bundler/setup' if ENV['HONEY_FORMAT_GEM_DEV']
+require 'honey_format'
+
+input_path = ARGV.first
+
+columns = nil
+output_path = nil
+delimiter = ','
+
+require 'optparse'
+
+OptionParser.new do |parser|
+  parser.banner = "Usage: honey_format [file.csv] [options]"
+  parser.default_argv = ARGV
+
+  parser.on("--csv=input.csv", String, "CSV file") do |value|
+    input_path = value
+  end
+
+  parser.on("--columns=id,name", Array, "Select columns.") do |value|
+    columns = value
+  end
+
+  parser.on("--output=output.csv", String, "CSV output (STDOUT otherwise)") do |value|
+    output_path = value
+  end
+
+  parser.on("--delimiter=,", String, "CSV delimiter (default: ,)") do |value|
+    delimiter = value
+  end
+
+  parser.on("-h", "--help", "How to use") do
+    puts parser
+    exit
+  end
+
+  parser.on_tail('--version', 'Show version') do
+    puts "HoneyFormat version #{HoneyFormat::VERSION}"
+    exit
+  end
+
+  # No argument, shows at tail. This will print an options summary.
+  parser.on_tail("-h", "--help", "Show this message") do
+    puts parser
+    exit
+  end
+end.parse!
+
+csv = HoneyFormat::CSV.new(File.read(input_path), delimiter: delimiter)
+csv_string = csv.to_csv(columns: columns.map(&:to_sym))
+if output_path
+  File.write(output_path, csv_string)
+else
+  puts csv_string
+end
