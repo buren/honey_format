@@ -88,9 +88,9 @@ module HoneyFormat
               end
 
       column = if arity == 2
-                 @converter.call(column.dup, index)
+                 @converter.call(column, index)
                else
-                 @converter.call(column.dup)
+                 @converter.call(column)
                end
 
       column
