@@ -80,20 +80,14 @@ module HoneyFormat
     end
 
     def convert_column(column, index)
+      return @converter.call(column) if converter_arity == 1
+      @converter.call(column, index)
+    end
+
+    def converter_arity
       # procs and lambdas respond to #arity
-      arity = if @converter.respond_to?(:arity)
-                @converter.arity
-              else
-                @converter.method(:call).arity
-              end
-
-      column = if arity == 2
-                 @converter.call(column, index)
-               else
-                 @converter.call(column)
-               end
-
-      column
+      return @converter.arity if @converter.respond_to?(:arity)
+      @converter.method(:call).arity
     end
   end
 end
