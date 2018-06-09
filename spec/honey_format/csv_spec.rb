@@ -116,14 +116,14 @@ let(:diabolical_cols) {
     it 'returns a CSV-string' do
       csv_string = "1,buren"
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
-      expect(csv.to_csv).to eq("Id,Username\n1,buren\n")
+      expect(csv.to_csv).to eq("id,username\n1,buren\n")
     end
 
     it 'returns a valid CSV-string even if values needs special quoting' do
       csv_string = '1,"jacob ""buren"" burenstam"'
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
       expected = <<~CSV
-      Id,Username\n1,"jacob ""buren"" burenstam"
+      id,username\n1,"jacob ""buren"" burenstam"
       CSV
       expect(csv.to_csv).to eq(expected)
     end
@@ -156,7 +156,7 @@ let(:diabolical_cols) {
         header: ['Id', 'Username'],
         row_builder: upcase_builder
       )
-      expect(csv.to_csv).to eq("Id,Username\n1,BUREN\n")
+      expect(csv.to_csv).to eq("id,username\n1,BUREN\n")
     end
   end
 end
