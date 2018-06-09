@@ -50,8 +50,8 @@ module HoneyFormat
 
     # Convert CSV object as CSV-string.
     # @return [String] CSV-string representation.
-    def to_csv
-      @header.to_csv + @rows.to_csv
+    def to_csv(columns: nil)
+      @header.to_csv(columns: columns) + @rows.to_csv(columns: columns)
     end
   end
 end

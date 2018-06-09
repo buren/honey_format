@@ -119,6 +119,12 @@ let(:diabolical_cols) {
       expect(csv.to_csv).to eq("id,username\n1,buren\n")
     end
 
+    it 'returns a CSV-string with selected columns' do
+      csv_string = "1,buren"
+      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      expect(csv.to_csv(columns: [:username])).to eq("username\nburen\n")
+    end
+
     it 'returns a valid CSV-string even if values needs special quoting' do
       csv_string = '1,"jacob ""buren"" burenstam"'
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
