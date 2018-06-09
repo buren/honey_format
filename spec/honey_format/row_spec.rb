@@ -1,14 +1,17 @@
 require 'spec_helper'
 
 describe HoneyFormat::Row do
-  let(:invalid_col_klass) { HoneyFormat::EmptyColumnsError }
-  let(:invalid_row_length_klass) { HoneyFormat::InvalidRowLengthError }
-
   describe '#initialize' do
-    it 'fails when initialized empty array' do
+    it 'fails with HoneyFormat::EmptyRowColumnsError when initialized empty array' do
       expect do
         described_class.new([])
-      end.to raise_error(invalid_col_klass)
+      end.to raise_error(HoneyFormat::EmptyRowColumnsError)
+    end
+
+    it 'fails with HoneyFormat::RowError when initialized empty array' do
+      expect do
+        described_class.new([])
+      end.to raise_error(HoneyFormat::RowError)
     end
   end
 
@@ -49,11 +52,18 @@ describe HoneyFormat::Row do
       expect(result).to eq(expected)
     end
 
-    it 'fails when passed a row longer than specified columns' do
+    it 'fails with HoneyFormat::InvalidRowLengthError when passed a row longer than specified columns' do
       row = described_class.new([:id])
       expect do
         row.build([nil, nil])
-      end.to raise_error(invalid_row_length_klass)
+      end.to raise_error(HoneyFormat::InvalidRowLengthError)
+    end
+
+    it 'fails with HoneyFormat::RowError when passed a row longer than specified columns' do
+      row = described_class.new([:id])
+      expect do
+        row.build([nil, nil])
+      end.to raise_error(HoneyFormat::RowError)
     end
 
     it 'builds when passed a shorter row than specified columns' do

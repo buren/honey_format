@@ -5,7 +5,7 @@ Convert CSV to an array of objects with with ease.
 Perfect for small files of test data or small import scripts.
 
 ```ruby
-csv_string = "Id, Username\n 1, buren"
+csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.header      # => ["Id", "Username"]
 user = csv.rows # => [#<struct id="1", username="buren">]
@@ -38,10 +38,10 @@ $ gem install honey_format
 By default assumes a header in the CSV file.
 
 ```ruby
-csv_string = "Id, Username\n 1, buren"
+csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.header # => ["Id", "Username"]
-csv.column # => [:id, :username]
+csv.columns # => [:id, :username]
 
 rows = csv.rows # => [#<struct id="1", username="buren">]
 user = rows.first
@@ -51,8 +51,8 @@ user.username   # => "buren"
 
 Minimal custom row builder
 ```ruby
-csv_string = "Id, Username\n 1, buren"
-upcaser = ->(row) { row.username.upcase!; row }
+csv_string = "Id,Username\n1,buren"
+upcaser = ->(row) { row.tap { |r| r.username.upcase! } }
 csv = HoneyFormat::CSV.new(csv_string, row_builder: upcaser)
 csv.rows # => [#<struct id="1", username="BUREN">]
 ```
@@ -71,17 +71,24 @@ class Anonymizer
   end
 end
 
-csv_string = "Id, Username\n 1, buren"
+csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string, row_builder: Anonymizer)
 csv.rows # => [#<struct id="1", username="BUREN">]
 ```
 
 Output CSV
 ```ruby
-csv_string = "Id, Username\n 1, buren"
+csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.rows.each { |row| row.id = nil }
-csv.to_csv # => "Id, Username\n,buren\n"
+csv.to_csv # => "id,username\n,buren\n"
+```
+
+Output a subset of columns to CSV
+```ruby
+csv_string = "Id, Username, Country\n1,buren,Sweden"
+csv = HoneyFormat::CSV.new(csv_string)
+csv.to_csv(columns: [:id, :country]) # => "id,country\nburen,Sweden\n"
 ```
 
 You can of course set the delimiter
@@ -91,10 +98,10 @@ HoneyFormat::CSV.new(csv_string, delimiter: ';')
 
 Validate CSV header
 ```ruby
-csv_string = "Id, Username\n 1, buren"
+csv_string = "Id,Username\n1,buren"
 # Invalid
 HoneyFormat::CSV.new(csv_string, valid_columns: [:something, :username])
-# => #<HoneyFormat::MissingCSVHeaderColumnError: key :id ("Id") not in [:something, :username]>
+# => HoneyFormat::UnknownHeaderColumnError (column :id not in [:something, :username])
 
 # Valid
 csv = HoneyFormat::CSV.new(csv_string, valid_columns: [:id, :username])
@@ -103,7 +110,7 @@ csv.rows.first.username # => "buren"
 
 Define header
 ```ruby
-csv_string = "1, buren"
+csv_string = "1,buren"
 csv = HoneyFormat::CSV.new(csv_string, header: ['Id', 'Username'])
 csv.rows.first.username # => "buren"
 ```
@@ -122,6 +129,8 @@ user.åäö
 csv_string = "First^Name\nJacob"
 user = HoneyFormat::CSV.new(csv_string).rows.first
 user.public_send(:"first^name") # => "Jacob"
+# or
+user['first^name'] # => "Jacob"
 ```
 
 Pass your own header converter
@@ -133,6 +142,30 @@ csv_string = "First^Name\nJacob"
 user = HoneyFormat::CSV.new(csv_string, header_converter: converter).rows.first
 user.first_name # => "Jacob"
 ```
+
+Missing header values
+```ruby
+csv_string = "first,,third\nval0,val1,val2"
+csv = HoneyFormat::CSV.new(csv_string)
+user = csv.rows.first
+user.column1 # => "val1"
+```
+
+Errors
+```ruby
+# there are two error super classes
+begin
+  HoneyFormat::CSV.new(csv_string)
+rescue HoneyFormat::HeaderError => e
+  puts 'there is a problem with the header'
+  raise(e)
+rescue HoneyFormat::RowError => e
+  puts 'there is a problem with a row'
+  raise(e)
+end
+```
+
+You can see all [available errors here](https://www.rubydoc.info/gems/honey_format/HoneyFormat/Errors).
 
 If you want to see more usage examples check out the `spec/` directory.
 

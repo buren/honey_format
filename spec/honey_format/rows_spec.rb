@@ -34,6 +34,13 @@ describe HoneyFormat::Rows do
 
       expect(rows.to_csv).to eq("first,thing\nsecond,thing\n")
     end
+
+    it 'returns the rows as a CSV-string with selected columns' do
+      matrix = [%w[name age country], %w[buren 28 Sweden]]
+      rows = described_class.new(matrix, %i[name age country])
+
+      expect(rows.to_csv(columns: %i[country age])).to eq("age,country\n28,Sweden\n")
+    end
   end
 
   describe 'quacks like an Enumerable' do

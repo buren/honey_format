@@ -9,8 +9,11 @@ module HoneyFormat
 
     # Represent row as CSV
     # @return [String] CSV-string representation.
-    def to_csv
-      row = members.map do |column_name|
+    def to_csv(columns: nil)
+      attributes = members
+      attributes = columns & attributes if columns
+
+      row = attributes.map do |column_name|
         column = public_send(column_name)
         next column.to_csv if column.respond_to?(:to_csv)
         next if column.nil?

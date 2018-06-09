@@ -2,29 +2,58 @@ require 'spec_helper'
 
 describe HoneyFormat::Header do
   describe '#initialize' do
-    it 'fails when header is nil' do
+    it 'fails with HoneyFormat::MissingHeaderError when header is nil' do
       expect do
         described_class.new(nil)
-      end.to raise_error(HoneyFormat::MissingCSVHeaderError)
+      end.to raise_error(HoneyFormat::MissingHeaderError)
     end
 
-    it 'fails when header is empty' do
+    it 'fails with HoneyFormat::HeaderError when header is nil' do
+      expect do
+        described_class.new(nil)
+      end.to raise_error(HoneyFormat::HeaderError)
+    end
+
+    it 'fails with HoneyFormat::MissingHeaderError when header is empty' do
       expect do
         described_class.new([])
-      end.to raise_error(HoneyFormat::MissingCSVHeaderError)
+      end.to raise_error(HoneyFormat::MissingHeaderError)
     end
 
-    it 'fails when a header column is empty' do
+    it 'fails with HoneyFormat::HeaderError when header is empty' do
       expect do
-        described_class.new(['first', ''])
-      end.to raise_error(HoneyFormat::MissingCSVHeaderColumnError)
+        described_class.new([])
+      end.to raise_error(HoneyFormat::HeaderError)
+    end
+
+    it 'fails with HoneyFormat::MissingHeaderColumnError when a header column is empty' do
+      expect do
+        described_class.new(['first', ''], converter: proc { |v| v })
+      end.to raise_error(HoneyFormat::MissingHeaderColumnError)
+     end
+
+     it 'fails with HoneyFormat::HeaderError when a header column is empty' do
+       expect do
+         described_class.new(['first', ''], converter: proc { |v| v })
+       end.to raise_error(HoneyFormat::HeaderError)
+      end
+
+    it 'generates names for missing/empty header columns' do
+      header = described_class.new(['first', '', 'third'])
+      expect(header.to_a).to eq([:first, :column1, :third])
     end
 
     context 'when given a valid argument' do
-      it 'fails when a column is found that is not in valid argument' do
+      it 'fails with HoneyFormat::UnknownHeaderColumnError when a column is found that is not in valid argument' do
         expect do
           described_class.new(%w[first third], valid: %w[first second])
-        end.to raise_error(HoneyFormat::UnknownCSVHeaderColumnError)
+        end.to raise_error(HoneyFormat::UnknownHeaderColumnError)
+      end
+
+      it 'fails with HoneyFormat::HeaderError when a column is found that is not in valid argument' do
+        expect do
+          described_class.new(%w[first third], valid: %w[first second])
+        end.to raise_error(HoneyFormat::HeaderError)
       end
 
       it 'does not fail when all columns are valid' do
@@ -67,6 +96,34 @@ describe HoneyFormat::Header do
       header = described_class.new(%w[name email])
 
       expect(header.to_csv).to eq("name,email\n")
+    end
+
+    it 'returns the header as a CSV-string with selected columns' do
+      header = described_class.new(%w[name country age])
+
+      expect(header.to_csv(columns: [:country, :age])).to eq("country,age\n")
+    end
+  end
+
+  one_arity_block = proc { |v| 'c' }
+  two_arity_block = proc { |v, i| "c#{i}" }
+  build_converters = lambda { |block|
+    [proc(&block), lambda(&block), Class.new { define_method(:call, &block) }.new]
+  }
+
+  {
+    1 => build_converters.call(one_arity_block),
+    2 => build_converters.call(two_arity_block),
+  }.each do |arity, converters|
+    converters.each do |converter|
+      describe "when given #{converter.class} converter" do
+        it "calls the method with #{arity} arugment(s)" do
+          header = described_class.new(%w[column0 column1], converter: converter)
+
+          expected = arity == 1 ? %w[c c] : %w[c0 c1]
+          expect(header.to_a).to eq(expected)
+        end
+      end
     end
   end
 end

@@ -8,20 +8,20 @@ module HoneyFormat
     # Instantiate a Header
     # @return [Header] a new instance of Header.
     # @param [Array<String>] header array of strings.
-    # @param [Array<Symbol>] valid array of symbols representing valid columns if empty all columns will be considered valid.
+    # @param [Array<Symbol, String>] valid array representing the valid columns, if empty all columns will be considered valid.
     # @param converter [#call] header converter that implements a #call method that takes one column (string) argument.
-    # @raise [MissingCSVHeaderColumnError] raised when header is missing
-    # @raise [UnknownCSVHeaderColumnError] raised when column is not in valid list.
+    # @raise [MissingHeaderColumnError] raised when header is missing
+    # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
     # @example Instantiate a header with a customer converter
     #     converter = ->(col) { col == 'username' ? 'handle' : col }
     #     header = HoneyFormat::Header.new(['name', 'username'], converter: converter)
     #     header.to_a # => ['name', 'handle']
     def initialize(header, valid: [], converter: ConvertHeaderValue)
       if header.nil? || header.empty?
-        raise(MissingCSVHeaderError, "CSV header can't be empty.")
+        raise(Errors::MissingHeaderError, "CSV header can't be empty.")
       end
 
-      @original_header = header.map { |col| col ? col.strip : nil }
+      @original_header = header
       @converter = converter
       @columns = build_columns(@original_header, valid)
     end
@@ -36,51 +36,84 @@ module HoneyFormat
     # @return [Enumerator]
     #   If no block is given, an enumerator object will be returned.
     def each(&block)
-      @columns.each(&block)
+      columns.each(&block)
+    end
+
+    # Returns columns as array.
+    # @return [Array<Symbol>] of columns.
+    def columns
+      @columns
     end
 
     # Returns columns as array.
     # @return [Array<Symbol>] of columns.
     def to_a
-      @columns
+      columns
     end
 
     # Return the number of header columns
     # @return [Integer] the number of header columns
     def length
-      @columns.length
+      columns.length
     end
     alias_method :size, :length
 
     # Header as CSV-string
     # @return [String] CSV-string representation.
-    def to_csv
-      ::CSV.generate_line(@columns)
+    def to_csv(columns: nil)
+      attributes = if columns
+                     self.columns & columns
+                   else
+                     self.columns
+                   end
+
+      ::CSV.generate_line(attributes)
     end
 
     private
 
     # Convert original header
     # @param [Array<String>] header the original header
-    # @param [Array<Symbol>] valid list of valid column names if empty all are considered valid.
     # @return [Array<String>] converted columns
     def build_columns(header, valid)
       valid = valid.map(&:to_sym)
 
-      header.map do |column|
-        column = @converter.call(column.dup)
-
-        if column.nil? || column.empty?
-          raise(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
+      header.each_with_index.map do |header_column, index|
+        convert_column(header_column, index).tap do |column|
+          maybe_raise_missing_column!(column)
+          maybe_raise_unknown_column!(column, valid)
         end
-
-        if valid.any? && !valid.include?(column)
-          err_msg = "column :#{column} not in #{valid.inspect}"
-          raise(UnknownCSVHeaderColumnError, err_msg)
-        end
-
-        column
       end
+    end
+
+    def convert_column(column, index)
+      return @converter.call(column) if converter_arity == 1
+      @converter.call(column, index)
+    end
+
+    def converter_arity
+      # procs and lambdas respond to #arity
+      return @converter.arity if @converter.respond_to?(:arity)
+      @converter.method(:call).arity
+    end
+
+    def maybe_raise_unknown_column!(column, valid)
+      return if valid.empty?
+      return if valid.include?(column)
+
+      err_msg = "column :#{column} not in #{valid.inspect}"
+      raise(Errors::UnknownHeaderColumnError, err_msg)
+    end
+
+    def maybe_raise_missing_column!(column)
+      return if column && !column.empty?
+
+      parts = [
+        "CSV header column can't be nil or empty!",
+        "When you pass your own converter make sure that it never returns nil or an empty string.",
+        'Instead generate unique columns names.'
+      ]
+      raise(Errors::MissingHeaderColumnError, parts.join(' '))
     end
   end
 end

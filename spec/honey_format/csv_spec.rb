@@ -39,7 +39,7 @@ let(:diabolical_cols) {
 
   describe 'missing header' do
     it 'should fail' do
-      expect { described_class.new('') }.to raise_error(HoneyFormat::MissingCSVHeaderError)
+      expect { described_class.new('') }.to raise_error(HoneyFormat::MissingHeaderError)
     end
   end
 
@@ -63,13 +63,13 @@ let(:diabolical_cols) {
 
   describe '#header' do
     it 'returns a CSVs header' do
-      result = described_class.new(csv_string).header
-      expect(result).to eq(%w(email ids))
+      result = described_class.new(csv_string).columns
+      expect(result).to eq(%i(email ids))
     end
 
     it 'can validate and return when all headers are valid in valid_columns' do
-      result = described_class.new(csv_string, valid_columns: [:email, :ids]).header
-      expect(result).to eq(%w(email ids))
+      result = described_class.new(csv_string, valid_columns: [:email, :ids]).columns
+      expect(result).to eq(%i(email ids))
     end
   end
 
@@ -108,22 +108,28 @@ let(:diabolical_cols) {
     email; ids
     test@example.com; 42
     CSV
-    result = described_class.new(csv, delimiter: ';').header
-    expect(result).to eq(%w(email ids))
+    result = described_class.new(csv, delimiter: ';').columns
+    expect(result).to eq(%i(email ids))
   end
 
   describe '#to_csv' do
     it 'returns a CSV-string' do
       csv_string = "1,buren"
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
-      expect(csv.to_csv).to eq("Id,Username\n1,buren\n")
+      expect(csv.to_csv).to eq("id,username\n1,buren\n")
+    end
+
+    it 'returns a CSV-string with selected columns' do
+      csv_string = "1,buren"
+      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      expect(csv.to_csv(columns: [:username])).to eq("username\nburen\n")
     end
 
     it 'returns a valid CSV-string even if values needs special quoting' do
       csv_string = '1,"jacob ""buren"" burenstam"'
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
       expected = <<~CSV
-      Id,Username\n1,"jacob ""buren"" burenstam"
+      id,username\n1,"jacob ""buren"" burenstam"
       CSV
       expect(csv.to_csv).to eq(expected)
     end
@@ -156,7 +162,7 @@ let(:diabolical_cols) {
         header: ['Id', 'Username'],
         row_builder: upcase_builder
       )
-      expect(csv.to_csv).to eq("Id,Username\n1,BUREN\n")
+      expect(csv.to_csv).to eq("id,username\n1,BUREN\n")
     end
   end
 end

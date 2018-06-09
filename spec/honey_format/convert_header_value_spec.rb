@@ -20,13 +20,21 @@ describe HoneyFormat::ConvertHeaderValue do
     ['   first_name  ', :first_name],
     ['first-name', :first_name],
     ['USeRnaMe', :username],
+    [nil, :column3, 3],
     ruby_version_under_2_4 ? ['ÅÄÖ', :'ÅÄÖ'] : ['ÅÄÖ', :'åäö'],
   ].each do |data|
-    input, expected = data
+    input, expected, index = data
 
     it "converts #{input} to #{expected}" do
-      result = described_class.call(input)
+      result = described_class.call(input, index || 0)
       expect(result).to eq(expected)
     end
+  end
+
+  it 'does not mutate orignal value' do
+    input = 'A'
+    result = described_class.call(input, 0)
+    expect(result).to eq(:a)
+    expect(input).to eq('A')
   end
 end
