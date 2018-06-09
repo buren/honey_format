@@ -63,6 +63,14 @@ let(:diabolical_cols) {
 
   describe '#header' do
     it 'returns a CSVs header' do
+      csv = " ID ,Name"
+      result = described_class.new(csv).header
+      expect(result).to eq([' ID ', 'Name'])
+    end
+  end
+
+  describe '#columns' do
+    it 'returns a CSVs header' do
       result = described_class.new(csv_string).columns
       expect(result).to eq(%i(email ids))
     end

@@ -1,5 +1,5 @@
 require 'set'
-require 'honey_format/row'
+require 'honey_format/row_builder'
 
 module HoneyFormat
   # Represents rows.
@@ -14,7 +14,8 @@ module HoneyFormat
     # @raise [EmptyRowColumnsError] raised when there are no columns.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
     def initialize(rows, columns, builder: nil)
-      @rows = prepare_rows(Row.new(columns, builder: builder), rows)
+      builder = RowBuilder.new(columns, builder: builder)
+      @rows = prepare_rows(builder, rows)
     end
 
     # @yield [row] The given block will be passed for every row.

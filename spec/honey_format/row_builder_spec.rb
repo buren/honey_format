@@ -1,91 +1,87 @@
 require 'spec_helper'
 
-require 'set'
 require 'honey_format/row_builder'
 
 describe HoneyFormat::RowBuilder do
-  describe '::call' do
-    it 'returns an instantiated Struct' do
-      struct = described_class.call(%i[name age])
-      person = struct.new('buren', 28)
+  describe '#initialize' do
+    it 'fails with HoneyFormat::EmptyRowColumnsError when initialized empty array' do
+      expect do
+        described_class.new([])
+      end.to raise_error(HoneyFormat::EmptyRowColumnsError)
+    end
 
-      expect(person.name).to eq('buren')
-      expect(person.age).to eq(28)
+    it 'fails with HoneyFormat::RowError when initialized empty array' do
+      expect do
+        described_class.new([])
+      end.to raise_error(HoneyFormat::RowError)
+    end
+  end
+
+  describe '#build' do
+    it 'calls the injected builder' do
+      expected = 'changed'
+      builder = ->(row) { row.id = expected; row }
+      row = described_class.new(:id, builder: builder)
+      result = row.build('value').id
+      expect(result).to eq(expected)
+    end
+
+    it 'builds struct from single symbol' do
+      expected = 'value'
+      row = described_class.new(:id)
+      result = row.build(expected).id
+      expect(result).to eq(expected)
+    end
+
+    it 'can have spec chars column names' do
+      expected = 'value'
+      row = described_class.new(:ÅÄÖ)
+      result = row.build(expected).ÅÄÖ
+      expect(result).to eq(expected)
+    end
+
+    it 'can have spec chars column names' do
+      expected = 'value'
+      row = described_class.new(:"ids(list of things)")
+      result = row.build(expected).public_send(:"ids(list of things)")
+      expect(result).to eq(expected)
+    end
+
+    it 'builds struct from row array' do
+      expected = 'value'
+      row = described_class.new([:id])
+      result = row.build(expected).id
+      expect(result).to eq(expected)
+    end
+
+    it 'fails with HoneyFormat::InvalidRowLengthError when passed a row longer than specified columns' do
+      row = described_class.new([:id])
+      expect do
+        row.build([nil, nil])
+      end.to raise_error(HoneyFormat::InvalidRowLengthError)
+    end
+
+    it 'fails with HoneyFormat::RowError when passed a row longer than specified columns' do
+      row = described_class.new([:id])
+      expect do
+        row.build([nil, nil])
+      end.to raise_error(HoneyFormat::RowError)
+    end
+
+    it 'builds when passed a shorter row than specified columns' do
+      expected = 'expected'
+      row = described_class.new([:id, :username])
+      expect(row.build([expected]).id).to eq(expected)
+      expect(row.build([expected]).username).to eq(nil)
     end
   end
 
   describe '#to_csv' do
     it 'returns the row as a CSV-string' do
-      struct = described_class.call(%i[name age])
-      person = struct.new('buren', 28)
+      header = described_class.new(%i[col1 col2])
+      columns = %w[first second]
 
-      expect(person.to_csv).to eq("buren,28\n")
-    end
-
-    it 'returns the row as a CSV-string with selected columns' do
-      struct = described_class.call(%i[name age country])
-      person = struct.new('buren', 28, 'Sweden')
-
-      expect(person.to_csv(columns: [:age, :country])).to eq("28,Sweden\n")
-    end
-
-    it 'returns the row as a CSV-string with selected columns (passed as Set object)' do
-      struct = described_class.call(%i[name age country])
-      person = struct.new('buren', 28, 'Sweden')
-
-      columns = Set.new([:age, :country])
-      expect(person.to_csv(columns: columns)).to eq("28,Sweden\n")
-    end
-
-    it 'handles empty cell' do
-      struct = described_class.call(%i[name age])
-      person = struct.new('jacob')
-
-      expect(person.to_csv).to eq("jacob,\n")
-    end
-
-    it 'handles strings containing a CSV-delimiter character' do
-      struct = described_class.call(%i[name age])
-      person = struct.new('jacob,buren', 28)
-
-      expect(person.to_csv).to eq("\"jacob,buren\",28\n")
-    end
-
-    it 'handles strings containing a quote characters' do
-      struct = described_class.call(%i[name age])
-      person = struct.new('jacob "buren" burenstam', 28)
-
-      expect(person.to_csv).to eq("\"jacob \"\"buren\"\" burenstam\",28\n")
-    end
-
-    it 'handles strings containing a quote character' do
-      struct = described_class.call(%i[name age])
-      person = struct.new('jacob buren" burenstam', 28)
-
-      expect(person.to_csv).to eq("\"jacob buren\"\" burenstam\",28\n")
-    end
-
-    it 'handles strings containing a new line character' do
-      struct = described_class.call(%i[name age])
-      person = struct.new("jacob\nburen", 28)
-
-      expect(person.to_csv).to eq("\"jacob\nburen\",28\n")
-    end
-
-    it 'calls #to_csv if supported for each of the members in the Struct' do
-      struct = described_class.call(%i[name age])
-      name_object = Class.new { define_method(:to_csv) { 'buren' } }.new
-      person = struct.new(name_object, 28)
-
-      expect(person.to_csv).to eq("buren,28\n")
-    end
-
-    it 'calls #to_s for each of the members in the Struct if #to_csv is not supported' do
-      struct = described_class.call(%i[name age])
-      name_object = Class.new { define_method(:to_s) { 'buren' } }.new
-      person = struct.new(name_object, 28)
-
-      expect(person.to_csv).to eq("buren,28\n")
+      expect(header.build(columns).to_csv).to eq("first,second\n")
     end
   end
 end

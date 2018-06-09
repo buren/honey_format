@@ -1,49 +1,32 @@
-require 'honey_format/row_builder'
-
 module HoneyFormat
-  # Holds data for a single row.
-  class Row
-    # Returns a new instance of Row.
-    # @return [Row] a new instance of Row.
-    # @param [Array] columns an array of symbols.
-    # @param builder [#call, #to_csv] optional row builder
-    # @raise [RowError] super class of errors raised when there is a row error.
-    # @raise [EmptyRowColumnsError] raised when there are no columns.
-    # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
-    # @example Create new row
-    #     Row.new!([:id])
-    def initialize(columns, builder: nil)
-      if columns.empty?
-        err_msg = 'Expected array with at least one element, but was empty.'
-        raise(Errors::EmptyRowColumnsError, err_msg)
-      end
-
-      @row_builder = RowBuilder.new(*columns)
-      @builder = builder
-      @columns = columns
+  # Default row builder
+  class Row < Struct
+    # Create a row
+    # @return [Struct] returns an instantiated Struct representing a row
+    # @example
+    #   row_klass = Row.new(:id, :username)
+    #   row = row_klass.call('1', 'buren')
+    #   # => #<struct id="1", username="buren">
+    def self.call(row)
+      new(*row)
     end
 
-    # Returns a Struct.
-    # @return [Object] a new instance of built row.
-    # @param row [Array] the row array.
-    # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
-    # @example Build new row
-    #     r = Row.new([:id])
-    #     r.build(['1']).id #=> '1'
-    def build(row)
-      built_row = @row_builder.call(row)
-      return built_row unless @builder
-      @builder.call(built_row)
-    rescue ArgumentError => e
-      raise unless e.message == 'struct size differs'
+    # Represent row as CSV
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
+    # @return [String] CSV-string representation.
+    def to_csv(columns: nil)
+      attributes = members
+      attributes = columns & attributes if columns
 
-      err_msg = [
-        "Row length #{row.length}",
-        "column length #{@columns.length}",
-        "row: #{row.inspect}",
-        "orignal message: '#{e.message}'"
-      ].join(', ')
-      raise(Errors::InvalidRowLengthError, err_msg)
+      row = attributes.map do |column_name|
+        column = public_send(column_name)
+        next column.to_csv if column.respond_to?(:to_csv)
+        next if column.nil?
+
+        column.to_s
+      end
+
+      ::CSV.generate_line(row)
     end
   end
 end
