@@ -42,6 +42,8 @@ module HoneyFormat
     private
 
     # Raises invalid row length error
+    # @param [StandardError] e the raised error
+    # @param [Object] row
     # @raise [Errors::InvalidRowLengthError]
     def raise_invalid_row_length!(e, row)
       err_msg = [
