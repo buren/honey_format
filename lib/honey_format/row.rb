@@ -3,6 +3,10 @@ module HoneyFormat
   class Row < Struct
     # Create a row
     # @return [Struct] returns an instantiated Struct representing a row
+    # @example
+    #   row_klass = Row.new(:id, :username)
+    #   row = row_klass.call('1', 'buren')
+    #   # => #<struct id="1", username="buren">
     def self.call(row)
       new(*row)
     end
