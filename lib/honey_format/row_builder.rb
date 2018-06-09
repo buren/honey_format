@@ -8,6 +8,7 @@ module HoneyFormat
     end
 
     # Represent row as CSV
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
     # @return [String] CSV-string representation.
     def to_csv(columns: nil)
       attributes = members

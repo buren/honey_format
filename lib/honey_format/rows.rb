@@ -35,11 +35,19 @@ module HoneyFormat
     end
     alias_method :size, :length
 
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
+    # @yieldparam [Row] each row - return truthy if you want the row to be included in the output
     # @return [String] CSV-string representation.
-    def to_csv(columns: nil)
+    def to_csv(columns: nil, &block)
       # Convert columns to Set for performance
       columns = Set.new(columns) if columns
-      to_a.map { |row| row.to_csv(columns: columns) }.join
+      csv_rows = []
+      each do |row|
+        if !block || block.call(row)
+          csv_rows << row.to_csv(columns: columns)
+        end
+      end
+      csv_rows.join
     end
 
     private

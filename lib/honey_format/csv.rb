@@ -53,9 +53,11 @@ module HoneyFormat
     end
 
     # Convert CSV object as CSV-string.
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
+    # @yieldparam [Row] each row - return truthy if you want the row to be included in the output
     # @return [String] CSV-string representation.
-    def to_csv(columns: nil)
-      @header.to_csv(columns: columns) + @rows.to_csv(columns: columns)
+    def to_csv(columns: nil, &block)
+      @header.to_csv(columns: columns) + @rows.to_csv(columns: columns, &block)
     end
   end
 end
