@@ -13,7 +13,7 @@ module HoneyFormat
     def initialize(columns, builder: nil)
       if columns.empty?
         err_msg = 'Expected array with at least one element, but was empty.'
-        raise(EmptyRowColumnsError, err_msg)
+        raise(Errors::EmptyRowColumnsError, err_msg)
       end
 
       @row_builder = RowBuilder.new(*columns)
@@ -41,7 +41,7 @@ module HoneyFormat
         "row: #{row.inspect}",
         "orignal message: '#{e.message}'"
       ].join(', ')
-      raise(InvalidRowLengthError, err_msg)
+      raise(Errors::InvalidRowLengthError, err_msg)
     end
   end
 end

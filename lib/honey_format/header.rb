@@ -18,7 +18,7 @@ module HoneyFormat
     #     header.to_a # => ['name', 'handle']
     def initialize(header, valid: [], converter: ConvertHeaderValue)
       if header.nil? || header.empty?
-        raise(MissingHeaderError, "CSV header can't be empty.")
+        raise(Errors::MissingHeaderError, "CSV header can't be empty.")
       end
 
       @original_header = header
@@ -102,7 +102,7 @@ module HoneyFormat
       return if valid.include?(column)
 
       err_msg = "column :#{column} not in #{valid.inspect}"
-      raise(UnknownHeaderColumnError, err_msg)
+      raise(Errors::UnknownHeaderColumnError, err_msg)
     end
 
     def maybe_raise_missing_column!(column)
@@ -113,7 +113,7 @@ module HoneyFormat
         "When you pass your own converter make sure that it never returns nil or an empty string.",
         'Instead generate unique columns names.'
       ]
-      raise(MissingHeaderColumnError, parts.join(' '))
+      raise(Errors::MissingHeaderColumnError, parts.join(' '))
     end
   end
 end

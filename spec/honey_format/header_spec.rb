@@ -2,23 +2,41 @@ require 'spec_helper'
 
 describe HoneyFormat::Header do
   describe '#initialize' do
-    it 'fails when header is nil' do
+    it 'fails with HoneyFormat::MissingHeaderError when header is nil' do
       expect do
         described_class.new(nil)
       end.to raise_error(HoneyFormat::MissingHeaderError)
     end
 
-    it 'fails when header is empty' do
+    it 'fails with HoneyFormat::HeaderError when header is nil' do
+      expect do
+        described_class.new(nil)
+      end.to raise_error(HoneyFormat::HeaderError)
+    end
+
+    it 'fails with HoneyFormat::MissingHeaderError when header is empty' do
       expect do
         described_class.new([])
       end.to raise_error(HoneyFormat::MissingHeaderError)
     end
 
-    it 'fails when a header column is empty' do
+    it 'fails with HoneyFormat::HeaderError when header is empty' do
+      expect do
+        described_class.new([])
+      end.to raise_error(HoneyFormat::HeaderError)
+    end
+
+    it 'fails with HoneyFormat::MissingHeaderColumnError when a header column is empty' do
       expect do
         described_class.new(['first', ''], converter: proc { |v| v })
       end.to raise_error(HoneyFormat::MissingHeaderColumnError)
      end
+
+     it 'fails with HoneyFormat::HeaderError when a header column is empty' do
+       expect do
+         described_class.new(['first', ''], converter: proc { |v| v })
+       end.to raise_error(HoneyFormat::HeaderError)
+      end
 
     it 'generates names for missing/empty header columns' do
       header = described_class.new(['first', '', 'third'])
@@ -26,10 +44,16 @@ describe HoneyFormat::Header do
     end
 
     context 'when given a valid argument' do
-      it 'fails when a column is found that is not in valid argument' do
+      it 'fails with HoneyFormat::UnknownHeaderColumnError when a column is found that is not in valid argument' do
         expect do
           described_class.new(%w[first third], valid: %w[first second])
         end.to raise_error(HoneyFormat::UnknownHeaderColumnError)
+      end
+
+      it 'fails with HoneyFormat::HeaderError when a column is found that is not in valid argument' do
+        expect do
+          described_class.new(%w[first third], valid: %w[first second])
+        end.to raise_error(HoneyFormat::HeaderError)
       end
 
       it 'does not fail when all columns are valid' do
