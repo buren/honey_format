@@ -14,10 +14,9 @@ describe HoneyFormat::Header do
       end.to raise_error(HoneyFormat::MissingCSVHeaderError)
     end
 
-    it 'fails when a header column is empty' do
-      expect do
-        described_class.new(['first', ''])
-      end.to raise_error(HoneyFormat::MissingCSVHeaderColumnError)
+    it 'generates names for missing/empty header columns' do
+      header = described_class.new(['first', '', 'third'])
+      expect(header.to_a).to eq([:first, :column1, :third])
     end
 
     context 'when given a valid argument' do
@@ -67,6 +66,28 @@ describe HoneyFormat::Header do
       header = described_class.new(%w[name email])
 
       expect(header.to_csv).to eq("name,email\n")
+    end
+  end
+
+  one_arity_block = proc { |v| 'c' }
+  two_arity_block = proc { |v, i| "c#{i}" }
+  build_converters = lambda { |block|
+    [proc(&block), lambda(&block), Class.new { define_method(:call, &block) }.new]
+  }
+
+  {
+    1 => build_converters.call(one_arity_block),
+    2 => build_converters.call(two_arity_block),
+  }.each do |arity, converters|
+    converters.each do |converter|
+      describe "when given #{converter.class} converter" do
+        it "calls the method with #{arity} arugment(s)" do
+          header = described_class.new(%w[column0 column1], converter: converter)
+
+          expected = arity == 1 ? %w[c c] : %w[c0 c1]
+          expect(header.to_a).to eq(expected)
+        end
+      end
     end
   end
 end

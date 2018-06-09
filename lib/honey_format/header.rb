@@ -67,12 +67,8 @@ module HoneyFormat
     def build_columns(header, valid)
       valid = valid.map(&:to_sym)
 
-      header.map do |column|
-        column = @converter.call(column.dup)
-
-        if column.nil? || column.empty?
-          raise(MissingCSVHeaderColumnError, "CSV header column can't be empty.")
-        end
+      header.each_with_index.map do |column, index|
+        column = convert_column(column, index)
 
         if valid.any? && !valid.include?(column)
           err_msg = "column :#{column} not in #{valid.inspect}"
@@ -81,6 +77,23 @@ module HoneyFormat
 
         column
       end
+    end
+
+    def convert_column(column, index)
+      # procs and lambdas respond to #arity
+      arity = if @converter.respond_to?(:arity)
+                @converter.arity
+              else
+                @converter.method(:call).arity
+              end
+
+      column = if arity == 2
+                 @converter.call(column.dup, index)
+               else
+                 @converter.call(column.dup)
+               end
+
+      column
     end
   end
 end

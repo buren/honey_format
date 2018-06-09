@@ -134,6 +134,14 @@ user = HoneyFormat::CSV.new(csv_string, header_converter: converter).rows.first
 user.first_name # => "Jacob"
 ```
 
+Missing header values
+```ruby
+csv_string = "first,,third\nval0,val1,val2"
+csv = HoneyFormat::CSV.new(csv_string)
+user = csv.rows.first
+user.column1 # => "val1"
+```
+
 If you want to see more usage examples check out the `spec/` directory.
 
 ## Benchmark
