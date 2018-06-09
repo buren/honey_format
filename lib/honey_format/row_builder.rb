@@ -1,28 +1,49 @@
+require 'honey_format/row'
+
 module HoneyFormat
-  # Default row builder
-  class RowBuilder < Struct
-    # Create a row
-    # @return [Struct] returns an instantiated Struct representing a row
-    def self.call(row)
-      new(*row)
-    end
-
-    # Represent row as CSV
-    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
-    # @return [String] CSV-string representation.
-    def to_csv(columns: nil)
-      attributes = members
-      attributes = columns & attributes if columns
-
-      row = attributes.map do |column_name|
-        column = public_send(column_name)
-        next column.to_csv if column.respond_to?(:to_csv)
-        next if column.nil?
-
-        column.to_s
+  # Holds data for a single row.
+  class RowBuilder
+    # Returns a new instance of RowBuilder.
+    # @return [RowBuilder] a new instance of RowBuilder.
+    # @param [Array<Symbol>] columns an array of symbols.
+    # @param builder [#call, #to_csv] optional row builder
+    # @raise [RowError] super class of errors raised when there is a row error.
+    # @raise [EmptyRowColumnsError] raised when there are no columns.
+    # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
+    # @example Create new row
+    #     RowBuilder.new!([:id])
+    def initialize(columns, builder: nil)
+      if columns.empty?
+        err_msg = 'Expected array with at least one element, but was empty.'
+        raise(Errors::EmptyRowColumnsError, err_msg)
       end
 
-      ::CSV.generate_line(row)
+      @row_klass = Row.new(*columns)
+      @builder = builder
+      @columns = columns
+    end
+
+    # Returns a Struct.
+    # @return [Row, Object] a new instance of built row.
+    # @param row [Array] the row array.
+    # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
+    # @example Build new row
+    #     r = RowBuilder.new([:id])
+    #     r.build(['1']).id #=> '1'
+    def build(row)
+      row = @row_klass.call(row)
+      return row unless @builder
+      @builder.call(row)
+    rescue ArgumentError => e
+      raise unless e.message == 'struct size differs'
+
+      err_msg = [
+        "Row length #{row.length}",
+        "column length #{@columns.length}",
+        "row: #{row.inspect}",
+        "orignal message: '#{e.message}'"
+      ].join(', ')
+      raise(Errors::InvalidRowLengthError, err_msg)
     end
   end
 end
