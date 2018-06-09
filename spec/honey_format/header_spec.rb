@@ -67,6 +67,12 @@ describe HoneyFormat::Header do
 
       expect(header.to_csv).to eq("name,email\n")
     end
+
+    it 'returns the header as a CSV-string with selected columns' do
+      header = described_class.new(%w[name country age])
+
+      expect(header.to_csv(columns: [:country, :age])).to eq("country,age\n")
+    end
   end
 
   one_arity_block = proc { |v| 'c' }

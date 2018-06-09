@@ -54,8 +54,11 @@ module HoneyFormat
 
     # Header as CSV-string
     # @return [String] CSV-string representation.
-    def to_csv
-      ::CSV.generate_line(@columns)
+    def to_csv(columns: nil)
+      attributes = @columns
+      attributes = attributes & columns if columns
+
+      ::CSV.generate_line(attributes)
     end
 
     private
