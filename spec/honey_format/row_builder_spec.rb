@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+require 'set'
 require 'honey_format/row_builder'
 
 describe HoneyFormat::RowBuilder do
@@ -26,6 +27,14 @@ describe HoneyFormat::RowBuilder do
       person = struct.new('buren', 28, 'Sweden')
 
       expect(person.to_csv(columns: [:age, :country])).to eq("28,Sweden\n")
+    end
+
+    it 'returns the row as a CSV-string with selected columns (passed as Set object)' do
+      struct = described_class.call(%i[name age country])
+      person = struct.new('buren', 28, 'Sweden')
+
+      columns = Set.new([:age, :country])
+      expect(person.to_csv(columns: columns)).to eq("28,Sweden\n")
     end
 
     it 'handles empty cell' do

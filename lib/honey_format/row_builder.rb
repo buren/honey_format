@@ -11,7 +11,7 @@ module HoneyFormat
     # @return [String] CSV-string representation.
     def to_csv(columns: nil)
       attributes = members
-      attributes = attributes & columns if columns
+      attributes = columns & attributes if columns
 
       row = attributes.map do |column_name|
         column = public_send(column_name)
