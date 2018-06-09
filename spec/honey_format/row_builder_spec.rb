@@ -21,6 +21,13 @@ describe HoneyFormat::RowBuilder do
       expect(person.to_csv).to eq("buren,28\n")
     end
 
+    it 'returns the row as a CSV-string with selected columns' do
+      struct = described_class.call(%i[name age country])
+      person = struct.new('buren', 28, 'Sweden')
+
+      expect(person.to_csv(columns: [:age, :country])).to eq("28,Sweden\n")
+    end
+
     it 'handles empty cell' do
       struct = described_class.call(%i[name age])
       person = struct.new('jacob')
