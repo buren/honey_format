@@ -21,9 +21,9 @@ module HoneyFormat
     # @example Convert complex header
     #     ConvertHeaderValue.call(" First name (user)") #=> :'first_name(user)'
     def self.call(column, index)
-      column ||= ''
       return :"column#{index}" if column.nil? || column.empty?
 
+      column = column.dup
       column.strip!
       column.downcase!
       REPLACE_MAP.each do |data|

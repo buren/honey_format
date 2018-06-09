@@ -30,4 +30,11 @@ describe HoneyFormat::ConvertHeaderValue do
       expect(result).to eq(expected)
     end
   end
+
+  it 'does not mutate orignal value' do
+    input = 'A'
+    result = described_class.call(input, 0)
+    expect(result).to eq(:a)
+    expect(input).to eq('A')
+  end
 end
