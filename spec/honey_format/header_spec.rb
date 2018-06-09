@@ -14,6 +14,12 @@ describe HoneyFormat::Header do
       end.to raise_error(HoneyFormat::MissingCSVHeaderError)
     end
 
+    it 'fails when a header column is empty' do
+      expect do
+        described_class.new(['first', ''], converter: proc { |v| v })
+      end.to raise_error(HoneyFormat::MissingCSVHeaderColumnError)
+     end
+
     it 'generates names for missing/empty header columns' do
       header = described_class.new(['first', '', 'third'])
       expect(header.to_a).to eq([:first, :column1, :third])
