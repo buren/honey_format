@@ -1,3 +1,4 @@
+require 'set'
 require 'honey_format/row'
 
 module HoneyFormat
@@ -35,8 +36,10 @@ module HoneyFormat
     alias_method :size, :length
 
     # @return [String] CSV-string representation.
-    def to_csv
-      to_a.map(&:to_csv).join
+    def to_csv(columns: nil)
+      # Convert columns to Set for performance
+      columns = Set.new(columns) if columns
+      to_a.map { |row| row.to_csv(columns: columns) }.join
     end
 
     private
