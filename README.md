@@ -64,6 +64,25 @@ user.id         # => "1"
 user.username   # => "buren"
 ```
 
+Type coercions
+```ruby
+csv_string = "Id,Username\n1,buren"
+type_map = { id: :integer }
+csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
+csv.rows.first.id # => 1
+
+# Add your own coercer
+HoneyFormat.configure do |config|
+  config.coercer.register :upcased, proc { |v| v.upcase }
+end
+
+type_map = { username: :upcased }
+csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
+csv.rows.first.username # => "BUREN"
+```
+
+See [`ValueCoercer::DEFAULT_COERCERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/value_coercer.rb) for a complete list of the default ones.
+
 Minimal custom row builder
 ```ruby
 csv_string = "Id,Username\n1,buren"
@@ -72,7 +91,7 @@ csv = HoneyFormat::CSV.new(csv_string, row_builder: upcaser)
 csv.rows # => [#<struct id="1", username="BUREN">]
 ```
 
-Complete custom row builder
+As long as the row builder responds to `#call` you can pass anything you like
 ```ruby
 class Anonymizer
   def self.call(row)
@@ -205,6 +224,7 @@ Usage: honey_format [file.csv] [options]
         --version                    Show version
 ```
 
+
 ## Benchmark
 
 _Note_: This gem, adds some overhead to parsing a CSV string, typically ~5-10%. I've included some benchmarks below, your mileage may vary..
@@ -212,21 +232,29 @@ _Note_: This gem, adds some overhead to parsing a CSV string, typically ~5-10%. 
 You can run the benchmarks yourself:
 
 ```
-$ bin/benchmark file.csv
+Usage: bin/benchmark [file.csv] [options]
+        --csv=[file1.csv]            CSV file(s)
+        --[no-]verbose               Verbose output
+        --lines-multipliers=[1,2,10] Multiply the rows in the CSV file (default: 1)
+        --time=[30]                  Benchmark time (default: 30)
+        --warmup=[30]                Benchmark warmup (default: 30)
+    -h, --help                       How to use
 ```
 
 204KB (1k lines)
 
 ```
-      stdlib CSV:       51.9 i/s
-HoneyFormat::CSV:       49.6 i/s - 1.05x  slower
+ CSV no options:       51.0 i/s
+ CSV with header:      36.1 i/s - 1.41x  slower
+HoneyFormat::CSV:      48.7 i/s - 1.05x  slower
 ```
 
 2MB (10k lines)
 
 ```
-      stdlib CSV:        4.6 i/s
-HoneyFormat::CSV:        4.2 i/s - 1.08x  slower
+  CSV no options:        5.1 i/s
+ CSV with header:        3.6 i/s - 1.42x  slower
+HoneyFormat::CSV:        4.9 i/s - 1.05x  slower
 ```
 
 
