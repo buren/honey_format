@@ -4,16 +4,72 @@ require 'honey_format'
 
 require 'benchmark/ips'
 require 'csv'
+require 'optparse'
 
-path = ARGV.first || fail(ArgumentError, '<path_to_csv> argument must be provided')
-csv = File.read(path)
+input_path = nil
+benchmark_time = 30
+benchmark_warmup = 5
+lines_multipliers = [1]
 
-Benchmark.ips do |x|
-  x.time = 30
-  x.warmup = 5
+OptionParser.new do |parser|
+  parser.banner = "Usage: bin/benchmark [file.csv] [options]"
+  parser.default_argv = ARGV
 
-  x.report('stdlib CSV')       { CSV.parse(csv) }
-  x.report('HoneyFormat::CSV') { HoneyFormat::CSV.new(csv).rows }
+  parser.on("--csv=file1.csv", String, "CSV file(s)") do |value|
+    input_path = value
+  end
 
-  x.compare!
+  parser.on("--lines-multipliers=[1,10,50]", Array, "Multiply the rows in the CSV file (default: 1)") do |value|
+    lines_multipliers = value.map do |v|
+      Integer(v).tap do |int|
+        unless int >= 1
+          raise(ArgumentError, '--lines-multiplier must be 1 or greater')
+        end
+      end
+    end
+  end
+
+  parser.on("--time=[30]", String, "Benchmark time (default: 30)") do |value|
+    benchmark_time = Integer(value)
+  end
+
+  parser.on("--warmup=[30]", String, "Benchmark warmup (default: 30)") do |value|
+    benchmark_warmup = Integer(value)
+  end
+
+  parser.on("-h", "--help", "How to use") do
+    puts parser
+    exit
+  end
+
+  # No argument, shows at tail. This will print an options summary.
+  parser.on_tail("-h", "--help", "Show this message") do
+    puts parser
+    exit
+  end
+end.parse!
+
+csv = File.read(input_path)
+
+lines_multipliers.each do |lines_multiplier|
+  if lines_multiplier > 1
+    orignial_csv_lines = csv.lines
+    rows = orignial_csv_lines[1..-1] * lines_multiplier
+    csv = orignial_csv_lines.first + rows.join
+  end
+
+  line_count = csv.lines.length
+
+  puts "== [START] Benchmark for #{line_count} lines =="
+  Benchmark.ips do |x|
+    x.time = benchmark_time
+    x.warmup = benchmark_warmup
+
+    x.report('stdlib CSV no options')  { CSV.parse(csv) }
+    x.report('stdlib CSV with header') { CSV.parse(csv, headers: true) }
+    x.report('HoneyFormat::CSV')       { HoneyFormat::CSV.new(csv).rows }
+
+    x.compare!
+  end
+  puts "== [END] Benchmark for #{line_count} lines =="
 end
