@@ -4,9 +4,7 @@ require 'honey_format'
 
 require 'benchmark/ips'
 require 'csv'
-require 'optparse'
 
-require 'honey_format/cli/result_writer'
 require 'honey_format/cli/benchmark_cli'
 
 cli = HoneyFormat::CLI::BenchmarkCLI.new

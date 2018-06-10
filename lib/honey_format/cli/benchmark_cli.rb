@@ -1,3 +1,6 @@
+require 'optparse'
+require 'honey_format/cli/result_writer'
+
 module HoneyFormat
   module CLI
     class BenchmarkCLI
