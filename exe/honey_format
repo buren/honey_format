@@ -60,7 +60,7 @@ if header_only
   exit
 end
 
-csv_string = csv.to_csv(columns: columns.map(&:to_sym))
+csv_string = csv.to_csv(columns: columns&.map(&:to_sym))
 if output_path
   File.write(output_path, csv_string)
 else
