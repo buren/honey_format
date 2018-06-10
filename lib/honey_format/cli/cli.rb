@@ -24,15 +24,7 @@ module HoneyFormat
           input_path = value
         end
 
-        parser.on("--[no-]header-only", "Print only the header") do |value|
-          header_only = value
-        end
-
-        parser.on("--[no-]rows-only", "Print only the rows") do |value|
-          rows_only = value
-        end
-
-        parser.on("--columns=id,name", Array, "Select columns.") do |value|
+        parser.on("--columns=id,name", Array, "Select columns") do |value|
           columns = value&.map(&:to_sym)
         end
 
@@ -42,6 +34,14 @@ module HoneyFormat
 
         parser.on("--delimiter=,", String, "CSV delimiter (default: ,)") do |value|
           delimiter = value
+        end
+
+        parser.on("--[no-]header-only", "Print only the header") do |value|
+          header_only = value
+        end
+
+        parser.on("--[no-]rows-only", "Print only the rows") do |value|
+          rows_only = value
         end
 
         parser.on("-h", "--help", "How to use") do
