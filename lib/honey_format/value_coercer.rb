@@ -6,11 +6,21 @@ module HoneyFormat
   class ValueCoercer
     def initialize
       @coercers = {
-        decimal: proc { |v| Float(v) },
-        integer: proc { |v| Integer(v) },
-        date: proc { |v| Date.parse(v) },
-        datetime: proc { |v| Time.parse(v) },
+        # strict variants
+        decimal!: proc { |v| Float(v) },
+        integer!: proc { |v| Integer(v) },
+        date!: proc { |v| Date.parse(v) },
+        datetime!: proc { |v| Time.parse(v) },
+        # safe variants
+        decimal: proc { |v| Float(v) rescue nil },
+        integer: proc { |v| Integer(v) rescue nil },
+        date: proc { |v| Date.parse(v) rescue nil },
+        datetime: proc { |v| Time.parse(v) rescue nil },
       }
+    end
+
+    def types
+      @coercers.keys
     end
 
     # Register a value coercer

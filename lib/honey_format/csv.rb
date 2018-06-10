@@ -14,6 +14,7 @@ module HoneyFormat
     # @param [Array<Symbol>] valid_columns array of symbols representing valid columns, if empty all will be considered valid.
     # @param [#call] header_converter converts header columns.
     # @param [#call] row_builder will be called for each parsed row.
+    # @param type_map [Hash] map of column_name => type conversion to perform.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderError] raised when header is missing (empty or nil).
     # @raise [MissingHeaderColumnError] raised when header column is missing.
@@ -21,11 +22,19 @@ module HoneyFormat
     # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when row columns are empty.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
-    def initialize(csv, delimiter: ',', header: nil, valid_columns: [], header_converter: ConvertHeaderValue, row_builder: nil)
+    def initialize(
+      csv,
+      delimiter: ',',
+      header: nil,
+      valid_columns: [],
+      header_converter: ConvertHeaderValue,
+      row_builder: nil,
+      type_map: {}
+    )
       csv = ::CSV.parse(csv, col_sep: delimiter)
       header_row = header || csv.shift
       @header = Header.new(header_row, valid: valid_columns, converter: header_converter)
-      @rows = Rows.new(csv, columns, builder: row_builder)
+      @rows = Rows.new(csv, columns, builder: row_builder, type_map: type_map)
     end
 
     # Original CSV header

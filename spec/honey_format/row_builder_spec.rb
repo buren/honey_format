@@ -33,6 +33,12 @@ describe HoneyFormat::RowBuilder do
       expect(result).to eq(expected)
     end
 
+    it 'builds struct from single symbol' do
+      row = described_class.new(:id, type_map: { id: :integer })
+      result = row.build(['1']).id
+      expect(result).to eq(1)
+    end
+
     it 'can have spec chars column names' do
       expected = 'value'
       row = described_class.new(:ÅÄÖ)
