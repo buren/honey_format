@@ -4,19 +4,21 @@ require "set"
 
 module HoneyFormat
   class ValueCoercer
+    DEFAULT_COERCERS = {
+      # strict variants
+      decimal!: proc { |v| Float(v) },
+      integer!: proc { |v| Integer(v) },
+      date!: proc { |v| Date.parse(v) },
+      datetime!: proc { |v| Time.parse(v) },
+      # safe variants
+      decimal: proc { |v| Float(v) rescue nil },
+      integer: proc { |v| Integer(v) rescue nil },
+      date: proc { |v| Date.parse(v) rescue nil },
+      datetime: proc { |v| Time.parse(v) rescue nil },
+    }.freeze
+
     def initialize
-      @coercers = {
-        # strict variants
-        decimal!: proc { |v| Float(v) },
-        integer!: proc { |v| Integer(v) },
-        date!: proc { |v| Date.parse(v) },
-        datetime!: proc { |v| Time.parse(v) },
-        # safe variants
-        decimal: proc { |v| Float(v) rescue nil },
-        integer: proc { |v| Integer(v) rescue nil },
-        date: proc { |v| Date.parse(v) rescue nil },
-        datetime: proc { |v| Time.parse(v) rescue nil },
-      }
+      @coercers = DEFAULT_COERCERS.dup
     end
 
     def types
