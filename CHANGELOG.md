@@ -1,3 +1,8 @@
+# v0.12.0
+
+* Add `--[no-]only-header` option to CLI
+* _[Bugfix]_: Handle missing --columns argument in CLI
+
 # v0.11.0
 
 * Add CLI: `honey_format` executable
