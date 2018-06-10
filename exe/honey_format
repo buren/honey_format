@@ -4,65 +4,26 @@
 require 'bundler/setup' if ENV['HONEY_FORMAT_GEM_DEV']
 require 'honey_format'
 
-input_path = ARGV.first
+require 'honey_format/cli/cli'
 
-columns = nil
-output_path = nil
-delimiter = ','
-header_only = false
+cli = HoneyFormat::CLI.new
+options = cli.options
 
-require 'optparse'
+input_path = options[:input_path] || raise(ArgumentError, 'input path required')
+csv_input = File.read(input_path)
+csv = HoneyFormat::CSV.new(csv_input, delimiter: options[:delimiter])
 
-OptionParser.new do |parser|
-  parser.banner = "Usage: honey_format [file.csv] [options]"
-  parser.default_argv = ARGV
+csv_part = if options[:header_only]
+             csv.header
+           elsif options[:rows_only]
+             csv.rows
+           else
+             csv
+           end
 
-  parser.on("--csv=input.csv", String, "CSV file") do |value|
-    input_path = value
-  end
-
-  parser.on("--[no-]only-header=[output.csv]", "Print only the header") do |value|
-    header_only = value
-  end
-
-  parser.on("--columns=id,name", Array, "Select columns.") do |value|
-    columns = value
-  end
-
-  parser.on("--output=output.csv", String, "CSV output (STDOUT otherwise)") do |value|
-    output_path = value
-  end
-
-  parser.on("--delimiter=,", String, "CSV delimiter (default: ,)") do |value|
-    delimiter = value
-  end
-
-  parser.on("-h", "--help", "How to use") do
-    puts parser
-    exit
-  end
-
-  parser.on_tail('--version', 'Show version') do
-    puts "HoneyFormat version #{HoneyFormat::VERSION}"
-    exit
-  end
-
-  # No argument, shows at tail. This will print an options summary.
-  parser.on_tail("-h", "--help", "Show this message") do
-    puts parser
-    exit
-  end
-end.parse!
-
-csv = HoneyFormat::CSV.new(File.read(input_path), delimiter: delimiter)
-if header_only
-  puts csv.columns.join(',')
-  exit
-end
-
-csv_string = csv.to_csv(columns: columns&.map(&:to_sym))
-if output_path
-  File.write(output_path, csv_string)
+csv_string = csv_part.to_csv(columns: options[:columns])
+if path = options[:output_path]
+  File.write(path, csv_string)
 else
   puts csv_string
 end
