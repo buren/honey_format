@@ -9,6 +9,7 @@ input_path = ARGV.first
 columns = nil
 output_path = nil
 delimiter = ','
+header_only = false
 
 require 'optparse'
 
@@ -18,6 +19,10 @@ OptionParser.new do |parser|
 
   parser.on("--csv=input.csv", String, "CSV file") do |value|
     input_path = value
+  end
+
+  parser.on("--[no-]only-header=[output.csv]", "Print only the header") do |value|
+    header_only = value
   end
 
   parser.on("--columns=id,name", Array, "Select columns.") do |value|
@@ -50,6 +55,11 @@ OptionParser.new do |parser|
 end.parse!
 
 csv = HoneyFormat::CSV.new(File.read(input_path), delimiter: delimiter)
+if header_only
+  puts csv.columns.join(',')
+  exit
+end
+
 csv_string = csv.to_csv(columns: columns.map(&:to_sym))
 if output_path
   File.write(output_path, csv_string)
