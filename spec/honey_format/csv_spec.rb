@@ -62,10 +62,10 @@ let(:diabolical_cols) {
   end
 
   describe '#header' do
-    it 'returns a CSVs header' do
+    it 'returns an instance of Header' do
       csv = " ID ,Name"
       result = described_class.new(csv).header
-      expect(result).to eq([' ID ', 'Name'])
+      expect(result).to be_a(HoneyFormat::Header)
     end
   end
 

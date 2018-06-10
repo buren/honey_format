@@ -29,9 +29,9 @@ module HoneyFormat
     end
 
     # Original CSV header
-    # @return [Array<String>] of strings for sanitized header.
+    # @return [Header] object representing the CSV header.
     def header
-      @header.original
+      @header
     end
 
     # CSV columns converted from the original CSV header
