@@ -19,7 +19,7 @@ See [examples/](https://github.com/buren/honey_format/tree/master/examples) for 
 ```ruby
 csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string)
-csv.header      # => ["Id", "Username"]
+csv.columns     # => [:id, :username]
 user = csv.rows # => [#<struct id="1", username="buren">]
 user.id         # => "1"
 user.username   # => "buren"
@@ -50,9 +50,14 @@ By default assumes a header in the CSV file.
 ```ruby
 csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string)
-csv.header # => ["Id", "Username"]
-csv.columns # => [:id, :username]
 
+# Header
+header = csv.header
+header.original # => ["Id", "Username"]
+header.columns # => [:id, :username]
+
+
+# Rows
 rows = csv.rows # => [#<struct id="1", username="buren">]
 user = rows.first
 user.id         # => "1"
@@ -191,6 +196,8 @@ If you want to see more usage examples check out the `spec/` directory.
 ```
 Usage: honey_format [file.csv] [options]
         --csv=input.csv              CSV file
+        --[no-]header-only           Print only the header
+        --[no-]rows-only             Print only the rows
         --columns=id,name            Select columns.
         --output=output.csv          CSV output (STDOUT otherwise)
         --delimiter=,                CSV delimiter (default: ,)
@@ -200,7 +207,7 @@ Usage: honey_format [file.csv] [options]
 
 ## Benchmark
 
-_Note_: This gem, adds some overhead to parsing a CSV string. I've included some benchmarks below, your mileage may vary..
+_Note_: This gem, adds some overhead to parsing a CSV string, typically ~5-10%. I've included some benchmarks below, your mileage may vary..
 
 You can run the benchmarks yourself:
 

@@ -1,3 +1,11 @@
+# HEAD
+
+:warning: This release contains some backwards compatible changes.
+
+* `CSV#header` no returns an instance of `Header` instead of an array of the original header columns
+* Add `--[no-]rows-only` CLI option
+* Rename `--[no-]only-header` CLI option to `--[no-]header-only`
+
 # v0.12.0
 
 * Add `--[no-]only-header` option to CLI
