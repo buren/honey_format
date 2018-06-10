@@ -6,6 +6,7 @@ require 'honey_format/header'
 module HoneyFormat
   # Represents CSV.
   class CSV
+    # Instantiate CSV.
     # @return [CSV] a new instance of CSV.
     # @param [String] csv the CSV string
     # @param [String] delimiter the CSV delimiter
