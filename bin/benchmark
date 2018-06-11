@@ -7,7 +7,7 @@ require 'csv'
 
 require 'honey_format/cli/benchmark_cli'
 
-cli = HoneyFormat::CLI::BenchmarkCLI.new
+cli = HoneyFormat::BenchmarkCLI.new
 Writer = cli.writer
 options = cli.options
 
