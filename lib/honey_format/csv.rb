@@ -101,6 +101,7 @@ module HoneyFormat
     # @example with both selected columns and rows
     #   csv.to_csv(columns: [:id, :country]) { |row| row.country == 'Sweden' }
     def to_csv(columns: nil, &block)
+      columns = columns&.map(&:to_sym)
       @header.to_csv(columns: columns) + @rows.to_csv(columns: columns, &block)
     end
   end

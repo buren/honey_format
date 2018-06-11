@@ -149,10 +149,16 @@ let(:diabolical_cols) {
       expect(csv.to_csv).to eq("id,username\n1,buren\n")
     end
 
-    it 'returns a CSV-string with selected columns' do
+    it 'returns a CSV-string with selected columns as symbols' do
       csv_string = "1,buren"
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
       expect(csv.to_csv(columns: [:username])).to eq("username\nburen\n")
+    end
+
+    it 'returns a CSV-string with selected columns as strings' do
+      csv_string = "1,buren"
+      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      expect(csv.to_csv(columns: ['username'])).to eq("username\nburen\n")
     end
 
     it 'returns a CSV-string with selected rows' do

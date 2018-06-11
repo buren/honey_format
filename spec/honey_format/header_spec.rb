@@ -98,10 +98,16 @@ describe HoneyFormat::Header do
       expect(header.to_csv).to eq("name,email\n")
     end
 
-    it 'returns the header as a CSV-string with selected columns' do
+    it 'returns the header as a CSV-string with selected columns as symbols' do
       header = described_class.new(%w[name country age])
 
-      expect(header.to_csv(columns: [:country, :age])).to eq("country,age\n")
+      expect(header.to_csv(columns: %i[country age])).to eq("country,age\n")
+    end
+
+    it 'returns the header as a CSV-string with selected columns as strings' do
+      header = described_class.new(%w[name country age])
+
+      expect(header.to_csv(columns: %w[country age])).to eq("country,age\n")
     end
   end
 

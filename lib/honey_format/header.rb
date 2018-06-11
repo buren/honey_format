@@ -63,7 +63,7 @@ module HoneyFormat
     # @return [String] CSV-string representation.
     def to_csv(columns: nil)
       attributes = if columns
-                     self.columns & columns
+                     self.columns & columns.map(&:to_sym)
                    else
                      self.columns
                    end
