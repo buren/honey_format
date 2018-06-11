@@ -4,11 +4,11 @@ require 'honey_format/value_coercer'
 
 RSpec.describe HoneyFormat::ValueCoercer do
   describe "#register" do
-    it 'raises ArgumentError when trying to register duplicated type' do
+    it 'raises Errors::ValueTypeExistsError when trying to register duplicated type' do
       value_coercer = described_class.new
       expect do
         value_coercer.register(:datetime!, proc {})
-      end.to raise_error(ArgumentError)
+      end.to raise_error(HoneyFormat::Errors::ValueTypeExistsError)
     end
   end
 

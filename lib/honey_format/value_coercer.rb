@@ -29,7 +29,7 @@ module HoneyFormat
     # @param [Symbol, String] type the name of the type
     # @param [#call] coercer that responds to #call
     # @return [ValueCoercer] returns self
-    # @raise [ArgumentError] if type is already registered
+    # @raise [ValueTypeExistsError] if type is already registered
     def register(type, coercer)
       self[type] = coercer
       self
@@ -46,12 +46,12 @@ module HoneyFormat
     # @param [Symbol, String] type the name of the type
     # @param [#call] coercer that responds to #call
     # @return [Object] returns the coercer
-    # @raise [ArgumentError] if type is already registered
+    # @raise [ValueTypeExistsError] if type is already registered
     def []=(type, coercer)
       type = type.to_sym
 
       if type?(type)
-        raise(ArgumentError, "type '#{type}' already exists")
+        raise(Errors::ValueTypeExistsError, "type '#{type}' already exists")
       end
 
       @coercers[type] = coercer
@@ -59,10 +59,10 @@ module HoneyFormat
 
     # @param [Symbol, String] type the name of the type
     # @return [Object] returns the coercer
-    # @raise [ArgumentError] if type does not exist
+    # @raise [UnknownValueTypeError] if type does not exist
     def [](type)
       @coercers.fetch(type.to_sym) do
-        raise(ArgumentError, "unknown type '#{type}'")
+        raise(Errors::UnknownValueTypeError, "unknown type '#{type}'")
       end
     end
 
