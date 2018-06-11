@@ -44,7 +44,7 @@ module HoneyFormat
     # Instantiate configuration
     def initialize
       @converter = ValueConverter.new
-      @header_converter = ConvertHeaderValue
+      @header_converter = @converter[:header_column]
     end
 
     # Set the header converter

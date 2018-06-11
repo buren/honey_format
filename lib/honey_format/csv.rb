@@ -47,7 +47,7 @@ module HoneyFormat
       quote_character: '"',
       header: nil,
       valid_columns: [],
-      header_converter: ConvertHeaderValue,
+      header_converter: HoneyFormat.header_converter,
       row_builder: nil,
       type_map: {}
     )

@@ -1,6 +1,8 @@
-require "date"
-require "time"
-require "set"
+require 'date'
+require 'time'
+require 'set'
+
+require 'honey_format/convert_header_value'
 
 module HoneyFormat
   # Converts values
@@ -24,6 +26,7 @@ module HoneyFormat
       downcase: proc { |v| v&.downcase },
       upcase: proc { |v| v&.upcase },
       nil: proc {},
+      header_column: ConvertHeaderValue,
     }.freeze
 
     # Instantiate a value converter

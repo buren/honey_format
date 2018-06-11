@@ -17,6 +17,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       expected = %i[
         decimal! integer! date! datetime! symbol! downcase! upcase!
         decimal integer date datetime symbol downcase upcase nil
+        header_column
       ]
       expect(described_class.new.types).to eq(expected)
     end
