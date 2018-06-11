@@ -1,13 +1,18 @@
 require 'optparse'
 
 module HoneyFormat
+  # Main CLI
   class CLI
     attr_reader :options
 
+    # Instantiate the CLI
     def initialize
       @options = parse_options(argv: ARGV)
     end
 
+    # Parse command line arguments and return options
+    # @param [Array<String>] argv the command lines arguments
+    # @return [Hash] the command line options
     def parse_options(argv:)
       input_path = argv.first
       columns = nil

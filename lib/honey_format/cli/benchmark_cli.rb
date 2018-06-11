@@ -3,12 +3,16 @@ require 'honey_format/cli/result_writer'
 
 module HoneyFormat
   module CLI
+    # Benchmark CLI
     class BenchmarkCLI
+      # CSV default test data location
       CSV_TEST_DATA_URL = 'https://gist.github.com/buren/b669dd82fa37e37672da2cab33c8a830/raw/54ba14a698941ff61f3b854b66df0a7782c79c85/csv_1000_rows.csv'
+      # CSV default test data cache location
       CSV_TEST_DATA_CACHE_PATH = '/tmp/honey-format-benchmark-test.csv'
 
       attr_reader :writer, :options
 
+      # Instantiate the CLI
       def initialize(writer: CLI::ResultWriter.new)
         @used_input_path = nil
         @writer = writer
@@ -16,6 +20,9 @@ module HoneyFormat
         writer.verbose = true if @options[:verbose]
       end
 
+      # Returns the expected runtime in seconds
+      # report_count [Integer] number of reports in benchmark
+      # @return [Integer] expected runtime in seconds
       def expected_runtime_seconds(report_count:)
         runs = report_count * options[:lines_multipliers].length
         warmup_time_seconds = runs * options[:benchmark_warmup]
@@ -24,10 +31,13 @@ module HoneyFormat
         warmup_time_seconds + bench_time_seconds
       end
 
+      # Return the input path used for the benchmark
+      # @return [String] the input path (URL or filepath)
       def used_input_path
         options[:input_path] || @used_input_path
       end
 
+      # Download or fetch the default benchmark file from cache
       def fetch_default_benchmark_csv
         cache_path = CSV_TEST_DATA_CACHE_PATH
 
@@ -47,6 +57,9 @@ module HoneyFormat
         end
       end
 
+      # Parse command line arguments and return options
+      # @param [Array<String>] argv the command lines arguments
+      # @return [Hash] the command line options
       def parse_options(argv:)
         input_path = nil
         benchmark_time = 30

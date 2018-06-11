@@ -3,7 +3,9 @@ require "time"
 require "set"
 
 module HoneyFormat
+  # Converts values
   class ValueConverter
+    # Default value converters
     DEFAULT_CONVERTERS = {
       # strict variants
       decimal!: proc { |v| Float(v) },
@@ -17,10 +19,13 @@ module HoneyFormat
       datetime: proc { |v| Time.parse(v) rescue nil },
     }.freeze
 
+    # Instantiate a value converter
     def initialize
       @converters = DEFAULT_CONVERTERS.dup
     end
 
+    # Returns list of registered types
+    # @return [Array<Symbol>] list of registered types
     def types
       @converters.keys
     end

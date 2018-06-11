@@ -9,16 +9,22 @@ module HoneyFormat
   # CSV alias
   HoneyCSV = CSV
 
+  # Configure HoneyFormat
+  # @yield [configuration] the configuration
+  # @yieldparam [Configuration] current configuration
+  # @return [Configuration] current configuration
   def self.configure
     @configuration ||= Configuration.new
     yield(@configuration) if block_given?
     @configuration
   end
 
+  # @return [Configuration] current configuration
   def self.config
     configure
   end
 
+  # Holds HoneyFormat configuration
   class Configuration
     attr_reader :converter
 
