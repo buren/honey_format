@@ -202,6 +202,17 @@ Set default header converter
 HoneyFormat.configure do |config|
   config.header_converter = proc { |v| v.downcase }
 end
+
+# you can get the default one with
+header_converter = HoneyFormat.value_converter[:header_column]
+header_converter.call('First name') # => "first_name"
+```
+
+Use any value converter as the header converter
+```ruby
+csv_string = "Id,Username\n1,buren"
+csv = HoneyFormat::CSV.new(csv_string, header_converter: :upcase)
+csv.columns # => [:ID, :USERNAME]
 ```
 
 Validate CSV header

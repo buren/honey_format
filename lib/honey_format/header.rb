@@ -11,7 +11,7 @@ module HoneyFormat
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
-    # @example Instantiate a header with a customer converter
+    # @example Instantiate a header with a custom converter
     #     converter = ->(col) { col == 'username' ? 'handle' : col }
     #     header = HoneyFormat::Header.new(['name', 'username'], converter: converter)
     #     header.to_a # => ['name', 'handle']
@@ -21,7 +21,12 @@ module HoneyFormat
       end
 
       @original_header = header
-      @converter = converter
+      @converter = if converter.is_a?(Symbol)
+                     HoneyFormat.value_converter[converter]
+                   else
+                     converter
+                   end
+
       @columns = build_columns(@original_header, valid)
     end
 
