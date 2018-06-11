@@ -2,7 +2,7 @@ require 'date'
 require 'time'
 require 'set'
 
-require 'honey_format/convert_header_value'
+require 'honey_format/header_column_converter'
 
 module HoneyFormat
   # Converts values
@@ -26,7 +26,7 @@ module HoneyFormat
       downcase: proc { |v| v&.downcase },
       upcase: proc { |v| v&.upcase },
       nil: proc {},
-      header_column: ConvertHeaderValue,
+      header_column: HeaderColumnConverter,
     }.freeze
 
     # Instantiate a value converter

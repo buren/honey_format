@@ -1,6 +1,6 @@
 module HoneyFormat
   # Header column converter
-  module ConvertHeaderValue
+  module HeaderColumnConverter
     # Replace map
     REPLACE_MAP = [
       [/ \(/, '('],
@@ -18,9 +18,9 @@ module HoneyFormat
     # @param [String] column the string to be cleaned.
     # @param [Integer] column index.
     # @example Convert simple header
-    #     ConvertHeaderValue.call("  User name ") #=> "user_name"
+    #     HeaderColumnConverter.call("  User name ") #=> "user_name"
     # @example Convert complex header
-    #     ConvertHeaderValue.call(" First name (user)") #=> :'first_name(user)'
+    #     HeaderColumnConverter.call(" First name (user)") #=> :'first_name(user)'
     def self.call(column, index)
       return :"column#{index}" if column.nil? || column.empty?
 
