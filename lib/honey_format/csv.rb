@@ -9,7 +9,9 @@ module HoneyFormat
     # Instantiate CSV.
     # @return [CSV] a new instance of CSV.
     # @param [String] csv the CSV string
-    # @param [String] delimiter the CSV delimiter
+    # @param [String] delimiter the CSV column delimiter
+    # @param [String, Symbol] row_delimiter the CSV row delimiter (default: :auto)
+    # @param [String] quote_character the CSV quote character (default: ")
     # @param [Array<String>] header optional argument that represents CSV header, required if the CSV file lacks a header row.
     # @param [Array<Symbol>] valid_columns array of symbols representing valid columns, if empty all will be considered valid.
     # @param [#call] header_converter converts header columns.
@@ -25,13 +27,21 @@ module HoneyFormat
     def initialize(
       csv,
       delimiter: ',',
+      row_delimiter: :auto,
+      quote_character: '"',
       header: nil,
       valid_columns: [],
       header_converter: ConvertHeaderValue,
       row_builder: nil,
       type_map: {}
     )
-      csv = ::CSV.parse(csv, col_sep: delimiter)
+      csv = ::CSV.parse(
+        csv,
+        col_sep: delimiter,
+        row_sep: row_delimiter,
+        quote_char: quote_character
+    )
+
       header_row = header || csv.shift
       @header = Header.new(header_row, valid: valid_columns, converter: header_converter)
       @rows = Rows.new(csv, columns, builder: row_builder, type_map: type_map)

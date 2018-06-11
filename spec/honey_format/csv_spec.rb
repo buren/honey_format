@@ -120,6 +120,28 @@ let(:diabolical_cols) {
     expect(result).to eq(%i(email ids))
   end
 
+  it 'can handle alternative row delimiters' do
+    csv = "name,id|test,42"
+    csv = described_class.new(csv, row_delimiter: '|')
+    row = csv.rows.first
+
+    expect(csv.header.columns).to eq(%i[name id])
+    expect(row.name).to eq('test')
+    expect(row.id).to eq('42')
+  end
+
+  it 'can handle alternative quote characters' do
+    csv = <<~CSV
+    name,id
+    'John Doe',42
+    CSV
+    csv = described_class.new(csv, quote_character: "'")
+    row = csv.rows.first
+
+    expect(row.name).to eq('John Doe')
+    expect(row.id).to eq('42')
+  end
+
   describe '#to_csv' do
     it 'returns a CSV-string' do
       csv_string = "1,buren"
