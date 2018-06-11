@@ -17,7 +17,7 @@ module HoneyFormat
     #     converter = ->(col) { col == 'username' ? 'handle' : col }
     #     header = HoneyFormat::Header.new(['name', 'username'], converter: converter)
     #     header.to_a # => ['name', 'handle']
-    def initialize(header, valid: [], converter: ConvertHeaderValue)
+    def initialize(header, valid: [], converter: HoneyFormat.header_converter)
       if header.nil? || header.empty?
         raise(Errors::MissingHeaderError, "CSV header can't be empty.")
       end
