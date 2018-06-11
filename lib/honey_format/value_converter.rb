@@ -50,7 +50,7 @@ module HoneyFormat
     # Convert value
     # @param [Symbol, String] type the name of the type
     # @param [Object] value to be converted
-    def convert(value, type)
+    def call(value, type)
       self[type].call(value)
     end
 

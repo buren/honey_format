@@ -55,7 +55,7 @@ module HoneyFormat
 
       # Convert values
       @type_map.each do |column, type|
-        row[column] = @converter.convert(row[column], type)
+        row[column] = @converter.call(row[column], type)
       end
 
       return row unless @builder

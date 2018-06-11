@@ -25,60 +25,60 @@ RSpec.describe HoneyFormat::ValueConverter do
   describe "#convert" do
     describe "integer! type" do
       it 'can convert' do
-        value = described_class.new.convert('1', :integer!)
+        value = described_class.new.call('1', :integer!)
         expect(value).to eq(1)
       end
 
       it "raises ArgumentError if type can't be converted" do
         expect do
-          described_class.new.convert('aa', :integer!)
+          described_class.new.call('aa', :integer!)
         end.to raise_error(ArgumentError)
       end
     end
 
     describe "integer type" do
       it 'can convert' do
-        value = described_class.new.convert('1', :integer)
+        value = described_class.new.call('1', :integer)
         expect(value).to eq(1)
       end
 
       it "returns nil if value can't be converted" do
-        value = described_class.new.convert('aa', :integer)
+        value = described_class.new.call('aa', :integer)
         expect(value).to be_nil
       end
     end
 
     describe "decimal type" do
       it 'can convert' do
-        value = described_class.new.convert('1.1', :decimal)
+        value = described_class.new.call('1.1', :decimal)
         expect(value).to eq(1.1)
       end
 
       it 'returns 1.0 if when passed "1"' do
-        value = described_class.new.convert('1', :decimal)
+        value = described_class.new.call('1', :decimal)
         expect(value).to eq(1.0)
       end
 
       it "returns nil if value can't be converted" do
-        value = described_class.new.convert('aa', :decimal)
+        value = described_class.new.call('aa', :decimal)
         expect(value).to be_nil
       end
     end
 
     describe "decimal! type" do
       it 'can convert' do
-        value = described_class.new.convert('1.1', :decimal!)
+        value = described_class.new.call('1.1', :decimal!)
         expect(value).to eq(1.1)
       end
 
       it 'returns 1.0 if when passed "1"' do
-        value = described_class.new.convert('1', :decimal!)
+        value = described_class.new.call('1', :decimal!)
         expect(value).to eq(1.0)
       end
 
       it "raise ArgumentError if value can't be converted" do
         expect do
-          described_class.new.convert('aa', :decimal!)
+          described_class.new.call('aa', :decimal!)
         end.to raise_error(ArgumentError)
       end
     end
@@ -86,14 +86,14 @@ RSpec.describe HoneyFormat::ValueConverter do
     describe "date! type" do
       it 'can convert' do
         date_string = '2018-01-01'
-        value = described_class.new.convert(date_string, :date!)
+        value = described_class.new.call(date_string, :date!)
         expected = Date.parse('2018-01-01')
         expect(value).to eq(expected)
       end
 
       it "raise ArgumentError if value can't be converted" do
         expect do
-          described_class.new.convert('aa', :date!)
+          described_class.new.call('aa', :date!)
         end.to raise_error(ArgumentError)
       end
     end
@@ -101,13 +101,13 @@ RSpec.describe HoneyFormat::ValueConverter do
     describe "date type" do
       it 'can convert' do
         date_string = '2018-01-01'
-        value = described_class.new.convert(date_string, :date!)
+        value = described_class.new.call(date_string, :date!)
         expected = Date.parse('2018-01-01')
         expect(value).to eq(expected)
       end
 
       it "returns nil if value can't be converted" do
-        value = described_class.new.convert('aa', :date)
+        value = described_class.new.call('aa', :date)
         expect(value).to be_nil
       end
     end
@@ -115,14 +115,14 @@ RSpec.describe HoneyFormat::ValueConverter do
     describe "datetime! type" do
       it 'can convert' do
         time_string = '2018-01-01 00:15'
-        value = described_class.new.convert(time_string, :datetime)
+        value = described_class.new.call(time_string, :datetime)
         expected = Time.parse('2018-01-01 00:15')
         expect(value).to eq(expected)
       end
 
       it "raise ArgumentError if value can't be converted" do
         expect do
-          described_class.new.convert('aa', :datetime!)
+          described_class.new.call('aa', :datetime!)
         end.to raise_error(ArgumentError)
       end
     end
@@ -130,95 +130,95 @@ RSpec.describe HoneyFormat::ValueConverter do
     describe "datetime type" do
       it 'can convert' do
         time_string = '2018-01-01 00:15'
-        value = described_class.new.convert(time_string, :datetime)
+        value = described_class.new.call(time_string, :datetime)
         expected = Time.parse('2018-01-01 00:15')
         expect(value).to eq(expected)
       end
 
       it "returns nil if value can't be converted" do
-        value = described_class.new.convert('aa', :datetime)
+        value = described_class.new.call('aa', :datetime)
         expect(value).to be_nil
       end
     end
 
     describe "symbol! type" do
       it 'can convert' do
-        value = described_class.new.convert('1', :symbol!)
+        value = described_class.new.call('1', :symbol!)
         expect(value).to eq(:"1")
       end
 
       it "raises ArgumentError if type can't be converted" do
         expect do
-          described_class.new.convert(nil, :symbol!)
+          described_class.new.call(nil, :symbol!)
         end.to raise_error(ArgumentError)
       end
     end
 
     describe "symbol type" do
       it 'can convert' do
-        value = described_class.new.convert('1', :symbol)
+        value = described_class.new.call('1', :symbol)
         expect(value).to eq(:'1')
       end
 
       it "returns nil if value can't be converted" do
-        value = described_class.new.convert(nil, :symbol)
+        value = described_class.new.call(nil, :symbol)
         expect(value).to be_nil
       end
     end
 
     describe "downcase! type" do
       it 'can convert' do
-        value = described_class.new.convert('BUREN', :downcase!)
+        value = described_class.new.call('BUREN', :downcase!)
         expect(value).to eq('buren')
       end
 
       it "raises ArgumentError if type can't be converted" do
         expect do
-          described_class.new.convert(nil, :downcase!)
+          described_class.new.call(nil, :downcase!)
         end.to raise_error(ArgumentError)
       end
     end
 
     describe "downcase type" do
       it 'can convert' do
-        value = described_class.new.convert('BUREN', :downcase)
+        value = described_class.new.call('BUREN', :downcase)
         expect(value).to eq('buren')
       end
 
       it "returns nil if value can't be converted" do
-        value = described_class.new.convert(nil, :downcase)
+        value = described_class.new.call(nil, :downcase)
         expect(value).to be_nil
       end
     end
 
     describe "upcase! type" do
       it 'can convert' do
-        value = described_class.new.convert('buren', :upcase!)
+        value = described_class.new.call('buren', :upcase!)
         expect(value).to eq('BUREN')
       end
 
       it "raises ArgumentError if type can't be converted" do
         expect do
-          described_class.new.convert(nil, :upcase!)
+          described_class.new.call(nil, :upcase!)
         end.to raise_error(ArgumentError)
       end
     end
 
     describe "upcase type" do
       it 'can convert' do
-        value = described_class.new.convert('buren', :upcase)
+        value = described_class.new.call('buren', :upcase)
         expect(value).to eq('BUREN')
       end
 
       it "returns nil if value can't be converted" do
-        value = described_class.new.convert(nil, :upcase)
+        value = described_class.new.call(nil, :upcase)
         expect(value).to be_nil
       end
     end
 
     describe "nil type" do
       it 'converts value to nil' do
-        value = described_class.new.convert('buren', :nil)
+        value = described_class.new.call('buren', :nil)
         expect(value).to be_nil
       end
     end
@@ -226,14 +226,14 @@ RSpec.describe HoneyFormat::ValueConverter do
     it 'can convert custom value' do
       value_converter = described_class.new
       value_converter.register(:upcased, proc { |v| v.upcase })
-      value = value_converter.convert('buren', :upcased)
+      value = value_converter.call('buren', :upcased)
       expect(value).to eq('BUREN')
     end
 
     it 'raises ArgumentError if an unknown type is passed' do
       value_converter = described_class.new
       expect do
-        value_converter.convert(nil, :watman)
+        value_converter.call(nil, :watman)
       end.to raise_error(ArgumentError)
     end
   end
