@@ -46,5 +46,15 @@ module HoneyFormat
       @converter = ValueConverter.new
       @header_converter = ConvertHeaderValue
     end
+
+    # Set the header converter
+    # @param [Symbol, #call] symbol for registered value converter or object that responds to #call
+    # @return [#call] the header converter
+    def header_converter=(converter)
+      if converter.is_a?(Symbol)
+        return @header_converter = @converter[converter]
+      end
+      @header_converter = converter
+    end
   end
 end
