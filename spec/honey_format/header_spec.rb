@@ -120,7 +120,7 @@ describe HoneyFormat::Header do
         it "calls the method with #{arity} arugment(s)" do
           header = described_class.new(%w[column0 column1], converter: converter)
 
-          expected = arity == 1 ? %w[c c] : %w[c0 c1]
+          expected = arity == 1 ? %i[c c] : %i[c0 c1]
           expect(header.to_a).to eq(expected)
         end
       end

@@ -88,12 +88,16 @@ module HoneyFormat
     end
 
     # Convert the column value
-    # @param [Object] column the CSV header column value
+    # @param [String, Symbol] column the CSV header column value
     # @param [Integer] index the CSV header column index
-    # @return [Object] the converted object
+    # @return [Symbol] the converted column
     def convert_column(column, index)
-      return @converter.call(column) if converter_arity == 1
-      @converter.call(column, index)
+      value = if converter_arity == 1
+                @converter.call(column)
+              else
+                @converter.call(column, index)
+              end
+      value.to_sym
     end
 
     # Returns the converter#call method arity
