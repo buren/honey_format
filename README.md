@@ -209,11 +209,12 @@ user['first^name'] # => "Jacob"
 Pass your own header converter
 ```ruby
 map = { 'First^Name' => :first_name }
-converter = ->(column) { map.fetch(column, column) }
+converter = ->(column) { map.fetch(column, column.downcase) }
 
-csv_string = "First^Name\nJacob"
+csv_string = "ID,First^Name\n1,Jacob"
 user = HoneyFormat::CSV.new(csv_string, header_converter: converter).rows.first
 user.first_name # => "Jacob"
+user.id # => "1"
 ```
 
 Missing header values

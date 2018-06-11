@@ -24,6 +24,22 @@ module HoneyFormat
     # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when row columns are empty.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
+    # @example
+    #   csv = HoneyFormat::CSV.new(csv_string)
+    # @example With custom delimiter
+    #   csv = HoneyFormat::CSV.new(csv_string, delimiter: ';')
+    # @example With custom header converter
+    #   converter = proc { |v| v == 'name' ? 'first_name' : v }
+    #   csv = HoneyFormat::CSV.new("name,id", header_converter: converter)
+    #   csv.columns # => [:first_name, :id]
+    # @example Handle errors
+    #   begin
+    #     csv = HoneyFormat::CSV.new(csv_string)
+    #   rescue HoneyFormat::HeaderError => e
+    #     puts "header error: #{e.class}, #{e.message}"
+    #   rescue HoneyFormat::RowError => e
+    #     puts "row error: #{e.class}, #{e.message}"
+    #   end
     def initialize(
       csv,
       delimiter: ',',
