@@ -5,16 +5,18 @@ Convert CSV to an array of objects with with ease.
 ## Features
 
 - Proper objects for CSV header and rows
-- Convert column values with custom row builder
+- Coerce columns values
+- Pass your own custom row builder
 - Convert header column names
-- Customize what columns and rows are included in CSV output
-- [CLI](#cli)
+- Filter what columns and rows are included in CSV output
+- [CLI](#cli) - Simple command line interface
+- Only ~5-10% overhead from using Ruby CSV, see [benchmarks](#benchmark)
 - Has no dependencies other than Ruby stdlib
 - Supports Ruby >= 2.3
 
 ## Examples
 
-See [examples/](https://github.com/buren/honey_format/tree/master/examples) for more examples.
+See [`examples/`](https://github.com/buren/honey_format/tree/master/examples) for more examples.
 
 ```ruby
 csv_string = "Id,Username\n1,buren"
@@ -64,18 +66,28 @@ user.id         # => "1"
 user.username   # => "buren"
 ```
 
-Type coercions
+You can of course set the delimiter
+```ruby
+HoneyFormat::CSV.new(csv_string, delimiter: ';')
+```
+
+__Type coercions__
+
+There are a few default type coerces
 ```ruby
 csv_string = "Id,Username\n1,buren"
 type_map = { id: :integer }
 csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.id # => 1
+```
 
-# Add your own coercer
+Add your own coercer
+```ruby
 HoneyFormat.configure do |config|
   config.coercer.register :upcased, proc { |v| v.upcase }
 end
 
+csv_string = "Id,Username\n1,buren"
 type_map = { username: :upcased }
 csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.username # => "BUREN"
@@ -83,7 +95,9 @@ csv.rows.first.username # => "BUREN"
 
 See [`ValueCoercer::DEFAULT_COERCERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/value_coercer.rb) for a complete list of the default ones.
 
-Minimal custom row builder
+__Row builder__
+
+Custom row builder
 ```ruby
 csv_string = "Id,Username\n1,buren"
 upcaser = ->(row) { row.tap { |r| r.username.upcase! } }
@@ -94,23 +108,33 @@ csv.rows # => [#<struct id="1", username="BUREN">]
 As long as the row builder responds to `#call` you can pass anything you like
 ```ruby
 class Anonymizer
-  def self.call(row)
+  def call(row)
+    @cache ||= {}
     # Return an object you want to represent the row
     row.tap do |r|
-      r.name = '<anon>'
-      r.email = '<anon>'
-      r.ssn = '<anon>'
+      # given the same email make sure to return the same anonymized value
+      @cache[r.email] ||= "#{SecureRandom.hex(6)}@example.com"
+      r.email = @cache[r.email]
       r.payment_id = '<scrubbed>'
     end
   end
 end
 
-csv_string = "Id,Username\n1,buren"
-csv = HoneyFormat::CSV.new(csv_string, row_builder: Anonymizer)
-csv.rows # => [#<struct id="1", username="BUREN">]
+csv_string = <<~CSV
+Email,Payment ID
+buren@example.com,123
+buren@example.com,998
+CSV
+csv = HoneyFormat::CSV.new(csv_string, row_builder: Anonymizer.new)
+csv.rows.to_csv(columns: [:email])
+# => 8f6ed70a7f98@example.com
+#    8f6ed70a7f98@example.com
+#    0db96f350cea@example.com
 ```
 
-Output CSV
+__Output CSV__
+
+Manipulate the rows before output
 ```ruby
 csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string)
@@ -118,23 +142,31 @@ csv.rows.each { |row| row.id = nil }
 csv.to_csv # => "id,username\n,buren\n"
 ```
 
-Output a subset of columns to CSV
+Output a subset of columns
 ```ruby
 csv_string = "Id, Username, Country\n1,buren,Sweden"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.to_csv(columns: [:id, :country]) # => "id,country\nburen,Sweden\n"
 ```
 
-Output a subset of rows to CSV
+Output a subset of rows
 ```ruby
 csv_string = "Name, Country\nburen,Sweden\njacob,Denmark"
 csv = HoneyFormat::CSV.new(csv_string)
 csv.to_csv { |row| row.country == 'Sweden' } # => "name,country\nburen,Sweden\n"
 ```
 
-You can of course set the delimiter
+__Headers__
+
+By default assumes a header in the CSV file.
 ```ruby
-HoneyFormat::CSV.new(csv_string, delimiter: ';')
+csv_string = "Id,Username\n1,buren"
+csv = HoneyFormat::CSV.new(csv_string)
+
+# Header
+header = csv.header
+header.original # => ["Id", "Username"]
+header.columns # => [:id, :username]
 ```
 
 Validate CSV header
@@ -192,9 +224,10 @@ user = csv.rows.first
 user.column1 # => "val1"
 ```
 
-Errors
+__Errors__
+
+If you want to there are some errors you can rescue
 ```ruby
-# there are two error super classes
 begin
   HoneyFormat::CSV.new(csv_string)
 rescue HoneyFormat::HeaderError => e
@@ -208,7 +241,7 @@ end
 
 You can see all [available errors here](https://www.rubydoc.info/gems/honey_format/HoneyFormat/Errors).
 
-If you want to see more usage examples check out the `spec/` directory.
+If you want to see more usage examples check out the [`examples/`](https://github.com/buren/honey_format/tree/master/examples) and [`spec/`](https://github.com/buren/honey_format/tree/master/spec) directories.
 
 ## CLI
 
@@ -224,22 +257,21 @@ Usage: honey_format [file.csv] [options]
         --version                    Show version
 ```
 
+Output a subset of columns to a new file
+```
+# input.csv
+id,name,username
+1,jacob,buren
+```
+
+```
+$ honey_format input.csv --columns=id,username > output.csv
+```
+
 
 ## Benchmark
 
 _Note_: This gem, adds some overhead to parsing a CSV string, typically ~5-10%. I've included some benchmarks below, your mileage may vary..
-
-You can run the benchmarks yourself:
-
-```
-Usage: bin/benchmark [file.csv] [options]
-        --csv=[file1.csv]            CSV file(s)
-        --[no-]verbose               Verbose output
-        --lines-multipliers=[1,2,10] Multiply the rows in the CSV file (default: 1)
-        --time=[30]                  Benchmark time (default: 30)
-        --warmup=[30]                Benchmark warmup (default: 30)
-    -h, --help                       How to use
-```
 
 204KB (1k lines)
 
@@ -257,6 +289,16 @@ HoneyFormat::CSV:      48.7 i/s - 1.05x  slower
 HoneyFormat::CSV:        4.9 i/s - 1.05x  slower
 ```
 
+You can run the benchmarks yourself
+```
+Usage: bin/benchmark [file.csv] [options]
+        --csv=[file1.csv]            CSV file(s)
+        --[no-]verbose               Verbose output
+        --lines-multipliers=[1,2,10] Multiply the rows in the CSV file (default: 1)
+        --time=[30]                  Benchmark time (default: 30)
+        --warmup=[30]                Benchmark warmup (default: 30)
+    -h, --help                       How to use
+```
 
 ## Development
 
