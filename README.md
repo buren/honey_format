@@ -2,6 +2,8 @@
 
 > Makes working with CSVs as smooth as honey.
 
+Proper object for CSV headers and rows, convert column values, filter columns and rows, small(-ish) perfomance overhead, no dependencies other than Ruby stdlib.
+
 ## Features
 
 - Proper objects for CSV header and rows
@@ -27,7 +29,7 @@ CSV
 csv = HoneyFormat::CSV.new(csv_string, type_map: { id: :integer })
 csv.columns     # => [:id, :username]
 user = csv.rows # => [#<struct id="1", username="buren">]
-user.id         # => "1"
+user.id         # => 1
 user.username   # => "buren"
 
 csv.to_csv(columns: [:id, :username]) { |row| row.id < 2 }

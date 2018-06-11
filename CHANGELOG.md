@@ -2,7 +2,10 @@
 
 :warning: This release contains some backwards compatible changes.
 
-* `CSV#header` no returns an instance of `Header` instead of an array of the original header columns
+* Value converters [[#PR15](https://github.com/buren/honey_format/pull/15)]
+  + Convert column value to number, date, etc..
+* Add support for CSV row delimiter and quote character [[#PR15](https://github.com/buren/honey_format/pull/15)]
+* `CSV#header` now returns an instance of `Header` instead of an array of the original header columns [[#PR15](https://github.com/buren/honey_format/pull/15)]
 * Add `--[no-]rows-only` CLI option
 * Rename `--[no-]only-header` CLI option to `--[no-]header-only`
 
