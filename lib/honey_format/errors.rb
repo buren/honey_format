@@ -19,7 +19,7 @@ module HoneyFormat
     # Raised when row has more columns than header columns
     class InvalidRowLengthError < RowError; end
 
-    # Value coercion errors
+    # Value conversion errors
     # Raised when value type is unknown
     class UnknownValueTypeError < ArgumentError; end
     # Raised when value type already exists

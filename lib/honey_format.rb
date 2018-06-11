@@ -1,6 +1,6 @@
 require 'honey_format/version'
 require 'honey_format/errors'
-require 'honey_format/value_coercer'
+require 'honey_format/value_converter'
 require 'honey_format/csv'
 
 
@@ -20,10 +20,10 @@ module HoneyFormat
   end
 
   class Configuration
-    attr_reader :coercer
+    attr_reader :converter
 
     def initialize
-      @coercer = ValueCoercer.new
+      @converter = ValueConverter.new
     end
   end
 end

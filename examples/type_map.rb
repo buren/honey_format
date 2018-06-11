@@ -21,17 +21,17 @@ country_code_converter = proc { |v|
 
 puts '== EXAMPLE: CSV output with filtered columns and rows =='
 puts
-puts 'The type coercions available by default are:'
-puts "    #{HoneyFormat.config.coercer.types.join(', ')}"
+puts 'The type converters available by default are:'
+puts "    #{HoneyFormat.config.converter.types.join(', ')}"
 puts
 
 HoneyFormat.configure do |config|
-  config.coercer.register(:country_code, country_code_converter)
+  config.converter.register(:country_code, country_code_converter)
 end
 
 # Map columns to types
 type_map = {
-  age: :integer!, # the ! version will raise an exception if the value can't be coerced
+  age: :integer!, # the ! version will raise an exception if the value can't be converted
   country: :country_code,
   created_date: :date,
 }

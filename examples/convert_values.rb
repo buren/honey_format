@@ -7,8 +7,8 @@ John Doe,42,SE
 CSV
 
 HoneyFormat.configure do |config|
-  config.coercer.register :upcased, proc { |v| v.upcase }
-  config.coercer.register :country, proc { |v| v == 'SE' ? 'SWEDEN' : v }
+  config.converter.register :upcased, proc { |v| v.upcase }
+  config.converter.register :country, proc { |v| v == 'SE' ? 'SWEDEN' : v }
 end
 
 type_map = {

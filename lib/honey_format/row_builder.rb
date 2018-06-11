@@ -20,7 +20,7 @@ module HoneyFormat
       end
 
       @type_map = type_map
-      @coercer = HoneyFormat.config.coercer
+      @converter = HoneyFormat.config.converter
 
       @row_klass = Row.new(*columns)
       @builder = builder
@@ -55,7 +55,7 @@ module HoneyFormat
 
       # Convert values
       @type_map.each do |column, type|
-        row[column] = @coercer.coerce(row[column], type)
+        row[column] = @converter.convert(row[column], type)
       end
 
       return row unless @builder

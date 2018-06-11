@@ -71,9 +71,9 @@ You can of course set the delimiter
 HoneyFormat::CSV.new(csv_string, delimiter: ';')
 ```
 
-__Type coercions__
+__Type converters__
 
-There are a few default type coerces
+There are a few default type converters
 ```ruby
 csv_string = "Id,Username\n1,buren"
 type_map = { id: :integer }
@@ -81,10 +81,10 @@ csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.id # => 1
 ```
 
-Add your own coercer
+Add your own converter
 ```ruby
 HoneyFormat.configure do |config|
-  config.coercer.register :upcased, proc { |v| v.upcase }
+  config.converter.register :upcased, proc { |v| v.upcase }
 end
 
 csv_string = "Id,Username\n1,buren"
@@ -93,7 +93,7 @@ csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.username # => "BUREN"
 ```
 
-See [`ValueCoercer::DEFAULT_COERCERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/value_coercer.rb) for a complete list of the default ones.
+See [`ValueConverter::DEFAULT_CONVERTERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/value_converter.rb) for a complete list of the default ones.
 
 __Row builder__
 
