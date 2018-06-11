@@ -18,6 +18,12 @@ module HoneyFormat
     class EmptyRowColumnsError < RowError; end
     # Raised when row has more columns than header columns
     class InvalidRowLengthError < RowError; end
+
+    # Value conversion errors
+    # Raised when value type is unknown
+    class UnknownValueTypeError < ArgumentError; end
+    # Raised when value type already exists
+    class ValueTypeExistsError < ArgumentError; end
   end
 
   include Errors

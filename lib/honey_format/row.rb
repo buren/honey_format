@@ -18,7 +18,7 @@ module HoneyFormat
       attributes = members
       attributes = columns & attributes if columns
 
-      row = attributes.map { |column| to_csv_value(column) }
+      row = attributes.map! { |column| to_csv_value(column) }
 
       ::CSV.generate_line(row)
     end

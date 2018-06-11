@@ -111,6 +111,21 @@ let(:diabolical_cols) {
     end
   end
 
+  it 'can handle alternative delimiters and quote chars' do
+    csv_string = "name;id|'John Doe';42"
+    csv = HoneyFormat::CSV.new(
+      csv_string,
+      delimiter: ';',
+      row_delimiter: '|',
+      quote_character: "'",
+    )
+    row = csv.rows.first
+
+    expect(csv.columns).to eq(%i[name id])
+    expect(row.name).to eq('John Doe')
+    expect(row.id).to eq('42')
+  end
+
   it 'can handle alternative delimiters' do
     csv = <<-CSV
     email; ids
@@ -120,6 +135,28 @@ let(:diabolical_cols) {
     expect(result).to eq(%i(email ids))
   end
 
+  it 'can handle alternative row delimiters' do
+    csv = "name,id|test,42"
+    csv = described_class.new(csv, row_delimiter: '|')
+    row = csv.rows.first
+
+    expect(csv.header.columns).to eq(%i[name id])
+    expect(row.name).to eq('test')
+    expect(row.id).to eq('42')
+  end
+
+  it 'can handle alternative quote characters' do
+    csv = <<~CSV
+    name,id
+    'John Doe',42
+    CSV
+    csv = described_class.new(csv, quote_character: "'")
+    row = csv.rows.first
+
+    expect(row.name).to eq('John Doe')
+    expect(row.id).to eq('42')
+  end
+
   describe '#to_csv' do
     it 'returns a CSV-string' do
       csv_string = "1,buren"
@@ -127,10 +164,16 @@ let(:diabolical_cols) {
       expect(csv.to_csv).to eq("id,username\n1,buren\n")
     end
 
-    it 'returns a CSV-string with selected columns' do
+    it 'returns a CSV-string with selected columns as symbols' do
       csv_string = "1,buren"
       csv = described_class.new(csv_string, header: ['Id', 'Username'])
       expect(csv.to_csv(columns: [:username])).to eq("username\nburen\n")
+    end
+
+    it 'returns a CSV-string with selected columns as strings' do
+      csv_string = "1,buren"
+      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      expect(csv.to_csv(columns: ['username'])).to eq("username\nburen\n")
     end
 
     it 'returns a CSV-string with selected rows' do

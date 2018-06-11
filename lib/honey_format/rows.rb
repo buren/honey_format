@@ -9,12 +9,13 @@ module HoneyFormat
     # Returns array of cleaned strings.
     # @return [Rows] new instance of Rows.
     # @param [Array] rows the array of rows.
-    # @param [Array] columns the array of column symbols.
+    # @param [Array<Symbol>] columns the array of column symbols.
+    # @param type_map [Hash] map of column_name => type conversion to perform.
     # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when there are no columns.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
-    def initialize(rows, columns, builder: nil)
-      builder = RowBuilder.new(columns, builder: builder)
+    def initialize(rows, columns, builder: nil, type_map: {})
+      builder = RowBuilder.new(columns, builder: builder, type_map: type_map)
       @rows = prepare_rows(builder, rows)
     end
 
@@ -51,7 +52,7 @@ module HoneyFormat
     #   csv.to_csv(columns: [:id, :country]) { |row| row.country == 'Sweden' }
     def to_csv(columns: nil, &block)
       # Convert columns to Set for performance
-      columns = Set.new(columns) if columns
+      columns = Set.new(columns.map(&:to_sym)) if columns
       csv_rows = []
       each do |row|
         if !block || block.call(row)
