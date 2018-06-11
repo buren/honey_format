@@ -16,7 +16,7 @@ RSpec.describe HoneyFormat::ValueConverter do
     it 'returns the register types' do
       expected = %i[
         decimal! integer! date! datetime! symbol! downcase! upcase!
-        decimal integer date datetime symbol downcase upcase
+        decimal integer date datetime symbol downcase upcase nil
       ]
       expect(described_class.new.types).to eq(expected)
     end
@@ -29,7 +29,7 @@ RSpec.describe HoneyFormat::ValueConverter do
         expect(value).to eq(1)
       end
 
-      it "raises ArgumentError if typ can't be converted" do
+      it "raises ArgumentError if type can't be converted" do
         expect do
           described_class.new.convert('aa', :integer!)
         end.to raise_error(ArgumentError)
@@ -212,6 +212,13 @@ RSpec.describe HoneyFormat::ValueConverter do
 
       it "returns nil if value can't be converted" do
         value = described_class.new.convert(nil, :upcase)
+        expect(value).to be_nil
+      end
+    end
+
+    describe "nil type" do
+      it 'converts value to nil' do
+        value = described_class.new.convert('buren', :nil)
         expect(value).to be_nil
       end
     end

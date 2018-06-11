@@ -23,6 +23,7 @@ module HoneyFormat
       symbol: proc { |v| v&.to_sym },
       downcase: proc { |v| v&.downcase },
       upcase: proc { |v| v&.upcase },
+      nil: proc {},
     }.freeze
 
     # Instantiate a value converter
