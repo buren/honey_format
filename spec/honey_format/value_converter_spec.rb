@@ -15,8 +15,8 @@ RSpec.describe HoneyFormat::ValueConverter do
   describe "#types" do
     it 'returns the register types' do
       expected = %i[
-        decimal! integer! date! datetime!
-        decimal integer date datetime
+        decimal! integer! date! datetime! symbol! downcase! upcase!
+        decimal integer date datetime symbol downcase upcase
       ]
       expect(described_class.new.types).to eq(expected)
     end
@@ -137,6 +137,81 @@ RSpec.describe HoneyFormat::ValueConverter do
 
       it "returns nil if value can't be converted" do
         value = described_class.new.convert('aa', :datetime)
+        expect(value).to be_nil
+      end
+    end
+
+    describe "symbol! type" do
+      it 'can convert' do
+        value = described_class.new.convert('1', :symbol!)
+        expect(value).to eq(:"1")
+      end
+
+      it "raises ArgumentError if type can't be converted" do
+        expect do
+          described_class.new.convert(nil, :symbol!)
+        end.to raise_error(ArgumentError)
+      end
+    end
+
+    describe "symbol type" do
+      it 'can convert' do
+        value = described_class.new.convert('1', :symbol)
+        expect(value).to eq(:'1')
+      end
+
+      it "returns nil if value can't be converted" do
+        value = described_class.new.convert(nil, :symbol)
+        expect(value).to be_nil
+      end
+    end
+
+    describe "downcase! type" do
+      it 'can convert' do
+        value = described_class.new.convert('BUREN', :downcase!)
+        expect(value).to eq('buren')
+      end
+
+      it "raises ArgumentError if type can't be converted" do
+        expect do
+          described_class.new.convert(nil, :downcase!)
+        end.to raise_error(ArgumentError)
+      end
+    end
+
+    describe "downcase type" do
+      it 'can convert' do
+        value = described_class.new.convert('BUREN', :downcase)
+        expect(value).to eq('buren')
+      end
+
+      it "returns nil if value can't be converted" do
+        value = described_class.new.convert(nil, :downcase)
+        expect(value).to be_nil
+      end
+    end
+
+    describe "upcase! type" do
+      it 'can convert' do
+        value = described_class.new.convert('buren', :upcase!)
+        expect(value).to eq('BUREN')
+      end
+
+      it "raises ArgumentError if type can't be converted" do
+        expect do
+          described_class.new.convert(nil, :upcase!)
+        end.to raise_error(ArgumentError)
+      end
+    end
+
+    describe "upcase type" do
+      it 'can convert' do
+        value = described_class.new.convert('buren', :upcase)
+        expect(value).to eq('BUREN')
+      end
+
+      it "returns nil if value can't be converted" do
+        value = described_class.new.convert(nil, :upcase)
         expect(value).to be_nil
       end
     end

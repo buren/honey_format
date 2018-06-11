@@ -12,11 +12,17 @@ module HoneyFormat
       integer!: proc { |v| Integer(v) },
       date!: proc { |v| Date.parse(v) },
       datetime!: proc { |v| Time.parse(v) },
+      symbol!: proc { |v| v&.to_sym || raise(ArgumentError, "can't convert nil to symbol") },
+      downcase!: proc { |v| v&.downcase || raise(ArgumentError, "can't convert nil to downcased string") },
+      upcase!: proc { |v| v&.upcase || raise(ArgumentError, "can't convert nil to upcased string") },
       # safe variants
       decimal: proc { |v| Float(v) rescue nil },
       integer: proc { |v| Integer(v) rescue nil },
       date: proc { |v| Date.parse(v) rescue nil },
       datetime: proc { |v| Time.parse(v) rescue nil },
+      symbol: proc { |v| v&.to_sym },
+      downcase: proc { |v| v&.downcase },
+      upcase: proc { |v| v&.upcase },
     }.freeze
 
     # Instantiate a value converter
