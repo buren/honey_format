@@ -2,7 +2,7 @@
 
 > Makes working with CSVs as smooth as honey.
 
-Proper object for CSV headers and rows, convert column values, filter columns and rows, small(-ish) perfomance overhead, no dependencies other than Ruby stdlib.
+Proper objects for CSV headers and rows, convert column values, filter columns and rows, small(-ish) perfomance overhead, no dependencies other than Ruby stdlib.
 
 ## Features
 

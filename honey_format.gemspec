@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['burenstam@gmail.com']
 
   spec.summary       = 'Makes working with CSVs as smooth as honey.'
-  spec.description   = 'Proper object for CSV headers and rows, convert column values, filter columns and rows, small(-ish) perfomance overhead, no dependencies other than Ruby stdlib.'
+  spec.description   = 'Proper objects for CSV headers and rows, convert column values, filter columns and rows, small(-ish) perfomance overhead, no dependencies other than Ruby stdlib.'
   spec.homepage      = 'https://github.com/buren/honey_format'
   spec.license       = 'MIT'
 

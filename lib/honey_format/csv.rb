@@ -75,7 +75,7 @@ module HoneyFormat
       @header.to_a
     end
 
-    # @return [Array] of rows.
+    # @return [Rows] of rows.
     def rows
       @rows
     end
