@@ -111,6 +111,21 @@ let(:diabolical_cols) {
     end
   end
 
+  it 'can handle alternative delimiters and quote chars' do
+    csv_string = "name;id|'John Doe';42"
+    csv = HoneyFormat::CSV.new(
+      csv_string,
+      delimiter: ';',
+      row_delimiter: '|',
+      quote_character: "'",
+    )
+    row = csv.rows.first
+
+    expect(csv.columns).to eq(%i[name id])
+    expect(row.name).to eq('John Doe')
+    expect(row.id).to eq('42')
+  end
+
   it 'can handle alternative delimiters' do
     csv = <<-CSV
     email; ids

@@ -73,9 +73,15 @@ user.id         # => "1"
 user.username   # => "buren"
 ```
 
-You can of course set the delimiter
+Set delimiter & quote character
 ```ruby
-HoneyFormat::CSV.new(csv_string, delimiter: ';')
+csv_string = "name;id|'John Doe';42"
+csv = HoneyFormat::CSV.new(
+  csv_string,
+  delimiter: ';',
+  row_delimiter: '|',
+  quote_character: "'",
+)
 ```
 
 __Type converters__
