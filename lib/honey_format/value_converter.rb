@@ -47,7 +47,7 @@ module HoneyFormat
       self
     end
 
-    # Coerce value
+    # Convert value
     # @param [Symbol, String] type the name of the type
     # @param [Object] value to be converted
     def convert(value, type)

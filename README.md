@@ -1,11 +1,11 @@
 # HoneyFormat [![Build Status](https://travis-ci.org/buren/honey_format.svg)](https://travis-ci.org/buren/honey_format) [![Code Climate](https://codeclimate.com/github/buren/honey_format/badges/gpa.svg)](https://codeclimate.com/github/buren/honey_format) [![Inline docs](http://inch-ci.org/github/buren/honey_format.svg)](http://inch-ci.org/github/buren/honey_format)
 
-Convert CSV to an array of objects with with ease.
+> Makes working with CSVs as smooth as honey.
 
 ## Features
 
 - Proper objects for CSV header and rows
-- Coerce columns values
+- Convert column values
 - Pass your own custom row builder
 - Convert header column names
 - Filter what columns and rows are included in CSV output
@@ -14,17 +14,24 @@ Convert CSV to an array of objects with with ease.
 - Has no dependencies other than Ruby stdlib
 - Supports Ruby >= 2.3
 
-## Examples
+## Example
 
 See [`examples/`](https://github.com/buren/honey_format/tree/master/examples) for more examples.
 
 ```ruby
-csv_string = "Id,Username\n1,buren"
-csv = HoneyFormat::CSV.new(csv_string)
+csv_string = <<-CSV
+Id,Username,Email
+1,buren,buren@example.com
+2,jacob,jacob@example.com
+CSV
+csv = HoneyFormat::CSV.new(csv_string, type_map: { id: :integer })
 csv.columns     # => [:id, :username]
 user = csv.rows # => [#<struct id="1", username="buren">]
 user.id         # => "1"
 user.username   # => "buren"
+
+csv.to_csv(columns: [:id, :username]) { |row| row.id < 2 }
+# => "id,username\n1,buren\n"
 ```
 
 ## Installation
@@ -91,6 +98,12 @@ csv_string = "Id,Username\n1,buren"
 type_map = { username: :upcased }
 csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.username # => "BUREN"
+```
+
+Access registered converters
+```ruby
+decimal_converter = HoneyFormat.config.converter[:decimal]
+decimal_converter.call('1.1') # => 1.1
 ```
 
 See [`ValueConverter::DEFAULT_CONVERTERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/value_converter.rb) for a complete list of the default ones.

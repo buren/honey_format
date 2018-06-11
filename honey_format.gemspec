@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Jacob Burenstam']
   spec.email         = ['burenstam@gmail.com']
 
-  spec.summary       = 'Convert CSV to objects.'
-  spec.description   = 'Convert CSV to an array of objects with with ease. Create objects for each row with methods matching the column names. No dependencies other than Ruby stdlib.'
+  spec.summary       = 'Makes working with CSVs as smooth as honey.'
+  spec.description   = 'Proper object for CSV headers and rows, convert column values, filter columns and rows, small(-ish) perfomance overhead, no dependencies other than Ruby stdlib.'
   spec.homepage      = 'https://github.com/buren/honey_format'
   spec.license       = 'MIT'
 
