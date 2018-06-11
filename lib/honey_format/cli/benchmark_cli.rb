@@ -12,7 +12,7 @@ module HoneyFormat
     attr_reader :writer, :options
 
     # Instantiate the CLI
-    def initialize(writer: CLI::ResultWriter.new)
+    def initialize(writer: CLIResultWriter.new)
       @used_input_path = nil
       @writer = writer
       @options = parse_options(argv: ARGV)
