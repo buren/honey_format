@@ -26,9 +26,15 @@ describe HoneyFormat::HeaderColumnConverter do
     input, expected, index = data
 
     it "converts #{input} to #{expected}" do
-      result = described_class.call(input, index || 0)
+      result = described_class.call(input, index)
       expect(result).to eq(expected)
     end
+  end
+
+  it 'raises error if column and index is nil' do
+    expect do
+      described_class.call(nil, nil)
+    end.to raise_error(ArgumentError)
   end
 
   it 'does not mutate orignal value' do

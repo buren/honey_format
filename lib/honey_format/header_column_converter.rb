@@ -21,8 +21,11 @@ module HoneyFormat
     #     HeaderColumnConverter.call("  User name ") #=> "user_name"
     # @example Convert complex header
     #     HeaderColumnConverter.call(" First name (user)") #=> :'first_name(user)'
-    def self.call(column, index)
-      return :"column#{index}" if column.nil? || column.empty?
+    def self.call(column, index = nil)
+      if column.nil? || column.empty?
+        raise(ArgumentError, "column and column index can't be blank/nil") unless index
+        return :"column#{index}"
+      end
 
       column = column.dup
       column.strip!
