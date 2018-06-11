@@ -19,17 +19,32 @@ module HoneyFormat
     @configuration
   end
 
+  # Returns the current configuration
   # @return [Configuration] current configuration
   def self.config
     configure
   end
 
+  # Returns the configured header converter
+  # @return [#call] the current header converter
+  def self.header_converter
+    config.header_converter
+  end
+
+  # Returns the configured value converter
+  # @return [#call] the current value converter
+  def self.value_converter
+    config.converter
+  end
+
   # Holds HoneyFormat configuration
   class Configuration
-    attr_reader :converter
+    attr_accessor :header_converter, :converter
 
+    # Instantiate configuration
     def initialize
       @converter = ValueConverter.new
+      @header_converter = ConvertHeaderValue
     end
   end
 end
