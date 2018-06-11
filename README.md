@@ -110,7 +110,7 @@ csv.rows.first.username # => "BUREN"
 
 Access registered converters
 ```ruby
-decimal_converter = HoneyFormat.config.converter[:decimal]
+decimal_converter = HoneyFormat.value_converter[:decimal]
 decimal_converter.call('1.1') # => 1.1
 ```
 
@@ -190,23 +190,26 @@ header.original # => ["Id", "Username"]
 header.columns # => [:id, :username]
 ```
 
+Define header
+```ruby
+csv_string = "1,buren"
+csv = HoneyFormat::CSV.new(csv_string, header: ['Id', 'Username'])
+csv.rows.first.username # => "buren"
+```
+
+Set default header converter
+```ruby
+HoneyFormat.configure do |config|
+  config.header_converter = proc { |v| v.downcase }
+end
+```
+
 Validate CSV header
 ```ruby
 csv_string = "Id,Username\n1,buren"
 # Invalid
 HoneyFormat::CSV.new(csv_string, valid_columns: [:something, :username])
 # => HoneyFormat::UnknownHeaderColumnError (column :id not in [:something, :username])
-
-# Valid
-csv = HoneyFormat::CSV.new(csv_string, valid_columns: [:id, :username])
-csv.rows.first.username # => "buren"
-```
-
-Define header
-```ruby
-csv_string = "1,buren"
-csv = HoneyFormat::CSV.new(csv_string, header: ['Id', 'Username'])
-csv.rows.first.username # => "buren"
 ```
 
 If your header contains special chars and/or chars that can't be part of Ruby method names,
