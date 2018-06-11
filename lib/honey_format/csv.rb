@@ -1,11 +1,12 @@
 require 'csv'
 
-require 'honey_format/rows'
-require 'honey_format/header'
+require 'honey_format/matrix'
+# require 'honey_format/rows'
+# require 'honey_format/header'
 
 module HoneyFormat
   # Represents CSV.
-  class CSV
+  class CSV < Matrix
     # Instantiate CSV.
     # @return [CSV] a new instance of CSV.
     # @param [String] csv the CSV string
@@ -40,6 +41,7 @@ module HoneyFormat
     #   rescue HoneyFormat::RowError => e
     #     puts "row error: #{e.class}, #{e.message}"
     #   end
+    # @see Matrix#new
     def initialize(
       csv,
       delimiter: ',',
@@ -56,53 +58,14 @@ module HoneyFormat
         col_sep: delimiter,
         row_sep: row_delimiter,
         quote_char: quote_character
-    )
-
-      header_row = header || csv.shift
-      @header = Header.new(header_row, valid: valid_columns, converter: header_converter)
-      @rows = Rows.new(csv, columns, builder: row_builder, type_map: type_map)
-    end
-
-    # Original CSV header
-    # @return [Header] object representing the CSV header.
-    def header
-      @header
-    end
-
-    # CSV columns converted from the original CSV header
-    # @return [Array<Symbol>] of column identifiers.
-    def columns
-      @header.to_a
-    end
-
-    # @return [Rows] of rows.
-    def rows
-      @rows
-    end
-
-    # @yield [row] The given block will be passed for every row.
-    # @yieldparam [Row] row in the CSV.
-    # @return [Enumerator] If no block is given, an enumerator object will be returned.
-    def each_row
-      return rows.each unless block_given?
-
-      rows.each { |row| yield(row) }
-    end
-
-    # Convert CSV object as CSV-string.
-    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
-    # @yield [row] The given block will be passed for every row - return truthy if you want the row to be included in the output
-    # @yieldparam [Row] row
-    # @return [String] CSV-string representation.
-    # @example with selected columns
-    #   csv.to_csv(columns: [:id, :country])
-    # @example with selected rows
-    #   csv.to_csv { |row| row.country == 'Sweden' }
-    # @example with both selected columns and rows
-    #   csv.to_csv(columns: [:id, :country]) { |row| row.country == 'Sweden' }
-    def to_csv(columns: nil, &block)
-      columns = columns&.map(&:to_sym)
-      @header.to_csv(columns: columns) + @rows.to_csv(columns: columns, &block)
+      )
+      super(
+        csv,
+        header: header,
+        header_converter: header_converter,
+        row_builder: row_builder,
+        type_map: type_map
+      )
     end
   end
 end
