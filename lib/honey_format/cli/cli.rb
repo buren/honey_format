@@ -2,10 +2,12 @@ require 'optparse'
 
 module HoneyFormat
   # Main CLI
+  # @attr_reader [Hash] options from command line arguments
   class CLI
     attr_reader :options
 
     # Instantiate the CLI
+    # @return [CLI] the CLI
     def initialize
       @options = parse_options(argv: ARGV)
     end

@@ -16,7 +16,7 @@ module HoneyFormat
     # Returns converted value and mutates the argument.
     # @return [Symbol] the cleaned header column.
     # @param [String] column the string to be cleaned.
-    # @param [Integer] column index.
+    # @param [Integer] index the column index.
     # @example Convert simple header
     #     HeaderColumnConverter.call("  User name ") #=> "user_name"
     # @example Convert complex header

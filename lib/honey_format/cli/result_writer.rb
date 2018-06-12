@@ -1,9 +1,12 @@
 module HoneyFormat
   # CLI result writer handles command output
+  # @attr_reader [true, false] verbose the writer mode
   class CLIResultWriter
     attr_accessor :verbose
 
     # Instantiate the result writer
+    # @param verbose [true, false] mode (default: false)
+    # @return [CLIResultWriter] the result writer
     def initialize(verbose: false)
       @verbose = verbose
     end
@@ -16,7 +19,7 @@ module HoneyFormat
 
     # Print the string
     # @param [String] string to print
-    # @param [true, false] verbose mode (default: false)
+    # @param verbose [true, false] mode (default: false)
     def print(string, verbose: false)
       return if !verbose? && verbose
 
@@ -25,7 +28,7 @@ module HoneyFormat
 
     # Puts the string
     # @param [String] string to puts
-    # @param [true, false] verbose mode (default: false)
+    # @param verbose [true, false] mode (default: false)
     def puts(string, verbose: false)
       return if !verbose? && verbose
 

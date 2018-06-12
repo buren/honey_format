@@ -3,6 +3,8 @@ require 'honey_format/cli/result_writer'
 
 module HoneyFormat
   # Benchmark CLI
+  # @attr_reader [Hash] options from command line arguments
+  # @attr_reader [CLIResultWriter] writer the CLI result writer
   class BenchmarkCLI
     # CSV default test data location
     CSV_TEST_DATA_URL = 'https://gist.github.com/buren/b669dd82fa37e37672da2cab33c8a830/raw/54ba14a698941ff61f3b854b66df0a7782c79c85/csv_1000_rows.csv'
@@ -20,7 +22,7 @@ module HoneyFormat
     end
 
     # Returns the expected runtime in seconds
-    # report_count [Integer] number of reports in benchmark
+    # @param report_count [Integer] number of reports in benchmark
     # @return [Integer] expected runtime in seconds
     def expected_runtime_seconds(report_count:)
       runs = report_count * options[:lines_multipliers].length
@@ -37,6 +39,7 @@ module HoneyFormat
     end
 
     # Download or fetch the default benchmark file from cache
+    # @return [String] CSV file as a string
     def fetch_default_benchmark_csv
       cache_path = CSV_TEST_DATA_CACHE_PATH
 
