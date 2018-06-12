@@ -6,7 +6,7 @@ module HoneyFormat
     # Instantiate a Header
     # @return [Header] a new instance of Header.
     # @param [Array<String>] header array of strings.
-    # @param converter [#call] header converter that implements a #call method that takes one column (string) argument.
+    # @param converter [#call, Symbol] header converter that implements a #call method that takes one column (string) argument OR symbol for a registered value converter.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @example Instantiate a header with a custom converter
