@@ -42,6 +42,11 @@ describe HoneyFormat::Header do
       header = described_class.new(['first', '', 'third'])
       expect(header.to_a).to eq([:first, :column1, :third])
     end
+
+    it 'can receive converter argument as symbol' do
+      header = described_class.new(['first'], converter: :upcase)
+      expect(header.to_a).to eq([:FIRST])
+    end
   end
 
   describe 'quacks like an enumerable' do
