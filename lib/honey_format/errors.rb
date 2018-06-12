@@ -8,8 +8,6 @@ module HoneyFormat
     class MissingHeaderError < HeaderError; end
     # Raised when header column is missing
     class MissingHeaderColumnError < HeaderError; end
-    # Raised when a column is not in passed valid columns
-    class UnknownHeaderColumnError < HeaderError; end
 
     # Row errors
     # Super class of errors raised when there is a row error

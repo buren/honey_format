@@ -74,11 +74,6 @@ let(:diabolical_cols) {
       result = described_class.new(csv_string).columns
       expect(result).to eq(%i(email ids))
     end
-
-    it 'can validate and return when all headers are valid in valid_columns' do
-      result = described_class.new(csv_string, valid_columns: [:email, :ids]).columns
-      expect(result).to eq(%i(email ids))
-    end
   end
 
   describe '#columns' do

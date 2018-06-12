@@ -6,16 +6,14 @@ module HoneyFormat
     # Instantiate a Header
     # @return [Header] a new instance of Header.
     # @param [Array<String>] header array of strings.
-    # @param [Array<Symbol, String>] valid array representing the valid columns, if empty all columns will be considered valid.
     # @param converter [#call] header converter that implements a #call method that takes one column (string) argument.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
-    # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
     # @example Instantiate a header with a custom converter
     #     converter = ->(col) { col == 'username' ? 'handle' : col }
     #     header = HoneyFormat::Header.new(['name', 'username'], converter: converter)
     #     header.to_a # => ['name', 'handle']
-    def initialize(header, valid: [], converter: HoneyFormat.header_converter)
+    def initialize(header, converter: HoneyFormat.header_converter)
       if header.nil? || header.empty?
         raise(Errors::MissingHeaderError, "CSV header can't be empty.")
       end
@@ -27,7 +25,7 @@ module HoneyFormat
                      converter
                    end
 
-      @columns = build_columns(@original_header, valid)
+      @columns = build_columns(@original_header)
     end
 
     # @return [Array<String>] the original header
@@ -79,13 +77,10 @@ module HoneyFormat
     # Convert original header
     # @param [Array<String>] header the original header
     # @return [Array<String>] converted columns
-    def build_columns(header, valid)
-      valid = valid.map(&:to_sym)
-
+    def build_columns(header)
       header.each_with_index.map do |header_column, index|
         convert_column(header_column, index).tap do |column|
           maybe_raise_missing_column!(column)
-          maybe_raise_unknown_column!(column, valid)
         end
       end
     end
@@ -109,18 +104,6 @@ module HoneyFormat
       # procs and lambdas respond to #arity
       return @converter.arity if @converter.respond_to?(:arity)
       @converter.method(:call).arity
-    end
-
-    # Raises an error if header column is unknown
-    # @param [Object] column the CSV header column
-    # @param [Array<Symbol, String>] valid CSV columns
-    # @raise [Errors::UnknownHeaderColumnError]
-    def maybe_raise_unknown_column!(column, valid)
-      return if valid.empty?
-      return if valid.include?(column)
-
-      err_msg = "column :#{column} not in #{valid.inspect}"
-      raise(Errors::UnknownHeaderColumnError, err_msg)
     end
 
     # Raises an error if header column is missing/empty

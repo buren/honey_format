@@ -14,14 +14,12 @@ module HoneyFormat
     # @param [String, Symbol] row_delimiter the CSV row delimiter (default: :auto)
     # @param [String] quote_character the CSV quote character (default: ")
     # @param [Array<String>] header optional argument that represents CSV header, required if the CSV file lacks a header row.
-    # @param [Array<Symbol>] valid_columns array of symbols representing valid columns, if empty all will be considered valid.
     # @param [#call] header_converter converts header columns.
     # @param [#call] row_builder will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderError] raised when header is missing (empty or nil).
     # @raise [MissingHeaderColumnError] raised when header column is missing.
-    # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
     # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when row columns are empty.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
@@ -48,7 +46,6 @@ module HoneyFormat
       row_delimiter: :auto,
       quote_character: '"',
       header: nil,
-      valid_columns: [],
       header_converter: HoneyFormat.header_converter,
       row_builder: nil,
       type_map: {}

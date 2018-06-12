@@ -16,7 +16,6 @@ module HoneyFormat
     # @raise [HeaderError] super class of errors raised when there is a header error.
     # @raise [MissingHeaderError] raised when header is missing (empty or nil).
     # @raise [MissingHeaderColumnError] raised when header column is missing.
-    # @raise [UnknownHeaderColumnError] raised when column is not in valid list.
     # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when row columns are empty.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.

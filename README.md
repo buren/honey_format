@@ -215,14 +215,6 @@ csv = HoneyFormat::CSV.new(csv_string, header_converter: :upcase)
 csv.columns # => [:ID, :USERNAME]
 ```
 
-Validate CSV header
-```ruby
-csv_string = "Id,Username\n1,buren"
-# Invalid
-HoneyFormat::CSV.new(csv_string, valid_columns: [:something, :username])
-# => HoneyFormat::UnknownHeaderColumnError (column :id not in [:something, :username])
-```
-
 If your header contains special chars and/or chars that can't be part of Ruby method names,
 things can get a little awkward..
 ```ruby

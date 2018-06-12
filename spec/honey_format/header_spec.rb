@@ -42,26 +42,6 @@ describe HoneyFormat::Header do
       header = described_class.new(['first', '', 'third'])
       expect(header.to_a).to eq([:first, :column1, :third])
     end
-
-    context 'when given a valid argument' do
-      it 'fails with HoneyFormat::UnknownHeaderColumnError when a column is found that is not in valid argument' do
-        expect do
-          described_class.new(%w[first third], valid: %w[first second])
-        end.to raise_error(HoneyFormat::UnknownHeaderColumnError)
-      end
-
-      it 'fails with HoneyFormat::HeaderError when a column is found that is not in valid argument' do
-        expect do
-          described_class.new(%w[first third], valid: %w[first second])
-        end.to raise_error(HoneyFormat::HeaderError)
-      end
-
-      it 'does not fail when all columns are valid' do
-        cols = %w[first second]
-        header = described_class.new(cols, valid: cols)
-        expect(header.to_a).to eq(cols.map(&:to_sym))
-      end
-    end
   end
 
   describe 'quacks like an enumerable' do
