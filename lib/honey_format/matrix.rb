@@ -8,7 +8,7 @@ module HoneyFormat
   class Matrix
     # Instantiate CSV.
     # @return [CSV] a new instance of Matrix.
-    # @param [Array<Array<String, nil>>] matrix
+    # @param [Array<Array<String>>] matrix
     # @param [Array<String>] header optional argument that represents header, required if the matrix lacks a header row.
     # @param [#call] header_converter converts header columns.
     # @param [#call] row_builder will be called for each parsed row.
@@ -34,16 +34,33 @@ module HoneyFormat
     #     puts "row error: #{e.class}, #{e.message}"
     #   end
     def initialize(
-      matrix,
+      matrix = [],
       header: nil,
       header_converter: HoneyFormat.header_converter,
       row_builder: nil,
       type_map: {}
     )
-      header_row = header || matrix.shift
-      @header = Header.new(header_row, converter: header_converter)
-      @rows = Rows.new(matrix, columns, builder: row_builder, type_map: type_map)
+      @header_converter = header_converter
+      @row_builder = row_builder
+      @type_map = type_map
+
+      @header = Header.new(header, converter: @header_converter) if header
+      @rows = nil
+
+      matrix.each { |row| add_row(row) }
     end
+
+    def add_row(row)
+      unless @header
+        return @header = Header.new(row, converter: @header_converter)
+      end
+
+      @rows ||= Rows.new([], @header, builder: @row_builder, type_map: @type_map)
+
+      rows << row
+      row
+    end
+    alias_method :<<, :add_row
 
     # Original CSV header
     # @return [Header] object representing the CSV header.

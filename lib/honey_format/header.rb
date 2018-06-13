@@ -28,6 +28,12 @@ module HoneyFormat
       @columns = build_columns(@original_header)
     end
 
+    # Returns true if columns contains no elements.
+    # @return [true, false] true if columns contains no elements.
+    def empty?
+      @columns.empty?
+    end
+
     # @return [Array<String>] the original header
     def original
       @original_header

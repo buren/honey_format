@@ -50,20 +50,20 @@ module HoneyFormat
       row_builder: nil,
       type_map: {}
     )
-      csv = ::CSV.parse(
-        csv,
-        col_sep: delimiter,
-        row_sep: row_delimiter,
-        quote_char: quote_character,
-        skip_blanks: true
-      )
       super(
-        csv,
         header: header,
         header_converter: header_converter,
         row_builder: row_builder,
         type_map: type_map
       )
+
+      ::CSV.parse(
+        csv,
+        col_sep: delimiter,
+        row_sep: row_delimiter,
+        quote_char: quote_character,
+        skip_blanks: true
+      ) { |row| self << row }
     end
   end
 end

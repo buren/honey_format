@@ -3,21 +3,30 @@ require 'honey_format/row_builder'
 
 module HoneyFormat
   # Represents rows.
+  # @attr_reader [Hash] type_map map of column_name => type conversion to perform.
   class Rows
     include Enumerable
 
     # Returns array of cleaned strings.
     # @return [Rows] new instance of Rows.
     # @param [Array] rows the array of rows.
-    # @param [Array<Symbol>] columns the array of column symbols.
+    # @param [Header, Array<Symbol>] columns the header or an array of column symbols.
     # @param type_map [Hash] map of column_name => type conversion to perform.
     # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when there are no columns.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
     def initialize(rows, columns, builder: nil, type_map: {})
-      builder = RowBuilder.new(columns, builder: builder, type_map: type_map)
-      @rows = prepare_rows(builder, rows)
+      @type_map = type_map
+      @custom_builder = builder
+      @builder = RowBuilder.new(columns, builder: builder, type_map: type_map)
+      @rows = prepare_rows(rows)
     end
+
+    def add(row)
+      row = prepare_row(row)
+      @rows << row if row
+    end
+    alias_method :<<, :add
 
     # @yield [row] The given block will be passed for every row.
     # @yieldparam [Row] a row in the CSV file.
@@ -31,6 +40,12 @@ module HoneyFormat
     # @return [Array] of rows.
     def to_a
       @rows
+    end
+
+    # Returns true if rows contains no elements.
+    # @return [true, false] true if rows contains no elements.
+    def empty?
+      @rows.empty?
     end
 
     # Return the number of rows
@@ -64,14 +79,23 @@ module HoneyFormat
 
     private
 
-    def prepare_rows(builder, rows)
+    def builder
+      @builder ||= RowBuilder.new(columns, builder: @custom_builder, type_map: type_map)
+    end
+
+    def prepare_rows(rows)
       built_rows = []
       rows.each do |row|
         # ignore empty rows
-        next if row.nil? || row.empty? || row == [nil]
-        built_rows << builder.build(row)
+        row = prepare_row(row) || next
+        built_rows << row
       end
       built_rows
+    end
+
+    def prepare_row(row)
+      return if row.nil? || row.empty? || row == [nil]
+      builder.build(row)
     end
   end
 end

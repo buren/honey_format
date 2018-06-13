@@ -2,10 +2,13 @@ require 'honey_format/row'
 
 module HoneyFormat
   # Holds data for a single row.
+  # @attr_reader [Array<Symbol>] columns array of header columns
   class RowBuilder
+    attr_reader :columns
+
     # Returns a new instance of RowBuilder.
     # @return [RowBuilder] a new instance of RowBuilder.
-    # @param [Array<Symbol>] columns an array of symbols.
+    # @param [Header, Array<Symbol>] columns a Header or an array of symbols.
     # @param builder [#call, #to_csv] optional row builder.
     # @param type_map [Hash] map of column_name => type conversion to perform.
     # @raise [RowError] super class of errors raised when there is a row error.
@@ -14,15 +17,9 @@ module HoneyFormat
     # @example Create new row
     #     RowBuilder.new!([:id])
     def initialize(columns, builder: nil, type_map: {})
-      if columns.empty?
-        err_msg = 'Expected array with at least one element, but was empty.'
-        raise(Errors::EmptyRowColumnsError, err_msg)
-      end
-
       @type_map = type_map
       @converter = HoneyFormat.value_converter
 
-      @row_klass = Row.new(*columns)
       @builder = builder
       @columns = columns
     end
@@ -51,7 +48,7 @@ module HoneyFormat
     #     r = RowBuilder.new([:id])
     #     r.build(['1']).id #=> '1'
     def build_row!(row)
-      row = @row_klass.call(row)
+      row = row_klass.call(row)
 
       # Convert values
       @type_map.each do |column, type|
@@ -74,6 +71,15 @@ module HoneyFormat
         "orignal message: '#{e.message}'"
       ].join(', ')
       raise(Errors::InvalidRowLengthError, err_msg)
+    end
+
+    def row_klass
+      if columns.empty?
+        err_msg = 'Expected columns to be an array with at least one element, but was empty.'
+        raise(Errors::EmptyRowColumnsError, err_msg)
+      end
+
+      @row_klass ||= Row.new(*columns)
     end
   end
 end
