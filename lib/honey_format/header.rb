@@ -1,3 +1,5 @@
+require 'set'
+
 module HoneyFormat
   # Represents a header
   class Header
@@ -31,6 +33,12 @@ module HoneyFormat
     # @return [Array<String>] the original header
     def original
       @original_header
+    end
+
+    # Returns true if columns contains no elements.
+    # @return [true, false] true if columns contains no elements.
+    def empty?
+      @columns.empty?
     end
 
     # @yield [row] The given block will be passed for every column.

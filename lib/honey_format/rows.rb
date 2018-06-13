@@ -19,6 +19,12 @@ module HoneyFormat
       @rows = prepare_rows(builder, rows)
     end
 
+    # Returns true if rows contains no elements.
+    # @return [true, false] true if rows contains no elements.
+    def empty?
+      @rows.empty?
+    end
+
     # @yield [row] The given block will be passed for every row.
     # @yieldparam [Row] a row in the CSV file.
     # @return [Enumerator]

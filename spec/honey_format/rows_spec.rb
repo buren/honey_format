@@ -21,6 +21,20 @@ describe HoneyFormat::Rows do
     expect(rows.size).to eq(2)
   end
 
+  describe 'empty?' do
+    it 'returns true when empty' do
+      rows = described_class.new(%w[], %i[name])
+
+      expect(rows.empty?).to eq(true)
+    end
+
+    it 'returns false when not empty' do
+      rows = described_class.new(%w[first], %i[name])
+
+      expect(rows.empty?).to eq(false)
+    end
+  end
+
   it 'can return the rows length' do
     rows = described_class.new(%w[first second], %i[name])
 

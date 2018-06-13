@@ -2,6 +2,7 @@
 
 :warning: This release contains some backwards compatible changes.
 
+* Add `Header#empty?` and `Rows#empty?`
 * Value converters [[#PR15](https://github.com/buren/honey_format/pull/15)]
   + Convert column value to number, date, etc..
 * Add support for CSV row delimiter and quote character [[#PR15](https://github.com/buren/honey_format/pull/15)]

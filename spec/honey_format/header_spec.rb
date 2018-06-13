@@ -49,6 +49,14 @@ describe HoneyFormat::Header do
     end
   end
 
+  describe 'empty?' do
+    it 'returns false when not empty' do
+      header = described_class.new(%w[first])
+
+      expect(header.empty?).to eq(false)
+    end
+  end
+
   describe 'quacks like an enumerable' do
     it 'can #map' do
       header = described_class.new(%w[first])
