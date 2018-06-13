@@ -1,4 +1,4 @@
-# HoneyFormat [![Build Status](https://travis-ci.org/buren/honey_format.svg)](https://travis-ci.org/buren/honey_format) [![Code Climate](https://codeclimate.com/github/buren/honey_format/badges/gpa.svg)](https://codeclimate.com/github/buren/honey_format) [![Inline docs](http://inch-ci.org/github/buren/honey_format.svg)](http://inch-ci.org/github/buren/honey_format)
+# HoneyFormat [![Build Status](https://travis-ci.org/buren/honey_format.svg)](https://travis-ci.org/buren/honey_format) [![Code Climate](https://codeclimate.com/github/buren/honey_format/badges/gpa.svg)](https://codeclimate.com/github/buren/honey_format) [![Inline docs](http://inch-ci.org/github/buren/honey_format.svg)](https://www.rubydoc.info/gems/honey_format/)
 
 > Makes working with CSVs as smooth as honey.
 
@@ -16,9 +16,10 @@ Proper objects for CSV headers and rows, convert column values, filter columns a
 - Has no dependencies other than Ruby stdlib
 - Supports Ruby >= 2.3
 
-## Example
+Read the [usage section](#usage),  [RubyDoc](https://www.rubydoc.info/gems/honey_format/) or [examples/ directory](https://github.com/buren/honey_format/tree/master/examples)  for how to use this gem.
 
-See [`examples/`](https://github.com/buren/honey_format/tree/master/examples) for more examples.
+## Quick use
+
 
 ```ruby
 csv_string = <<-CSV
@@ -56,7 +57,7 @@ $ gem install honey_format
 
 ## Usage
 
-By default assumes a header in the CSV file.
+By default assumes a header in the CSV file
 
 ```ruby
 csv_string = "Id,Username\n1,buren"
@@ -88,6 +89,8 @@ csv = HoneyFormat::CSV.new(
 
 __Type converters__
 
+> Type converters are great if you want to convert column values, like numbers and dates.
+
 There are a few default type converters
 ```ruby
 csv_string = "Id,Username\n1,buren"
@@ -118,6 +121,8 @@ See [`ValueConverter::DEFAULT_CONVERTERS`](https://github.com/buren/honey_format
 
 __Row builder__
 
+> Pass your own row builder if you want more control of the entire row or if you want to return your own row object.
+
 Custom row builder
 ```ruby
 csv_string = "Id,Username\n1,buren"
@@ -133,7 +138,7 @@ class Anonymizer
     @cache ||= {}
     # Return an object you want to represent the row
     row.tap do |r|
-      # given the same email make sure to return the same anonymized value
+      # given the same value make sure to return the same anonymized value every time
       @cache[r.email] ||= "#{SecureRandom.hex(6)}@example.com"
       r.email = @cache[r.email]
       r.payment_id = '<scrubbed>'
@@ -154,6 +159,8 @@ csv.rows.to_csv(columns: [:email])
 ```
 
 __Output CSV__
+
+> Makes it super easy to output a subset of columns/rows.
 
 Manipulate the rows before output
 ```ruby
@@ -178,6 +185,8 @@ csv.to_csv { |row| row.country == 'Sweden' } # => "name,country\nburen,Sweden\n"
 ```
 
 __Headers__
+
+> By default generates method-like names for each header column, but also gives you full control: define them or convert them.
 
 By default assumes a header in the CSV file.
 ```ruby
@@ -215,24 +224,6 @@ csv = HoneyFormat::CSV.new(csv_string, header_converter: :upcase)
 csv.columns # => [:ID, :USERNAME]
 ```
 
-If your header contains special chars and/or chars that can't be part of Ruby method names,
-things can get a little awkward..
-```ruby
-csv_string = "ÅÄÖ\nSwedish characters"
-user = HoneyFormat::CSV.new(csv_string).rows.first
-# Note that these chars aren't "downcased" in Ruby 2.3 and older versions of Ruby,
-# "ÅÄÖ".downcase # => "ÅÄÖ"
-user.ÅÄÖ # => "Swedish characters"
-# while on Ruby > 2.3
-user.åäö
-
-csv_string = "First^Name\nJacob"
-user = HoneyFormat::CSV.new(csv_string).rows.first
-user.public_send(:"first^name") # => "Jacob"
-# or
-user['first^name'] # => "Jacob"
-```
-
 Pass your own header converter
 ```ruby
 map = { 'First^Name' => :first_name }
@@ -252,7 +243,27 @@ user = csv.rows.first
 user.column1 # => "val1"
 ```
 
+If your header contains special chars and/or chars that can't be part of Ruby method names,
+things can get a little awkward..
+```ruby
+csv_string = "ÅÄÖ\nSwedish characters"
+user = HoneyFormat::CSV.new(csv_string).rows.first
+# Note that these chars aren't "downcased" in Ruby 2.3 and older versions of Ruby,
+# "ÅÄÖ".downcase # => "ÅÄÖ"
+user.ÅÄÖ # => "Swedish characters"
+# while on Ruby > 2.3
+user.åäö
+
+csv_string = "First^Name\nJacob"
+user = HoneyFormat::CSV.new(csv_string).rows.first
+user.public_send(:"first^name") # => "Jacob"
+# or
+user['first^name'] # => "Jacob"
+```
+
 __Errors__
+
+> When you need that some extra safety.
 
 If you want to there are some errors you can rescue
 ```ruby
@@ -272,6 +283,8 @@ You can see all [available errors here](https://www.rubydoc.info/gems/honey_form
 If you want to see more usage examples check out the [`examples/`](https://github.com/buren/honey_format/tree/master/examples) and [`spec/`](https://github.com/buren/honey_format/tree/master/spec) directories.
 
 ## CLI
+
+> Perfect when you want to get something simple done quickly.
 
 ```
 Usage: honey_format [file.csv] [options]

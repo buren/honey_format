@@ -14,6 +14,7 @@ module HoneyFormat
     attr_reader :writer, :options
 
     # Instantiate the CLI
+    # @param writer [CLIResultWriter] the result writer to use
     def initialize(writer: CLIResultWriter.new)
       @used_input_path = nil
       @writer = writer

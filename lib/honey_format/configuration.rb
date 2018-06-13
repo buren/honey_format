@@ -2,8 +2,8 @@ module HoneyFormat
   # Holds HoneyFormat configuration
   # @attr_reader [#call] header_converter the configured header converter
   # @attr_reader [#call] converter the configured value converter
-  # @attr_reader [#call] header_converter to use
-  # @attr_reader [#call] converter the value converter to use
+  # @attr_writer [#call] header_converter to use
+  # @attr_writer [#call] converter the value converter to use
   class Configuration
     attr_accessor :header_converter, :converter
 
