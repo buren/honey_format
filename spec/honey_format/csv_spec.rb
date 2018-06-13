@@ -51,6 +51,19 @@ let(:diabolical_cols) {
     end
   end
 
+  describe 'with blank lines' do
+    it 'skips those lines' do
+      csv_string = <<~CSV
+      id,username
+      1,buren
+
+      2,jacob
+      CSV
+      csv = HoneyFormat::CSV.new(csv_string)
+      expect(csv.rows.length).to eq(2)
+    end
+  end
+
   describe '#each_row' do
     it 'yields each row' do
       csv = described_class.new("email, ids\ntest@example.com,42")

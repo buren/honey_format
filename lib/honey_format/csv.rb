@@ -54,7 +54,8 @@ module HoneyFormat
         csv,
         col_sep: delimiter,
         row_sep: row_delimiter,
-        quote_char: quote_character
+        quote_char: quote_character,
+        skip_blanks: true
       )
       super(
         csv,
