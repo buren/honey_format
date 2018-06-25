@@ -16,7 +16,7 @@ RSpec.describe HoneyFormat::ValueConverter do
     it 'returns the register types' do
       expected = %i[
         decimal! integer! date! datetime! symbol! downcase! upcase!
-        decimal integer date datetime symbol downcase upcase nil
+        decimal integer date datetime symbol downcase upcase md5 nil
         header_column
       ]
       expect(described_class.new.types).to eq(expected)
@@ -221,6 +221,23 @@ RSpec.describe HoneyFormat::ValueConverter do
       it 'converts value to nil' do
         value = described_class.new.call('buren', :nil)
         expect(value).to be_nil
+      end
+    end
+
+    describe 'md5 type' do
+      it 'return nil when given nil' do
+        value = described_class.new.call(nil, :md5)
+        expect(value).to be_nil
+      end
+
+      it 'converts value to MD5' do
+        converter = described_class.new
+        value = converter.call('buren', :md5)
+        value1 = converter.call('buren', :md5)
+
+        expect(value).not_to eq('buren')
+        expect(value.length).to eq(32)
+        expect(value).to eq(value1)
       end
     end
 

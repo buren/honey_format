@@ -1,6 +1,7 @@
 require 'date'
 require 'time'
 require 'set'
+require 'digest'
 
 require 'honey_format/header_column_converter'
 
@@ -25,6 +26,7 @@ module HoneyFormat
       symbol: proc { |v| v&.to_sym },
       downcase: proc { |v| v&.downcase },
       upcase: proc { |v| v&.upcase },
+      md5: proc { |v| Digest::MD5.hexdigest(v) if v },
       nil: proc {},
       header_column: HeaderColumnConverter,
     }.freeze
