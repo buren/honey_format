@@ -8,6 +8,20 @@ require 'honey_format/header_column_converter'
 module HoneyFormat
   # Converts values
   class ValueConverter
+    TRUTHY = Set.new(%w[t T 1 y Y true TRUE]).freeze
+    FALSY = Set.new(%w[f F 0 n N false FALSE]).freeze
+
+    CONVERT_BOOLEAN = lambda { |v|
+      value = v&.downcase
+      if TRUTHY.include?(value)
+        true
+      elsif FALSY.include?(value)
+        false
+      else
+        nil
+      end
+    }
+
     # Default value converters
     DEFAULT_CONVERTERS = {
       # strict variants
@@ -18,6 +32,11 @@ module HoneyFormat
       symbol!: proc { |v| v&.to_sym || raise(ArgumentError, "can't convert nil to symbol") },
       downcase!: proc { |v| v&.downcase || raise(ArgumentError, "can't convert nil to downcased string") },
       upcase!: proc { |v| v&.upcase || raise(ArgumentError, "can't convert nil to upcased string") },
+      boolean!: proc { |v|
+        value = CONVERT_BOOLEAN.call(v)
+        raise(ArgumentError, "can't convert #{v} to boolean") if value.nil?
+        value
+      },
       # safe variants
       decimal: proc { |v| Float(v) rescue nil },
       integer: proc { |v| Integer(v) rescue nil },
@@ -26,6 +45,7 @@ module HoneyFormat
       symbol: proc { |v| v&.to_sym },
       downcase: proc { |v| v&.downcase },
       upcase: proc { |v| v&.upcase },
+      boolean: proc { |v| CONVERT_BOOLEAN.call(v) },
       md5: proc { |v| Digest::MD5.hexdigest(v) if v },
       nil: proc {},
       header_column: HeaderColumnConverter,

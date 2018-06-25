@@ -15,8 +15,8 @@ RSpec.describe HoneyFormat::ValueConverter do
   describe "#types" do
     it 'returns the register types' do
       expected = %i[
-        decimal! integer! date! datetime! symbol! downcase! upcase!
-        decimal integer date datetime symbol downcase upcase md5 nil
+        decimal! integer! date! datetime! symbol! downcase! upcase! boolean!
+        decimal integer date datetime symbol downcase upcase boolean md5 nil
         header_column
       ]
       expect(described_class.new.types).to eq(expected)
@@ -46,6 +46,53 @@ RSpec.describe HoneyFormat::ValueConverter do
       it "returns nil if value can't be converted" do
         value = described_class.new.call('aa', :integer)
         expect(value).to be_nil
+      end
+    end
+
+    describe "boolean! type" do
+      %w[t T 1 y Y true TRUE].each do |input|
+        it "can convert #{input} to true" do
+          value = described_class.new.call(input, :boolean!)
+          expect(value).to eq(true)
+        end
+      end
+
+      %w[f F 0 n N false FALSE].each do |input|
+        it "can convert #{input} to false" do
+          value = described_class.new.call(input, :boolean!)
+          expect(value).to eq(false)
+        end
+      end
+
+      [nil, 'asd', '2', '', '11', '00'].each do |input|
+        it "raises ArgumentError if type can't be converted" do
+          expect do
+            described_class.new.call(input, :boolean!)
+          end.to raise_error(ArgumentError)
+        end
+      end
+    end
+
+    describe "boolean type" do
+      %w[t T 1 y Y true TRUE].each do |input|
+        it "can convert #{input} to true" do
+          value = described_class.new.call(input, :boolean)
+          expect(value).to eq(true)
+        end
+      end
+
+      %w[f F 0 n N false FALSE].each do |input|
+        it "can convert #{input} to false" do
+          value = described_class.new.call(input, :boolean)
+          expect(value).to eq(false)
+        end
+      end
+
+      [nil, 'asd', '2', '', '11', '00'].each do |input|
+        it "returns nil for #{input}" do
+          value = described_class.new.call(input, :boolean)
+          expect(value).to be_nil
+        end
       end
     end
 
