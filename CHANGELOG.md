@@ -1,12 +1,16 @@
 # HEAD
 
+# v0.13.0
+
 :warning: This release contains some backwards compatible changes.
 
+* Extract `Matrix` super class from `CSV`
 * Add `Header#empty?` and `Rows#empty?`
 * Value converters [[#PR15](https://github.com/buren/honey_format/pull/15)]
   + Convert column value to number, date, etc..
+  + Additional converters in [[#PR20](https://github.com/buren/honey_format/pull/20)]
 * Add support for CSV row delimiter and quote character [[#PR15](https://github.com/buren/honey_format/pull/15)]
-* `CSV#header` now returns an instance of `Header` instead of an array of the original header columns [[#PR15](https://github.com/buren/honey_format/pull/15)]
+* :warning: `CSV#header` now returns an instance of `Header` instead of an array of the original header columns [[#PR15](https://github.com/buren/honey_format/pull/15)]
 * Add `--[no-]rows-only` CLI option
 * Rename `--[no-]only-header` CLI option to `--[no-]header-only`
 
