@@ -1,5 +1,11 @@
 # HEAD
 
+# v0.14.0
+
+* Additional converters
+  + `integer_or_zero`
+  + `decimal_or_zero`
+
 # v0.13.0
 
 :warning: This release contains some backwards compatible changes.
