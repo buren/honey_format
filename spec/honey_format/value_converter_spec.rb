@@ -16,7 +16,8 @@ RSpec.describe HoneyFormat::ValueConverter do
     it 'returns the register types' do
       expected = %i[
         decimal! integer! date! datetime! symbol! downcase! upcase! boolean!
-        decimal integer date datetime symbol downcase upcase boolean md5 nil
+        decimal decimal_or_zero integer integer_or_zero
+        date datetime symbol downcase upcase boolean md5 nil
         header_column
       ]
       expect(described_class.new.types).to eq(expected)
@@ -46,6 +47,18 @@ RSpec.describe HoneyFormat::ValueConverter do
       it "returns nil if value can't be converted" do
         value = described_class.new.call('aa', :integer)
         expect(value).to be_nil
+      end
+    end
+
+    describe "integer_or_zero type" do
+      it 'can convert' do
+        value = described_class.new.call('1', :integer_or_zero)
+        expect(value).to eq(1)
+      end
+
+      it "returns 0 if value can't be converted" do
+        value = described_class.new.call('aa', :integer_or_zero)
+        expect(value).to eq(0)
       end
     end
 
@@ -110,6 +123,23 @@ RSpec.describe HoneyFormat::ValueConverter do
       it "returns nil if value can't be converted" do
         value = described_class.new.call('aa', :decimal)
         expect(value).to be_nil
+      end
+    end
+
+    describe "decimal_or_zero type" do
+      it 'can convert' do
+        value = described_class.new.call('1.1', :decimal_or_zero)
+        expect(value).to eq(1.1)
+      end
+
+      it 'returns 1.0 if when passed "1"' do
+        value = described_class.new.call('1', :decimal_or_zero)
+        expect(value).to eq(1.0)
+      end
+
+      it "returns 0.0 if value can't be converted" do
+        value = described_class.new.call('aa', :decimal_or_zero)
+        expect(value).to eq(0.0)
       end
     end
 

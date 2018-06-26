@@ -39,7 +39,9 @@ module HoneyFormat
       },
       # safe variants
       decimal: proc { |v| Float(v) rescue nil },
+      decimal_or_zero: proc { |v| Float(v) rescue 0.0 },
       integer: proc { |v| Integer(v) rescue nil },
+      integer_or_zero: proc { |v| Integer(v) rescue 0 },
       date: proc { |v| Date.parse(v) rescue nil },
       datetime: proc { |v| Time.parse(v) rescue nil },
       symbol: proc { |v| v&.to_sym },
