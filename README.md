@@ -304,13 +304,14 @@ csv.rows.length # => 2
 > Perfect when you want to get something simple done quickly.
 
 ```
-Usage: honey_format [file.csv] [options]
+Usage: honey_format [options] <file.csv>
         --csv=input.csv              CSV file
-        --[no-]header-only           Print only the header
-        --[no-]rows-only             Print only the rows
-        --columns=id,name            Select columns.
+        --columns=id,name            Select columns
         --output=output.csv          CSV output (STDOUT otherwise)
         --delimiter=,                CSV delimiter (default: ,)
+        --skip-lines=,               Skip lines that match this pattern
+        --[no-]header-only           Print only the header
+        --[no-]rows-only             Print only the rows
     -h, --help                       How to use
         --version                    Show version
 ```

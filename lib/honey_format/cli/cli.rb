@@ -29,6 +29,7 @@ module HoneyFormat
       delimiter = ','
       header_only = false
       rows_only = false
+      skip_lines = nil
 
       OptionParser.new do |parser|
         parser.banner = "Usage: honey_format [options] <file.csv>"
@@ -48,6 +49,10 @@ module HoneyFormat
 
         parser.on("--delimiter=,", String, "CSV delimiter (default: ,)") do |value|
           delimiter = value
+        end
+
+        parser.on("--skip-lines=,", String, "Skip lines that match this pattern") do |value|
+          skip_lines = value
         end
 
         parser.on("--[no-]header-only", "Print only the header") do |value|
@@ -85,6 +90,7 @@ module HoneyFormat
         delimiter: delimiter,
         header_only: header_only,
         rows_only: rows_only,
+        skip_lines: skip_lines
       }
     end
   end
