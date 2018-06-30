@@ -26,11 +26,11 @@ RSpec.describe HoneyFormat::ValueConverter do
       expect(value_converter.type?(:watman)).to eq(false)
     end
 
-    it 'raises Errors::UnknownTypeError when trying to unregister unknown type' do
+    it 'raises UnknownTypeError when trying to unregister unknown type' do
       value_converter = described_class.new(default_converters)
       expect do
         value_converter.unregister(:watman)
-      end.to raise_error(HoneyFormat::Errors::UnknownTypeError)
+      end.to raise_error(HoneyFormat::UnknownTypeError)
     end
   end
 
@@ -44,11 +44,11 @@ RSpec.describe HoneyFormat::ValueConverter do
       value_converter.reset!
     end
 
-    it 'raises Errors::ValueTypeExistsError when trying to register duplicated type' do
+    it 'raises ValueTypeExistsError when trying to register duplicated type' do
       value_converter = described_class.new(default_converters)
       expect do
         value_converter.register(:datetime!, proc {})
-      end.to raise_error(HoneyFormat::Errors::ValueTypeExistsError)
+      end.to raise_error(HoneyFormat::ValueTypeExistsError)
     end
   end
 
