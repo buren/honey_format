@@ -23,6 +23,20 @@ module HoneyFormat
       ::CSV.generate_line(row)
     end
 
+    # Describe the contents of this row in a string.
+    # @return [String] content of this row
+    def inspect
+      attributes = members.map do |field|
+        value = self[field]
+        value = "\"#{value}\"" if value.is_a?(String)
+
+        [field, value].join("=")
+      end.join(", ")
+
+      "#<Row #{attributes}>"
+    end
+    alias_method :to_s, :inspect
+
     private
 
     # Returns the column in CSV format

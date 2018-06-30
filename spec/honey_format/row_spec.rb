@@ -14,6 +14,22 @@ describe HoneyFormat::Row do
     end
   end
 
+  describe "#inspect" do
+    it "returns nicely formatted string representation of row" do
+      row = described_class.call(%i[name age])
+      person = row.new('buren', 28)
+
+      expect(person.inspect).to eq('#<Row name="buren", age=28>')
+    end
+
+    it "aliases #inspect to #to_s" do
+      row = described_class.call(%i[name age])
+      person = row.new('buren', 28)
+
+      expect(person.to_s).to eq(person.inspect)
+    end
+  end
+
   describe '#to_csv' do
     it 'returns the row as a CSV-string' do
       struct = described_class.call(%i[name age])
