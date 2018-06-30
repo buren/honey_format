@@ -1,7 +1,12 @@
 # HEAD
 
-* Rename `Errors::UnknownValueTypeError` => `Errors::UnknownTypeError`
-* Add hex converter registry
+:warning: This release contains some backwards compatible changes.
+
+* Rename `ValueConverter` => `ConverterRegistry`
+* Rename `UnknownValueTypeError` => `UnknownTypeError`
+  - :warning: Backwards incompatible
+* Allow unregister of existing value converters
+* Add `hex` converter to registry
 
 ## v0.16.0
 
