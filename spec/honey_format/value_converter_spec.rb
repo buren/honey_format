@@ -17,7 +17,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       expected = %i[
         decimal! integer! date! datetime! symbol! downcase! upcase! boolean!
         decimal decimal_or_zero integer integer_or_zero
-        date datetime symbol downcase upcase boolean md5 nil
+        date datetime symbol downcase upcase boolean md5 hex nil
         header_column
       ]
       expect(described_class.new.types).to eq(expected)
@@ -315,6 +315,23 @@ RSpec.describe HoneyFormat::ValueConverter do
         expect(value).not_to eq('buren')
         expect(value.length).to eq(32)
         expect(value).to eq(value1)
+      end
+    end
+
+    describe 'hex type' do
+      it 'return nil when given nil' do
+        value = described_class.new.call(nil, :hex)
+        expect(value).to be_nil
+      end
+
+      it 'converts value to random hex' do
+        converter = described_class.new
+        value = converter.call('buren', :hex)
+        value1 = converter.call('buren', :hex)
+
+        expect(value).not_to eq('buren')
+        expect(value.length).to eq(32)
+        expect(value).not_to eq(value1)
       end
     end
 
