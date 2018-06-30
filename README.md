@@ -111,6 +111,15 @@ csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.username # => "BUREN"
 ```
 
+Remove registered converter
+```ruby
+HoneyFormat.configure do |config|
+  config.converter.unregister :upcase
+  # now you're free to register your own
+  config.converter.register :upcase, proc { |v| v.upcase if v }
+end
+```
+
 Access registered converters
 ```ruby
 decimal_converter = HoneyFormat.value_converter[:decimal]

@@ -3,7 +3,33 @@ require 'spec_helper'
 require 'honey_format/value_converter'
 
 RSpec.describe HoneyFormat::ValueConverter do
+  describe "#unregister" do
+    it 'can unregister known type' do
+      value_converter = described_class.new
+      value_converter.register(:watman, proc {})
+      value_converter.unregister(:watman)
+
+      expect(value_converter.type?(:watman)).to eq(false)
+    end
+
+    it 'raises Errors::UnknownValueTypeError when trying to unregister unknown type' do
+      value_converter = described_class.new
+      expect do
+        value_converter.unregister(:watman)
+      end.to raise_error(HoneyFormat::Errors::UnknownValueTypeError)
+    end
+  end
+
   describe "#register" do
+    it 'can register type' do
+      value_converter = described_class.new
+      value_converter.register(:watman, proc {})
+      expect(value_converter.type?(:watman)).to eq(true)
+
+      # we must unregister the type since its global configuration
+      value_converter.unregister(:watman)
+    end
+
     it 'raises Errors::ValueTypeExistsError when trying to register duplicated type' do
       value_converter = described_class.new
       expect do

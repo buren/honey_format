@@ -79,6 +79,16 @@ module HoneyFormat
       self
     end
 
+    # Unregister a value converter
+    # @param [Symbol, String] type the name of the type
+    # @return [ValueConverter] returns self
+    # @raise [UnknownValueTypeError] if type is already registered
+    def unregister(type)
+      unknown_type_error!(type) unless type?(type)
+      @converters.delete(to_key(type))
+      self
+    end
+
     # Convert value
     # @param [Symbol, String] type the name of the type
     # @param [Object] value to be converted
@@ -92,7 +102,7 @@ module HoneyFormat
     # @return [Object] returns the converter
     # @raise [ValueTypeExistsError] if type is already registered
     def []=(type, converter)
-      type = type.to_sym
+      type = to_key(type)
 
       if type?(type)
         raise(Errors::ValueTypeExistsError, "type '#{type}' already exists")
@@ -105,15 +115,23 @@ module HoneyFormat
     # @return [Object] returns the converter
     # @raise [UnknownValueTypeError] if type does not exist
     def [](type)
-      @converters.fetch(type.to_sym) do
-        raise(Errors::UnknownValueTypeError, "unknown type '#{type}'")
-      end
+      @converters.fetch(to_key(type)) { unknown_type_error!(type) }
     end
 
     # @param [Symbol, String] type the name of the type
     # @return [true, false] true if type exists, false otherwise
     def type?(type)
-      @converters.key?(type.to_sym)
+      @converters.key?(to_key(type))
+    end
+
+    private
+
+    def to_key(key)
+      key.to_sym
+    end
+
+    def unknown_type_error!(type)
+      raise(Errors::UnknownValueTypeError, "unknown type '#{type}'")
     end
   end
 end
