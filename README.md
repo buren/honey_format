@@ -330,7 +330,7 @@ $ honey_format input.csv --columns=id,username > output.csv
 
 ## Benchmark
 
-_Note_: This gem, adds some overhead to parsing a CSV string, typically ~5-10%. I've included some benchmarks below, your mileage may vary..
+_Note_: This gem, adds some overhead to parsing a CSV string, typically ~5-10%. I've included some benchmarks below, your mileage may vary.. The benchmarks have been run with Ruby 2.5.
 
 204KB (1k lines)
 
