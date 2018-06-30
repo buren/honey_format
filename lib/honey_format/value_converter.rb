@@ -8,9 +8,12 @@ require 'honey_format/header_column_converter'
 module HoneyFormat
   # Converts values
   class ValueConverter
+    # String values considered truthy
     TRUTHY = Set.new(%w[t T 1 y Y true TRUE]).freeze
+    # String values considered falsy
     FALSY = Set.new(%w[f F 0 n N false FALSE]).freeze
 
+    # Tries to convert value boolean to, returns nil if it can't convert
     CONVERT_BOOLEAN = lambda { |v|
       value = v&.downcase
       if TRUTHY.include?(value)
