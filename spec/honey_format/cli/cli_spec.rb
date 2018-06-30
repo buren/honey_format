@@ -56,7 +56,8 @@ RSpec.describe HoneyFormat::CLI do
         output_path: nil,
         delimiter: ",",
         header_only: false,
-        rows_only: false
+        rows_only: false,
+        skip_lines: nil
       }
       expect(cli.options).to eq(expected)
     end
@@ -73,7 +74,8 @@ RSpec.describe HoneyFormat::CLI do
         output_path: nil,
         delimiter: ",",
         header_only: false,
-        rows_only: false
+        rows_only: false,
+        skip_lines: nil
       }
       expect(cli.options).to eq(expected)
     end
@@ -83,6 +85,7 @@ RSpec.describe HoneyFormat::CLI do
         "--csv=input.csv",
         "--columns=id,name",
         "--output=output.csv",
+        "--skip-lines=buren",
         "--delimiter=:",
         "--header-only",
         "--no-rows-only"
@@ -94,7 +97,8 @@ RSpec.describe HoneyFormat::CLI do
         output_path: "output.csv",
         delimiter: ":",
         header_only: true,
-        rows_only: false
+        rows_only: false,
+        skip_lines: "buren"
       }
       expect(cli.options).to eq(expected)
     end

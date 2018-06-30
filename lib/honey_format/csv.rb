@@ -17,6 +17,7 @@ module HoneyFormat
     # @param [#call] header_converter converts header columns.
     # @param [#call] row_builder will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
+    # @param skip_lines [Regexp, String] Regexp for determining wheter a line is a comment. See CSV skip_lines option.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderError] raised when header is missing (empty or nil).
     # @raise [MissingHeaderColumnError] raised when header column is missing.
@@ -48,14 +49,16 @@ module HoneyFormat
       header: nil,
       header_converter: HoneyFormat.header_converter,
       row_builder: nil,
-      type_map: {}
+      type_map: {},
+      skip_lines: nil
     )
       csv = ::CSV.parse(
         csv,
         col_sep: delimiter,
         row_sep: row_delimiter,
         quote_char: quote_character,
-        skip_blanks: true
+        skip_blanks: true,
+        skip_lines: skip_lines
       )
       super(
         csv,

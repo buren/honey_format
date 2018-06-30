@@ -11,7 +11,11 @@ options = cli.options
 
 input_path = options[:input_path] || raise(ArgumentError, 'input path required')
 csv_input = File.read(input_path)
-csv = HoneyFormat::CSV.new(csv_input, delimiter: options[:delimiter])
+csv = HoneyFormat::CSV.new(
+  csv_input,
+  delimiter: options[:delimiter],
+  skip_lines: options[:skip_lines]
+)
 
 csv_part = if options[:header_only]
              csv.header
