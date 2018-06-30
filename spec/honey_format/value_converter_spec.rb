@@ -12,11 +12,11 @@ RSpec.describe HoneyFormat::ValueConverter do
       expect(value_converter.type?(:watman)).to eq(false)
     end
 
-    it 'raises Errors::UnknownValueTypeError when trying to unregister unknown type' do
+    it 'raises Errors::UnknownTypeError when trying to unregister unknown type' do
       value_converter = described_class.new
       expect do
         value_converter.unregister(:watman)
-      end.to raise_error(HoneyFormat::Errors::UnknownValueTypeError)
+      end.to raise_error(HoneyFormat::Errors::UnknownTypeError)
     end
   end
 

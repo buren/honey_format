@@ -19,7 +19,7 @@ module HoneyFormat
 
     # Value conversion errors
     # Raised when value type is unknown
-    class UnknownValueTypeError < ArgumentError; end
+    class UnknownTypeError < ArgumentError; end
     # Raised when value type already exists
     class ValueTypeExistsError < ArgumentError; end
   end
