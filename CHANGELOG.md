@@ -1,5 +1,7 @@
 # HEAD
 
+## v0.15.0
+
 :warning: This release contains some backwards compatible changes.
 
 * Add `--skip-lines` argument to CLI [PR#22](https://github.com/buren/honey_format/pull/22)
