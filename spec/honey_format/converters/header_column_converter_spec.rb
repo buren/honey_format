@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'honey_format/header_column_converter'
+require 'honey_format/converters/header_column_converter'
 
 describe HoneyFormat::HeaderColumnConverter do
   # See https://bugs.ruby-lang.org/issues/10085
-  ruby_version_under_2_4 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.4.0') # rubocop:disable Naming/VariableNumber
+  ruby_version_under_2_4 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.4.0')
   [
     ['first_name', :first_name],
     ['first name', :first_name],

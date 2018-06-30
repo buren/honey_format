@@ -29,7 +29,7 @@ Id,Username,Email
 CSV
 csv = HoneyFormat::CSV.new(csv_string, type_map: { id: :integer })
 csv.columns     # => [:id, :username]
-user = csv.rows # => [#<Row id="1", username="buren">]
+user = csv.rows # => [#<Row id=1, username="buren">]
 user.id         # => 1
 user.username   # => "buren"
 
@@ -126,7 +126,7 @@ decimal_converter = HoneyFormat.value_converter[:decimal]
 decimal_converter.call('1.1') # => 1.1
 ```
 
-See [`ValueConverter::DEFAULT_CONVERTERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/value_converter.rb) for a complete list of the default ones.
+See [`ValueConverter::DEFAULT_CONVERTERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/converters/value_converter.rb) for a complete list of the default ones.
 
 __Row builder__
 
