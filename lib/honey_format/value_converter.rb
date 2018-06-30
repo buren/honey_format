@@ -2,6 +2,7 @@ require 'date'
 require 'time'
 require 'set'
 require 'digest'
+require 'securerandom'
 
 require 'honey_format/header_column_converter'
 
@@ -52,6 +53,7 @@ module HoneyFormat
       upcase: proc { |v| v&.upcase },
       boolean: proc { |v| CONVERT_BOOLEAN.call(v) },
       md5: proc { |v| Digest::MD5.hexdigest(v) if v },
+      hex: proc { |v| SecureRandom.hex if v },
       nil: proc {},
       header_column: HeaderColumnConverter,
     }.freeze
