@@ -1,5 +1,7 @@
 # HEAD
 
+* Add hex value converter
+
 ## v0.16.0
 
 * Add `--type-map` option to CLI
