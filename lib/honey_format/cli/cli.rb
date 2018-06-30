@@ -17,8 +17,11 @@ module HoneyFormat
 
     private
 
-    def puts(*args)
-      @io.puts(*args)
+    # Puts to configured IO
+    # @param [#to_s] object to print
+    # @return [nil] nil
+    def puts(arg)
+      @io.puts(arg)
     end
 
     # Parse command line arguments and return options

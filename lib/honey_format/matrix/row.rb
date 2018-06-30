@@ -13,11 +13,10 @@ module HoneyFormat
       new(*row)
     end
 
-    # rubocop:disable Metrics/LineLength
     # Represent row as CSV
-    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass]
+    #   the columns to output, nil means all columns (default: nil)
     # @return [String] CSV-string representation.
-    # rubocop:enable Metrics/LineLength
     def to_csv(columns: nil)
       attributes = members
       attributes = columns & attributes if columns

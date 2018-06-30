@@ -6,18 +6,20 @@ require 'honey_format/matrix'
 module HoneyFormat
   # Represents CSV.
   class CSV < Matrix
-    # rubocop:disable Metrics/LineLength
     # Instantiate CSV.
     # @return [CSV] a new instance of CSV.
     # @param [String] csv the CSV string
     # @param [String] delimiter the CSV column delimiter
     # @param [String, Symbol] row_delimiter the CSV row delimiter (default: :auto)
     # @param [String] quote_character the CSV quote character (default: ")
-    # @param [Array<String>] header optional argument that represents CSV header, required if the CSV file lacks a header row.
+    # @param [Array<String>]
+    #   header optional argument that represents CSV header, required if the CSV file
+    #   lacks a header row.
     # @param [#call] header_converter converts header columns.
     # @param [#call] row_builder will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
-    # @param skip_lines [Regexp, String] Regexp for determining wheter a line is a comment. See CSV skip_lines option.
+    # @param skip_lines [Regexp, String]
+    #   Regexp for determining wheter a line is a comment. See CSV skip_lines option.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderError] raised when header is missing (empty or nil).
     # @raise [MissingHeaderColumnError] raised when header column is missing.
@@ -41,7 +43,6 @@ module HoneyFormat
     #     puts "row error: #{e.class}, #{e.message}"
     #   end
     # @see Matrix#new
-    # rubocop:enable Metrics/LineLength
     def initialize(
       csv,
       delimiter: ',',

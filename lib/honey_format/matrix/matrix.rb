@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 module HoneyFormat
-  # Represents CSV.
+  # Represents Matrix.
   class Matrix
-    # Instantiate CSV.
-    # @return [CSV] a new instance of Matrix.
+    # Instantiate Matrix.
+    # @return [Matrix] a new instance of Matrix.
     # @param [Array<Array<String, nil>>] matrix
-    # @param [Array<String>] header optional argument that represents header,
-    #                        required if the matrix lacks a header row.
+    # @param [Array<String>]
+    #   header optional argument that represents header, required if the matrix
+    #   lacks a header row.
     # @param [#call] header_converter converts header columns.
     # @param [#call] row_builder will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
@@ -18,7 +19,9 @@ module HoneyFormat
     # @raise [EmptyRowColumnsError] raised when row columns are empty.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
     # @example
-    #   matrix = HoneyFormat::Matrix.new([%w[name id]])
+    #   matrix = HoneyFormat::Matrix.new([%w[name id], %w[jacob 1]])
+    #   matrix.columns # => [:name, :id]
+    #   matrix.rows.to_a # => [#<Row name="jacob", id="1">]
     # @example With custom header converter
     #   converter = proc { |v| v == 'name' ? 'first_name' : v }
     #   matrix = HoneyFormat::Matrix.new([%w[name id]], header_converter: converter)
@@ -43,25 +46,27 @@ module HoneyFormat
       @rows = Rows.new(matrix, columns, builder: row_builder, type_map: type_map)
     end
 
-    # Original CSV header
-    # @return [Header] object representing the CSV header.
+    # Original matrix header
+    # @return [Header] object representing the matrix header.
     def header
       @header
     end
 
-    # CSV columns converted from the original CSV header
+    # Matrix columns converted from the original Matrix header
     # @return [Array<Symbol>] of column identifiers.
     def columns
       @header.to_a
     end
 
-    # @return [Rows] of rows.
+    # Return rows
+    # @return [Rows] rows.
     def rows
       @rows
     end
 
+    # Itereate over each row
     # @yield [row] The given block will be passed for every row.
-    # @yieldparam [Row] row in the CSV.
+    # @yieldparam [Row] row in the matrix.
     # @return [Enumerator] If no block is given, an enumerator object will be returned.
     def each_row
       return rows.each unless block_given?
@@ -69,10 +74,12 @@ module HoneyFormat
       rows.each { |row| yield(row) }
     end
 
-    # rubocop:disable Metrics/LineLength
     # Convert matrix to CSV-string.
-    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
-    # @yield [row] The given block will be passed for every row - return truthy if you want the row to be included in the output
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass]
+    #   the columns to output, nil means all columns (default: nil)
+    # @yield [row]
+    #   The given block will be passed for every row - return truthy if you want the
+    #   row to be included in the output
     # @yieldparam [Row] row
     # @return [String] CSV-string representation.
     # @example with selected columns
@@ -81,7 +88,6 @@ module HoneyFormat
     #   matrix.to_csv { |row| row.country == 'Sweden' }
     # @example with both selected columns and rows
     #   matrix.to_csv(columns: [:id, :country]) { |row| row.country == 'Sweden' }
-    # rubocop:enable Metrics/LineLength
     def to_csv(columns: nil, &block)
       columns = columns&.map(&:to_sym)
       @header.to_csv(columns: columns) + @rows.to_csv(columns: columns, &block)

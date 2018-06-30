@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module HoneyFormat
-  # Converts values
+  # Convert registry that holds value converters
   class ConverterRegistry
     # Instantiate a converter registry
     # @param [Hash] default_converters hash of default converters
@@ -17,7 +17,7 @@ module HoneyFormat
       @converters.keys
     end
 
-    # Register a converter registry
+    # Register a converter
     # @param [Symbol, String] type the name of the type
     # @param [#call] converter that responds to #call
     # @return [ConverterRegistry] returns self
@@ -27,7 +27,7 @@ module HoneyFormat
       self
     end
 
-    # Unregister a converter registry
+    # Unregister a converter
     # @param [Symbol, String] type the name of the type
     # @return [ConverterRegistry] returns self
     # @raise [UnknownTypeError] if type is already registered
@@ -44,7 +44,7 @@ module HoneyFormat
       self[type].call(value)
     end
 
-    # Register a converter registry
+    # Register a converter
     # @param [Symbol, String] type the name of the type
     # @param [#call] converter that responds to #call
     # @return [Object] returns the converter
