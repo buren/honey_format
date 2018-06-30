@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'honey_format'
 
 csv_string = <<~CSV
-email,name,age,country
-john@example.com,John Doe,42,SE
-jane@example.com,Jane Doe,84,DK
-pete@example.com,Pete Doe,42,UK
+  email,name,age,country
+  john@example.com,John Doe,42,SE
+  jane@example.com,Jane Doe,84,DK
+  pete@example.com,Pete Doe,42,UK
 CSV
 
 puts '== EXAMPLE: CSV complete example =='

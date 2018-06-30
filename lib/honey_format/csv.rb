@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 require 'csv'
 
 require 'honey_format/matrix'
-# require 'honey_format/rows'
-# require 'honey_format/header'
 
 module HoneyFormat
   # Represents CSV.
   class CSV < Matrix
+    # rubocop:disable Metrics/LineLength
     # Instantiate CSV.
     # @return [CSV] a new instance of CSV.
     # @param [String] csv the CSV string
@@ -41,6 +42,7 @@ module HoneyFormat
     #     puts "row error: #{e.class}, #{e.message}"
     #   end
     # @see Matrix#new
+    # rubocop:enable Metrics/LineLength
     def initialize(
       csv,
       delimiter: ',',

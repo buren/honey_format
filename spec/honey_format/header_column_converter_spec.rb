@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'honey_format/header_column_converter'
 
 describe HoneyFormat::HeaderColumnConverter do
   # See https://bugs.ruby-lang.org/issues/10085
-  ruby_version_under_2_4 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.4.0')
+  ruby_version_under_2_4 = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.4.0') # rubocop:disable Naming/VariableNumber
   [
     ['first_name', :first_name],
     ['first name', :first_name],
@@ -21,7 +23,7 @@ describe HoneyFormat::HeaderColumnConverter do
     ['first-name', :first_name],
     ['USeRnaMe', :username],
     [nil, :column3, 3],
-    ruby_version_under_2_4 ? ['ÅÄÖ', :'ÅÄÖ'] : ['ÅÄÖ', :'åäö'],
+    ruby_version_under_2_4 ? ['ÅÄÖ', :'ÅÄÖ'] : ['ÅÄÖ', :'åäö']
   ].each do |data|
     input, expected, index = data
 

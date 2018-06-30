@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 require 'honey_format/row_builder'
@@ -20,7 +22,7 @@ describe HoneyFormat::RowBuilder do
   describe '#build' do
     it 'calls the injected builder' do
       expected = 'changed'
-      builder = ->(row) { row.id = expected; row }
+      builder = ->(row) { row.id = expected; row } # rubocop:disable Style/Semicolon
       row = described_class.new(:id, builder: builder)
       result = row.build('value').id
       expect(result).to eq(expected)
@@ -42,7 +44,7 @@ describe HoneyFormat::RowBuilder do
     it 'can have spec chars column names' do
       expected = 'value'
       row = described_class.new(:ÅÄÖ)
-      result = row.build(expected).ÅÄÖ
+      result = row.build(expected).ÅÄÖ # rubocop:disable Naming/AsciiIdentifiers
       expect(result).to eq(expected)
     end
 
@@ -76,7 +78,7 @@ describe HoneyFormat::RowBuilder do
 
     it 'builds when passed a shorter row than specified columns' do
       expected = 'expected'
-      row = described_class.new([:id, :username])
+      row = described_class.new(%i(id username))
       expect(row.build([expected]).id).to eq(expected)
       expect(row.build([expected]).username).to eq(nil)
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HoneyFormat
   # Header column converter
   module HeaderColumnConverter
@@ -11,7 +13,7 @@ module HoneyFormat
       [/\} /, '}'],
       [/ /, '_'],
       [/-/, '_']
-    ].map { |array| array.freeze }.freeze
+    ].map(&:freeze).freeze
 
     # Returns converted value and mutates the argument.
     # @return [Symbol] the cleaned header column.

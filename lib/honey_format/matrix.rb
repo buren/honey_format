@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'csv'
 
 require 'honey_format/rows'
@@ -9,7 +11,8 @@ module HoneyFormat
     # Instantiate CSV.
     # @return [CSV] a new instance of Matrix.
     # @param [Array<Array<String, nil>>] matrix
-    # @param [Array<String>] header optional argument that represents header, required if the matrix lacks a header row.
+    # @param [Array<String>] header optional argument that represents header,
+    #                        required if the matrix lacks a header row.
     # @param [#call] header_converter converts header columns.
     # @param [#call] row_builder will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
@@ -71,6 +74,7 @@ module HoneyFormat
       rows.each { |row| yield(row) }
     end
 
+    # rubocop:disable Metrics/LineLength
     # Convert matrix to CSV-string.
     # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
     # @yield [row] The given block will be passed for every row - return truthy if you want the row to be included in the output
@@ -82,6 +86,7 @@ module HoneyFormat
     #   matrix.to_csv { |row| row.country == 'Sweden' }
     # @example with both selected columns and rows
     #   matrix.to_csv(columns: [:id, :country]) { |row| row.country == 'Sweden' }
+    # rubocop:enable Metrics/LineLength
     def to_csv(columns: nil, &block)
       columns = columns&.map(&:to_sym)
       @header.to_csv(columns: columns) + @rows.to_csv(columns: columns, &block)

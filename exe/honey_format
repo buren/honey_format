@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 # for dev purposes
 require 'bundler/setup' if ENV['HONEY_FORMAT_GEM_DEV']

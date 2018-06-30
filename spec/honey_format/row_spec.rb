@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 require 'set'
@@ -14,15 +16,15 @@ describe HoneyFormat::Row do
     end
   end
 
-  describe "#inspect" do
-    it "returns nicely formatted string representation of row" do
+  describe '#inspect' do
+    it 'returns nicely formatted string representation of row' do
       row = described_class.call(%i[name age])
       person = row.new('buren', 28)
 
       expect(person.inspect).to eq('#<Row name="buren", age=28>')
     end
 
-    it "aliases #inspect to #to_s" do
+    it 'aliases #inspect to #to_s' do
       row = described_class.call(%i[name age])
       person = row.new('buren', 28)
 
@@ -42,14 +44,14 @@ describe HoneyFormat::Row do
       struct = described_class.call(%i[name age country])
       person = struct.new('buren', 28, 'Sweden')
 
-      expect(person.to_csv(columns: [:age, :country])).to eq("28,Sweden\n")
+      expect(person.to_csv(columns: %i(age country))).to eq("28,Sweden\n")
     end
 
     it 'returns the row as a CSV-string with selected columns (passed as Set object)' do
       struct = described_class.call(%i[name age country])
       person = struct.new('buren', 28, 'Sweden')
 
-      columns = Set.new([:age, :country])
+      columns = Set.new(%i(age country))
       expect(person.to_csv(columns: columns)).to eq("28,Sweden\n")
     end
 

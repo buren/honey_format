@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'optparse'
 require 'honey_format/cli/result_writer'
 
@@ -7,9 +9,9 @@ module HoneyFormat
   # @attr_reader [CLIResultWriter] writer the CLI result writer
   class BenchmarkCLI
     # CSV default test data location
-    CSV_TEST_DATA_URL = 'https://gist.github.com/buren/b669dd82fa37e37672da2cab33c8a830/raw/54ba14a698941ff61f3b854b66df0a7782c79c85/csv_1000_rows.csv'
+    CSV_TEST_DATA_URL = 'https://gist.github.com/buren/b669dd82fa37e37672da2cab33c8a830/raw/54ba14a698941ff61f3b854b66df0a7782c79c85/csv_1000_rows.csv'.freeze
     # CSV default test data cache location
-    CSV_TEST_DATA_CACHE_PATH = '/tmp/honey-format-benchmark-test.csv'
+    CSV_TEST_DATA_CACHE_PATH = '/tmp/honey-format-benchmark-test.csv'.freeze
 
     attr_reader :writer, :options
 
@@ -44,7 +46,7 @@ module HoneyFormat
     def fetch_default_benchmark_csv
       cache_path = CSV_TEST_DATA_CACHE_PATH
 
-      if File.exists?(cache_path)
+      if File.exist?(cache_path)
         writer.puts "Cache file found at #{cache_path}.", verbose: true
         @used_input_path = cache_path
         return File.read(cache_path)
@@ -52,7 +54,7 @@ module HoneyFormat
 
       writer.print 'Downloading test data file from GitHub..', verbose: true
       require 'open-uri'
-      open(CSV_TEST_DATA_URL).read.tap do |csv|
+      open(CSV_TEST_DATA_URL).read.tap do |csv| # rubocop:disable Security/Open
         @used_input_path = CSV_TEST_DATA_URL
         writer.puts 'done!', verbose: true
         File.write(cache_path, csv)
@@ -71,18 +73,18 @@ module HoneyFormat
       verbose = false
 
       OptionParser.new do |parser|
-        parser.banner = "Usage: bin/benchmark [file.csv] [options]"
-        parser.default_argv = ARGV
+        parser.banner = 'Usage: bin/benchmark [file.csv] [options]'
+        parser.default_argv = argv
 
-        parser.on("--csv=[file1.csv]", String, "CSV file(s)") do |value|
+        parser.on('--csv=[file1.csv]', String, 'CSV file(s)') do |value|
           input_path = value
         end
 
-        parser.on("--[no-]verbose", "Verbose output") do |value|
+        parser.on('--[no-]verbose', 'Verbose output') do |value|
           verbose = value
         end
 
-        parser.on("--lines-multipliers=[1,10,50]", Array, "Multiply the rows in the CSV file (default: 1)") do |value|
+        parser.on('--lines-multipliers=[1,10,50]', Array, 'Multiply the rows in the CSV file (default: 1)') do |value|
           lines_multipliers = value.map do |v|
             Integer(v).tap do |int|
               unless int >= 1
@@ -92,21 +94,21 @@ module HoneyFormat
           end
         end
 
-        parser.on("--time=[30]", String, "Benchmark time (default: 30)") do |value|
+        parser.on('--time=[30]', String, 'Benchmark time (default: 30)') do |value|
           benchmark_time = Integer(value)
         end
 
-        parser.on("--warmup=[30]", String, "Benchmark warmup (default: 30)") do |value|
+        parser.on('--warmup=[30]', String, 'Benchmark warmup (default: 30)') do |value|
           benchmark_warmup = Integer(value)
         end
 
-        parser.on("-h", "--help", "How to use") do
+        parser.on('-h', '--help', 'How to use') do
           puts parser
           exit
         end
 
         # No argument, shows at tail. This will print an options summary.
-        parser.on_tail("-h", "--help", "Show this message") do
+        parser.on_tail('-h', '--help', 'Show this message') do
           puts parser
           exit
         end
@@ -117,7 +119,7 @@ module HoneyFormat
         benchmark_time: benchmark_time,
         benchmark_warmup: benchmark_warmup,
         lines_multipliers: lines_multipliers,
-        verbose: verbose,
+        verbose: verbose
       }
     end
   end

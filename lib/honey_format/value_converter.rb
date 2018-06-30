@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'date'
 require 'time'
 require 'set'
@@ -21,11 +23,10 @@ module HoneyFormat
         true
       elsif FALSY.include?(value)
         false
-      else
-        nil
       end
     }
 
+    # rubocop:disable Metrics/LineLength
     # Default value converters
     DEFAULT_CONVERTERS = {
       # strict variants
@@ -42,12 +43,48 @@ module HoneyFormat
         value
       },
       # safe variants
-      decimal: proc { |v| Float(v) rescue nil },
-      decimal_or_zero: proc { |v| Float(v) rescue 0.0 },
-      integer: proc { |v| Integer(v) rescue nil },
-      integer_or_zero: proc { |v| Integer(v) rescue 0 },
-      date: proc { |v| Date.parse(v) rescue nil },
-      datetime: proc { |v| Time.parse(v) rescue nil },
+      decimal: proc { |v|
+                 begin
+                   Float(v)
+                 rescue StandardError
+                   nil
+                 end
+               },
+      decimal_or_zero: proc { |v|
+                         begin
+                           Float(v)
+                         rescue StandardError
+                           0.0
+                         end
+                       },
+      integer: proc { |v|
+                 begin
+                   Integer(v)
+                 rescue StandardError
+                   nil
+                 end
+               },
+      integer_or_zero: proc { |v|
+                         begin
+                           Integer(v)
+                         rescue StandardError
+                           0
+                         end
+                       },
+      date: proc { |v|
+              begin
+                Date.parse(v)
+              rescue StandardError
+                nil
+              end
+            },
+      datetime: proc { |v|
+                  begin
+                    Time.parse(v)
+                  rescue StandardError
+                    nil
+                  end
+                },
       symbol: proc { |v| v&.to_sym },
       downcase: proc { |v| v&.downcase },
       upcase: proc { |v| v&.upcase },
@@ -55,8 +92,9 @@ module HoneyFormat
       md5: proc { |v| Digest::MD5.hexdigest(v) if v },
       hex: proc { |v| SecureRandom.hex if v },
       nil: proc {},
-      header_column: HeaderColumnConverter,
+      header_column: HeaderColumnConverter
     }.freeze
+    # rubocop:enable Metrics/LineLength
 
     # Instantiate a value converter
     def initialize

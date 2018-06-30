@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'optparse'
 
 module HoneyFormat
@@ -33,26 +35,26 @@ module HoneyFormat
       type_map = {}
 
       OptionParser.new do |parser|
-        parser.banner = "Usage: honey_format [options] <file.csv>"
+        parser.banner = 'Usage: honey_format [options] <file.csv>'
         parser.default_argv = argv
 
-        parser.on("--csv=input.csv", String, "CSV file") do |value|
+        parser.on('--csv=input.csv', String, 'CSV file') do |value|
           input_path = value
         end
 
-        parser.on("--columns=id,name", Array, "Select columns") do |value|
+        parser.on('--columns=id,name', Array, 'Select columns') do |value|
           columns = value&.map(&:to_sym)
         end
 
-        parser.on("--output=output.csv", String, "CSV output (STDOUT otherwise)") do |value|
+        parser.on('--output=output.csv', String, 'CSV output (STDOUT otherwise)') do |value|
           output_path = value
         end
 
-        parser.on("--delimiter=,", String, "CSV delimiter (default: ,)") do |value|
+        parser.on('--delimiter=,', String, 'CSV delimiter (default: ,)') do |value|
           delimiter = value
         end
 
-        parser.on("--skip-lines=,", String, "Skip lines that match this pattern") do |value|
+        parser.on('--skip-lines=,', String, 'Skip lines that match this pattern') do |value|
           skip_lines = value
         end
 
@@ -60,15 +62,15 @@ module HoneyFormat
           type_map = option_to_h(value || [])
         end
 
-        parser.on("--[no-]header-only", "Print only the header") do |value|
+        parser.on('--[no-]header-only', 'Print only the header') do |value|
           header_only = value
         end
 
-        parser.on("--[no-]rows-only", "Print only the rows") do |value|
+        parser.on('--[no-]rows-only', 'Print only the rows') do |value|
           rows_only = value
         end
 
-        parser.on("-h", "--help", "How to use") do
+        parser.on('-h', '--help', 'How to use') do
           puts parser
           exit
         end

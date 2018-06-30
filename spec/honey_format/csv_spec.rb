@@ -1,41 +1,43 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe HoneyFormat::CSV do
-  let(:csv_string) {
-<<-CSV
-email, ids
-test@example.com,42
-CSV
-  }
+  let(:csv_string) do
+    <<~CSV
+      email, ids
+      test@example.com,42
+    CSV
+  end
 
-let(:diabolical_csv) {
-<<-CSV
-"Email Address","First Name","Last Name",MEMBER_RATING,OPTIN_TIME,OPTIN_IP,CONFIRM_TIME,CONFIRM_IP,LATITUDE,LONGITUDE,GMTOFF,DSTOFF,TIMEZONE,CC,REGION,LAST_CHANGED,LEID,EUID,NOTES
-mail@example.com,,,2,,,"2015-03-16 14:40:47",,,,,,,,,"2015-03-16 14:40:47",some-value,some-other-value,
-CSV
-}
+  let(:diabolical_csv) do
+    <<~CSV
+      "Email Address","First Name","Last Name",MEMBER_RATING,OPTIN_TIME,OPTIN_IP,CONFIRM_TIME,CONFIRM_IP,LATITUDE,LONGITUDE,GMTOFF,DSTOFF,TIMEZONE,CC,REGION,LAST_CHANGED,LEID,EUID,NOTES
+      mail@example.com,,,2,,,"2015-03-16 14:40:47",,,,,,,,,"2015-03-16 14:40:47",some-value,some-other-value,
+    CSV
+  end
 
-let(:diabolical_cols) {
-  [:email_address,
-   :first_name,
-   :last_name,
-   :member_rating,
-   :optin_time,
-   :optin_ip,
-   :confirm_time,
-   :confirm_ip,
-   :latitude,
-   :longitude,
-   :gmtoff,
-   :dstoff,
-   :timezone,
-   :cc,
-   :region,
-   :last_changed,
-   :leid,
-   :euid,
-   :notes]
-}
+  let(:diabolical_cols) do
+    %i(email_address
+       first_name
+       last_name
+       member_rating
+       optin_time
+       optin_ip
+       confirm_time
+       confirm_ip
+       latitude
+       longitude
+       gmtoff
+       dstoff
+       timezone
+       cc
+       region
+       last_changed
+       leid
+       euid
+       notes)
+  end
 
   describe 'missing header' do
     it 'should fail' do
@@ -45,8 +47,8 @@ let(:diabolical_cols) {
 
   describe 'with specified header' do
     it 'returns correct csv object' do
-      csv_string = "1,buren"
-      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      csv_string = '1,buren'
+      csv = described_class.new(csv_string, header: %w(Id Username))
       expect(csv.rows.first.username).to eq('buren')
     end
   end
@@ -54,10 +56,9 @@ let(:diabolical_cols) {
   describe 'with blank lines' do
     it 'skips those lines' do
       csv_string = <<~CSV
-      id,username
-      1,buren
-
-      2,jacob
+        id,username
+        1,buren
+         2,jacob
       CSV
       csv = HoneyFormat::CSV.new(csv_string)
       expect(csv.rows.length).to eq(2)
@@ -68,11 +69,11 @@ let(:diabolical_cols) {
     it 'can skip lines that match given regexp' do
       comment_regexp = %r{\A#|\/\/} # consider "#" and "//" comments
       csv_string = <<~CSV
-      id,username
-      1,buren
-      # this is a comment
-      // this is also comment
-      2,jacob
+        id,username
+        1,buren
+        # this is a comment
+        // this is also comment
+        2,jacob
       CSV
       csv = HoneyFormat::CSV.new(csv_string, skip_lines: comment_regexp)
       expect(csv.rows.length).to eq(2)
@@ -80,10 +81,10 @@ let(:diabolical_cols) {
 
     it 'can skip lines that match a given string' do
       csv_string = <<~CSV
-      id,username
-      1,buren
-      # this is a comment
-      2,jacob
+        id,username
+        1,buren
+        # this is a comment
+        2,jacob
       CSV
       csv = HoneyFormat::CSV.new(csv_string, skip_lines: '#')
       expect(csv.rows.length).to eq(2)
@@ -102,7 +103,7 @@ let(:diabolical_cols) {
 
   describe '#header' do
     it 'returns an instance of Header' do
-      csv = " ID ,Name"
+      csv = ' ID ,Name'
       result = described_class.new(csv).header
       expect(result).to be_a(HoneyFormat::Header)
     end
@@ -151,7 +152,7 @@ let(:diabolical_cols) {
       csv_string,
       delimiter: ';',
       row_delimiter: '|',
-      quote_character: "'",
+      quote_character: "'"
     )
     row = csv.rows.first
 
@@ -170,7 +171,7 @@ let(:diabolical_cols) {
   end
 
   it 'can handle alternative row delimiters' do
-    csv = "name,id|test,42"
+    csv = 'name,id|test,42'
     csv = described_class.new(csv, row_delimiter: '|')
     row = csv.rows.first
 
@@ -181,8 +182,8 @@ let(:diabolical_cols) {
 
   it 'can handle alternative quote characters' do
     csv = <<~CSV
-    name,id
-    'John Doe',42
+      name,id
+      'John Doe',42
     CSV
     csv = described_class.new(csv, quote_character: "'")
     row = csv.rows.first
@@ -193,34 +194,34 @@ let(:diabolical_cols) {
 
   describe '#to_csv' do
     it 'returns a CSV-string' do
-      csv_string = "1,buren"
-      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      csv_string = '1,buren'
+      csv = described_class.new(csv_string, header: %w(Id Username))
       expect(csv.to_csv).to eq("id,username\n1,buren\n")
     end
 
     it 'returns a CSV-string with selected columns as symbols' do
-      csv_string = "1,buren"
-      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      csv_string = '1,buren'
+      csv = described_class.new(csv_string, header: %w(Id Username))
       expect(csv.to_csv(columns: [:username])).to eq("username\nburen\n")
     end
 
     it 'returns a CSV-string with selected columns as strings' do
-      csv_string = "1,buren"
-      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      csv_string = '1,buren'
+      csv = described_class.new(csv_string, header: %w(Id Username))
       expect(csv.to_csv(columns: ['username'])).to eq("username\nburen\n")
     end
 
     it 'returns a CSV-string with selected rows' do
       csv_string = "1,buren\n2,jacob"
-      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      csv = described_class.new(csv_string, header: %w(Id Username))
       expect(csv.to_csv { |row| row.username == 'buren' }).to eq("id,username\n1,buren\n")
     end
 
     it 'returns a valid CSV-string even if values needs special quoting' do
       csv_string = '1,"jacob ""buren"" burenstam"'
-      csv = described_class.new(csv_string, header: ['Id', 'Username'])
+      csv = described_class.new(csv_string, header: %w(Id Username))
       expected = <<~CSV
-      id,username\n1,"jacob ""buren"" burenstam"
+        id,username\n1,"jacob ""buren"" burenstam"
       CSV
       expect(csv.to_csv).to eq(expected)
     end
@@ -231,8 +232,8 @@ let(:diabolical_cols) {
 
       csv = described_class.new(csv_string, header: header)
       expected = <<~CSV
-      order,order_date,paytype,payment_method_code,payment_reference,captured,captured_date,billing_country,billing_name,billing_company,billing_address,billing_coaddress,billing_zipcode,billing_state,billing_city,delivery_country,delivery_name,delivery_company,delivery_address,delivery_coaddress,delivery_zipcode,delivery_state,delivery_city,delivery_email,pcs,product_order_value(ex_vat),shipping_value(ex_vat),voucher_value(ex_vat),total_order_value(ex_vat),vat_deduct,vat,total_order_value(inc_vat),refunded,currency,currency_rate,total_order_value(sek),vat(sek),shipping_value(ex_vat)(sek),voucher_value(ex_vat)(sek),affiliate,ec_vat,vat#,collection
-      333333-1,2015-05-24 23:31:16,None,visa,1111111111,1119.00,0000-00-00 00:00:00,IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",john@example.com,1,1119.00,0.00,0.00,1119.00,0.00,23.80,1119.00,0,EUR,9.24140,1099.73,219.95,0.00,0.00,,,,
+        order,order_date,paytype,payment_method_code,payment_reference,captured,captured_date,billing_country,billing_name,billing_company,billing_address,billing_coaddress,billing_zipcode,billing_state,billing_city,delivery_country,delivery_name,delivery_company,delivery_address,delivery_coaddress,delivery_zipcode,delivery_state,delivery_city,delivery_email,pcs,product_order_value(ex_vat),shipping_value(ex_vat),voucher_value(ex_vat),total_order_value(ex_vat),vat_deduct,vat,total_order_value(inc_vat),refunded,currency,currency_rate,total_order_value(sek),vat(sek),shipping_value(ex_vat)(sek),voucher_value(ex_vat)(sek),affiliate,ec_vat,vat#,collection
+        333333-1,2015-05-24 23:31:16,None,visa,1111111111,1119.00,0000-00-00 00:00:00,IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",john@example.com,1,1119.00,0.00,0.00,1119.00,0.00,23.80,1119.00,0,EUR,9.24140,1099.73,219.95,0.00,0.00,,,,
       CSV
       csv_output = csv.to_csv
       expect(csv_output).to eq(expected)
@@ -240,7 +241,7 @@ let(:diabolical_cols) {
     end
 
     it 'returns a CSV-string with values changed by custom row builder' do
-      csv_string = "1,buren"
+      csv_string = '1,buren'
       upcase_builder = Class.new do
         def self.call(row)
           row.username = row.username.upcase
@@ -250,7 +251,7 @@ let(:diabolical_cols) {
 
       csv = described_class.new(
         csv_string,
-        header: ['Id', 'Username'],
+        header: %w(Id Username),
         row_builder: upcase_builder
       )
       expect(csv.to_csv).to eq("id,username\n1,BUREN\n")

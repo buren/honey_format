@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'honey_format'
 
 csv_string = <<~CSV
-name,age,country
-John Doe,42,SE
+  name,age,country
+  John Doe,42,SE
 CSV
 
 HoneyFormat.configure do |config|
-  config.converter.register :upcased, proc { |v| v.upcase }
-  config.converter.register :country, proc { |v| v == 'SE' ? 'SWEDEN' : v }
+  config.converter.register(:upcased, proc { |v| v.upcase })
+  config.converter.register(:country, proc { |v| v == 'SE' ? 'SWEDEN' : v })
 end
 
 type_map = {
   name: :upcased,
-  country: :country,
+  country: :country
 }
 
 puts '== EXAMPLE: Upcase name & convert country =='
