@@ -1,5 +1,9 @@
 # HEAD
 
+## v0.16.0
+
+* Add `--type-map` option to CLI
+
 ## v0.15.0
 
 :warning: This release contains some backwards compatible changes.
