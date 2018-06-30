@@ -1,5 +1,6 @@
 # HEAD
 
+* Rename `Errors::UnknownValueTypeError` => `Errors::UnknownTypeError`
 * Add hex value converter
 
 ## v0.16.0
