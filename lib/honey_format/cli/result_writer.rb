@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HoneyFormat
   # CLI result writer handles command output
   # @attr_reader [true, false] verbose the writer mode

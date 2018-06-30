@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 require 'honey_format/value_converter'
 
 RSpec.describe HoneyFormat::ValueConverter do
-  describe "#unregister" do
+  describe '#unregister' do
     it 'can unregister known type' do
       value_converter = described_class.new
       value_converter.register(:watman, proc {})
@@ -20,7 +22,7 @@ RSpec.describe HoneyFormat::ValueConverter do
     end
   end
 
-  describe "#register" do
+  describe '#register' do
     it 'can register type' do
       value_converter = described_class.new
       value_converter.register(:watman, proc {})
@@ -38,7 +40,7 @@ RSpec.describe HoneyFormat::ValueConverter do
     end
   end
 
-  describe "#types" do
+  describe '#types' do
     it 'returns the register types' do
       expected = %i[
         decimal! integer! date! datetime! symbol! downcase! upcase! boolean!
@@ -50,8 +52,8 @@ RSpec.describe HoneyFormat::ValueConverter do
     end
   end
 
-  describe "#convert" do
-    describe "integer! type" do
+  describe '#convert' do
+    describe 'integer! type' do
       it 'can convert' do
         value = described_class.new.call('1', :integer!)
         expect(value).to eq(1)
@@ -64,7 +66,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "integer type" do
+    describe 'integer type' do
       it 'can convert' do
         value = described_class.new.call('1', :integer)
         expect(value).to eq(1)
@@ -76,7 +78,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "integer_or_zero type" do
+    describe 'integer_or_zero type' do
       it 'can convert' do
         value = described_class.new.call('1', :integer_or_zero)
         expect(value).to eq(1)
@@ -88,7 +90,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "boolean! type" do
+    describe 'boolean! type' do
       %w[t T 1 y Y true TRUE].each do |input|
         it "can convert #{input} to true" do
           value = described_class.new.call(input, :boolean!)
@@ -112,7 +114,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "boolean type" do
+    describe 'boolean type' do
       %w[t T 1 y Y true TRUE].each do |input|
         it "can convert #{input} to true" do
           value = described_class.new.call(input, :boolean)
@@ -135,7 +137,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "decimal type" do
+    describe 'decimal type' do
       it 'can convert' do
         value = described_class.new.call('1.1', :decimal)
         expect(value).to eq(1.1)
@@ -152,7 +154,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "decimal_or_zero type" do
+    describe 'decimal_or_zero type' do
       it 'can convert' do
         value = described_class.new.call('1.1', :decimal_or_zero)
         expect(value).to eq(1.1)
@@ -169,7 +171,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "decimal! type" do
+    describe 'decimal! type' do
       it 'can convert' do
         value = described_class.new.call('1.1', :decimal!)
         expect(value).to eq(1.1)
@@ -187,7 +189,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "date! type" do
+    describe 'date! type' do
       it 'can convert' do
         date_string = '2018-01-01'
         value = described_class.new.call(date_string, :date!)
@@ -202,7 +204,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "date type" do
+    describe 'date type' do
       it 'can convert' do
         date_string = '2018-01-01'
         value = described_class.new.call(date_string, :date!)
@@ -216,7 +218,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "datetime! type" do
+    describe 'datetime! type' do
       it 'can convert' do
         time_string = '2018-01-01 00:15'
         value = described_class.new.call(time_string, :datetime)
@@ -231,7 +233,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "datetime type" do
+    describe 'datetime type' do
       it 'can convert' do
         time_string = '2018-01-01 00:15'
         value = described_class.new.call(time_string, :datetime)
@@ -245,7 +247,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "symbol! type" do
+    describe 'symbol! type' do
       it 'can convert' do
         value = described_class.new.call('1', :symbol!)
         expect(value).to eq(:"1")
@@ -258,7 +260,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "symbol type" do
+    describe 'symbol type' do
       it 'can convert' do
         value = described_class.new.call('1', :symbol)
         expect(value).to eq(:'1')
@@ -270,7 +272,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "downcase! type" do
+    describe 'downcase! type' do
       it 'can convert' do
         value = described_class.new.call('BUREN', :downcase!)
         expect(value).to eq('buren')
@@ -283,7 +285,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "downcase type" do
+    describe 'downcase type' do
       it 'can convert' do
         value = described_class.new.call('BUREN', :downcase)
         expect(value).to eq('buren')
@@ -295,7 +297,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "upcase! type" do
+    describe 'upcase! type' do
       it 'can convert' do
         value = described_class.new.call('buren', :upcase!)
         expect(value).to eq('BUREN')
@@ -308,7 +310,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "upcase type" do
+    describe 'upcase type' do
       it 'can convert' do
         value = described_class.new.call('buren', :upcase)
         expect(value).to eq('BUREN')
@@ -320,7 +322,7 @@ RSpec.describe HoneyFormat::ValueConverter do
       end
     end
 
-    describe "nil type" do
+    describe 'nil type' do
       it 'converts value to nil' do
         value = described_class.new.call('buren', :nil)
         expect(value).to be_nil

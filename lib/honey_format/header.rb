@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
 require 'set'
 
 module HoneyFormat
   # Represents a header
+  # @attr_reader [Array<Symbol>]
   class Header
     include Enumerable
 
     # Instantiate a Header
     # @return [Header] a new instance of Header.
     # @param [Array<String>] header array of strings.
-    # @param converter [#call, Symbol] header converter that implements a #call method that takes one column (string) argument OR symbol for a registered value converter.
+    # @param converter [#call, Symbol] header converter that implements a #call method
+    #                                  that takes one column (string) argument OR
+    #                                  symbol for a registered value converter.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @example Instantiate a header with a custom converter
@@ -122,7 +127,7 @@ module HoneyFormat
 
       parts = [
         "CSV header column can't be nil or empty!",
-        "When you pass your own converter make sure that it never returns nil or an empty string.",
+        'When you pass your own converter make sure that it never returns nil or an empty string.', # rubocop:disable Metrics/LineLength
         'Instead generate unique columns names.'
       ]
       raise(Errors::MissingHeaderColumnError, parts.join(' '))

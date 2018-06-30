@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'honey_format'
 
 csv_string = <<~CSV
-Email,Name,Age,Country
-john@example.com,John Doe,42,Sweden
-jane@example.com,Jane Doe,42,Denmark
+  Email,Name,Age,Country
+  john@example.com,John Doe,42,Sweden
+  jane@example.com,Jane Doe,42,Denmark
 CSV
 
 puts '== EXAMPLE: CSV output with filtered columns and rows =='
@@ -20,7 +22,7 @@ end
 country_coder = lambda do |value|
   {
     'Sweden' => 'SE',
-    'Denmark' => 'DK',
+    'Denmark' => 'DK'
     # ...
   }.fetch(value, value)
 end
@@ -40,7 +42,7 @@ end
 # convert column values
 type_map = {
   age: :integer,
-  country_code: :country_code,
+  country_code: :country_code
 }
 
 csv = HoneyFormat::CSV.new(

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe HoneyFormat::Header do
@@ -30,17 +32,17 @@ describe HoneyFormat::Header do
       expect do
         described_class.new(['first', ''], converter: proc { |v| v })
       end.to raise_error(HoneyFormat::MissingHeaderColumnError)
-     end
+    end
 
-     it 'fails with HoneyFormat::HeaderError when a header column is empty' do
-       expect do
-         described_class.new(['first', ''], converter: proc { |v| v })
-       end.to raise_error(HoneyFormat::HeaderError)
-      end
+    it 'fails with HoneyFormat::HeaderError when a header column is empty' do
+      expect do
+        described_class.new(['first', ''], converter: proc { |v| v })
+      end.to raise_error(HoneyFormat::HeaderError)
+    end
 
     it 'generates names for missing/empty header columns' do
       header = described_class.new(['first', '', 'third'])
-      expect(header.to_a).to eq([:first, :column1, :third])
+      expect(header.to_a).to eq(%i(first column1 third))
     end
 
     it 'can receive converter argument as symbol' do
@@ -104,15 +106,15 @@ describe HoneyFormat::Header do
     end
   end
 
-  one_arity_block = proc { |v| 'c' }
-  two_arity_block = proc { |v, i| "c#{i}" }
+  one_arity_block = proc { |_v| 'c' }
+  two_arity_block = proc { |_v, i| "c#{i}" }
   build_converters = lambda { |block|
     [proc(&block), lambda(&block), Class.new { define_method(:call, &block) }.new]
   }
 
   {
     1 => build_converters.call(one_arity_block),
-    2 => build_converters.call(two_arity_block),
+    2 => build_converters.call(two_arity_block)
   }.each do |arity, converters|
     converters.each do |converter|
       describe "when given #{converter.class} converter" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'honey_format'
 
@@ -6,7 +8,7 @@ csv = HoneyFormat::CSV.new(
   csv_string,
   delimiter: ';',
   row_delimiter: '|',
-  quote_character: "'",
+  quote_character: "'"
 )
 
 puts '== EXAMPLE: CSV with custom column delimiter, row delimiter and quote character =='

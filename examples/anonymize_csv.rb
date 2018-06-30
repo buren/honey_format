@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'honey_format'
 require 'securerandom'
 
 csv_string = <<~CSV
-email,name,age,country,payment_id
-john@example.com,John Doe,42,SE,3912
-john@example.com,John Doe,42,SE,4102
+  email,name,age,country,payment_id
+  john@example.com,John Doe,42,SE,3912
+  john@example.com,John Doe,42,SE,4102
 CSV
 
 puts '== EXAMPLE: Anonymize by removing columns from output =='
@@ -34,10 +36,10 @@ class Anonymizer
 end
 
 csv_string = <<~CSV
-Email,Payment ID
-buren@example.com,123
-buren@example.com,998
-jacob@example.com,3211
+  Email,Payment ID
+  buren@example.com,123
+  buren@example.com,998
+  jacob@example.com,3211
 CSV
 csv = HoneyFormat::CSV.new(csv_string, row_builder: Anonymizer.new)
 puts '== CSV START =='
