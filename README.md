@@ -29,7 +29,7 @@ Id,Username,Email
 CSV
 csv = HoneyFormat::CSV.new(csv_string, type_map: { id: :integer })
 csv.columns     # => [:id, :username]
-user = csv.rows # => [#<struct id="1", username="buren">]
+user = csv.rows # => [#<Row id="1", username="buren">]
 user.id         # => 1
 user.username   # => "buren"
 
@@ -70,7 +70,7 @@ header.columns # => [:id, :username]
 
 
 # Rows
-rows = csv.rows # => [#<struct id="1", username="buren">]
+rows = csv.rows # => [#<Row id="1", username="buren">]
 user = rows.first
 user.id         # => "1"
 user.username   # => "buren"
@@ -128,7 +128,7 @@ Custom row builder
 csv_string = "Id,Username\n1,buren"
 upcaser = ->(row) { row.tap { |r| r.username.upcase! } }
 csv = HoneyFormat::CSV.new(csv_string, row_builder: upcaser)
-csv.rows # => [#<struct id="1", username="BUREN">]
+csv.rows # => [#<Row id="1", username="BUREN">]
 ```
 
 As long as the row builder responds to `#call` you can pass anything you like
