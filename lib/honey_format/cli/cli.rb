@@ -8,15 +8,22 @@ module HoneyFormat
 
     # Instantiate the CLI
     # @return [CLI] the CLI
-    def initialize
-      @options = parse_options(argv: ARGV)
+    def initialize(argv: ARGV, io: STDOUT)
+      @io = io
+      @options = parse_options(argv: argv.dup)
+    end
+
+    private
+
+    def puts(*args)
+      @io.puts(*args)
     end
 
     # Parse command line arguments and return options
     # @param [Array<String>] argv the command lines arguments
     # @return [Hash] the command line options
     def parse_options(argv:)
-      input_path = argv.first
+      input_path = nil
       columns = nil
       output_path = nil
       delimiter = ','
@@ -24,8 +31,8 @@ module HoneyFormat
       rows_only = false
 
       OptionParser.new do |parser|
-        parser.banner = "Usage: honey_format [file.csv] [options]"
-        parser.default_argv = ARGV
+        parser.banner = "Usage: honey_format [options] <file.csv>"
+        parser.default_argv = argv
 
         parser.on("--csv=input.csv", String, "CSV file") do |value|
           input_path = value
@@ -60,13 +67,16 @@ module HoneyFormat
           puts "HoneyFormat version #{HoneyFormat::VERSION}"
           exit
         end
-
-        # No argument, shows at tail. This will print an options summary.
-        parser.on_tail("-h", "--help", "Show this message") do
-          puts parser
-          exit
-        end
       end.parse!
+
+      if header_only && rows_only
+        raise(ArgumentError, "you can't provide both --header-only and --rows-only")
+      end
+
+      if input_path && argv.last
+        raise(ArgumentError, "you can't provide both --csv and <path>")
+      end
+      input_path ||= argv.last
 
       {
         input_path: input_path,
