@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'csv'
-
 require 'honey_format/matrix'
 
 module HoneyFormat

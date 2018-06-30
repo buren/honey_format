@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
-
 module HoneyFormat
   # Represents a header
   # @attr_reader [Array<Symbol>]
