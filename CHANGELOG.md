@@ -1,5 +1,12 @@
 # HEAD
 
+:warning: This release contains some backwards compatible changes.
+
+* Add `--skip-lines` argument to CLI [PR#22](https://github.com/buren/honey_format/pull/22)
+* Add support for CSV skip lines [PR#22](https://github.com/buren/honey_format/pull/22)
+* CLI have input file argument on tail instead of head [PR #21](https://github.com/buren/honey_format/pull/21)
+  - :warning: Backwards incompatible
+
 # v0.14.0
 
 * Additional converters
