@@ -282,6 +282,23 @@ You can see all [available errors here](https://www.rubydoc.info/gems/honey_form
 
 If you want to see more usage examples check out the [`examples/`](https://github.com/buren/honey_format/tree/master/examples) and [`spec/`](https://github.com/buren/honey_format/tree/master/spec) directories.
 
+__Skip lines__
+
+> Skip comments and/or other unwanted lines from being parsed.
+
+```ruby
+csv_string = <<~CSV
+Id,Username
+1,buren
+# comment
+2,jacob
+CSV
+regexp = %r{\A#} # Match all lines that start with "#"
+csv = HoneyFormat::CSV.new(csv_string, skip_lines: regexp)
+csv.rows.length # => 2
+```
+
+
 ## CLI
 
 > Perfect when you want to get something simple done quickly.

@@ -64,6 +64,32 @@ let(:diabolical_cols) {
     end
   end
 
+  describe 'with comment lines' do
+    it 'can skip lines that match given regexp' do
+      comment_regexp = %r{\A#|\/\/} # consider "#" and "//" comments
+      csv_string = <<~CSV
+      id,username
+      1,buren
+      # this is a comment
+      // this is also comment
+      2,jacob
+      CSV
+      csv = HoneyFormat::CSV.new(csv_string, skip_lines: comment_regexp)
+      expect(csv.rows.length).to eq(2)
+    end
+
+    it 'can skip lines that match a given string' do
+      csv_string = <<~CSV
+      id,username
+      1,buren
+      # this is a comment
+      2,jacob
+      CSV
+      csv = HoneyFormat::CSV.new(csv_string, skip_lines: '#')
+      expect(csv.rows.length).to eq(2)
+    end
+  end
+
   describe '#each_row' do
     it 'yields each row' do
       csv = described_class.new("email, ids\ntest@example.com,42")
