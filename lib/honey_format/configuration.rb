@@ -16,7 +16,7 @@ module HoneyFormat
     end
 
     # Set the header converter
-    # @param [Symbol, #call] converter for registered value converter or object that
+    # @param [Symbol, #call] converter for registered converter registry or object that
     #                        responds to #call
     # @return [#call] the header converter
     def header_converter=(converter)
@@ -27,13 +27,13 @@ module HoneyFormat
                           end
     end
 
-    # Returns the value converter
-    # @attr_reader [#call] converter the configured value converter
+    # Returns the converter registry
+    # @attr_reader [#call] converter the configured converter registry
     def converter
-      @converter ||= ValueConverter.new
+      @converter ||= ConverterRegistry.new
     end
 
-    # Default value converters
+    # Default converter registry
     # @return [Hash] hash with default converters
     def default_converters
       @default_converters ||= {

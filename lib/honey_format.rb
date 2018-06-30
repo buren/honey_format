@@ -4,7 +4,7 @@ require 'honey_format/version'
 require 'honey_format/configuration'
 require 'honey_format/errors'
 require 'honey_format/converters/converters'
-require 'honey_format/converters/value_converter'
+require 'honey_format/converters/converter_registry'
 require 'honey_format/csv'
 
 # Main module for HoneyFormat
@@ -34,9 +34,9 @@ module HoneyFormat
     config.header_converter
   end
 
-  # Returns the configured value converter
-  # @return [#call] the current value converter
-  def self.value_converter
+  # Returns the configured converter registry
+  # @return [#call] the current converter registry
+  def self.converter
     config.converter
   end
 end

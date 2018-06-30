@@ -2,8 +2,8 @@
 
 module HoneyFormat
   # Converts values
-  class ValueConverter
-    # Instantiate a value converter
+  class ConverterRegistry
+    # Instantiate a converter registry
     # @param [Hash] default_converters hash of default converters
     def initialize(default_converters = HoneyFormat.config.default_converters)
       @converters = nil
@@ -17,19 +17,19 @@ module HoneyFormat
       @converters.keys
     end
 
-    # Register a value converter
+    # Register a converter registry
     # @param [Symbol, String] type the name of the type
     # @param [#call] converter that responds to #call
-    # @return [ValueConverter] returns self
+    # @return [ConverterRegistry] returns self
     # @raise [ValueTypeExistsError] if type is already registered
     def register(type, converter)
       self[type] = converter
       self
     end
 
-    # Unregister a value converter
+    # Unregister a converter registry
     # @param [Symbol, String] type the name of the type
-    # @return [ValueConverter] returns self
+    # @return [ConverterRegistry] returns self
     # @raise [UnknownTypeError] if type is already registered
     def unregister(type)
       unknown_type_error!(type) unless type?(type)
@@ -44,7 +44,7 @@ module HoneyFormat
       self[type].call(value)
     end
 
-    # Register a value converter
+    # Register a converter registry
     # @param [Symbol, String] type the name of the type
     # @param [#call] converter that responds to #call
     # @return [Object] returns the converter
@@ -74,8 +74,8 @@ module HoneyFormat
       @converters.key?(to_key(type))
     end
 
-    # Resets the value converter to its default configuration
-    # @return [ValueConverter] returns the value converter
+    # Resets the converter registry to its default configuration
+    # @return [ConverterRegistry] returns the converter registry
     def reset!
       @converters = @default.dup
       self

@@ -2,9 +2,9 @@
 
 require 'spec_helper'
 
-require 'honey_format/converters/value_converter'
+require 'honey_format/converters/converter_registry'
 
-RSpec.describe HoneyFormat::ValueConverter do
+RSpec.describe HoneyFormat::ConverterRegistry do
   let(:default_converters) { HoneyFormat.config.default_converters }
 
   describe 'integer! type' do
@@ -354,16 +354,16 @@ RSpec.describe HoneyFormat::ValueConverter do
   end
 
   it 'can convert custom value' do
-    value_converter = described_class.new(default_converters)
-    value_converter.register(:upcased, proc { |v| v.upcase })
-    value = value_converter.call('buren', :upcased)
+    converter_registry = described_class.new(default_converters)
+    converter_registry.register(:upcased, proc { |v| v.upcase })
+    value = converter_registry.call('buren', :upcased)
     expect(value).to eq('BUREN')
   end
 
   it 'raises ArgumentError if an unknown type is passed' do
-    value_converter = described_class.new(default_converters)
+    converter_registry = described_class.new(default_converters)
     expect do
-      value_converter.call(nil, :watman)
+      converter_registry.call(nil, :watman)
     end.to raise_error(ArgumentError)
   end
 end

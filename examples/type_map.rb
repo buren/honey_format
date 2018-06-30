@@ -24,7 +24,7 @@ country_code_converter = proc { |v|
 puts '== EXAMPLE: CSV output with filtered columns and rows =='
 puts
 puts 'The type converters available by default are:'
-puts "    #{HoneyFormat.value_converter.types.join(', ')}"
+puts "    #{HoneyFormat.converter.types.join(', ')}"
 puts
 
 HoneyFormat.configure do |config|

@@ -11,7 +11,7 @@ module HoneyFormat
     # @param [Array<String>] header array of strings.
     # @param converter [#call, Symbol] header converter that implements a #call method
     #                                  that takes one column (string) argument OR
-    #                                  symbol for a registered value converter.
+    #                                  symbol for a registered converter registry.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @example Instantiate a header with a custom converter
@@ -25,7 +25,7 @@ module HoneyFormat
 
       @original_header = header
       @converter = if converter.is_a?(Symbol)
-                     HoneyFormat.value_converter[converter]
+                     HoneyFormat.converter[converter]
                    else
                      converter
                    end

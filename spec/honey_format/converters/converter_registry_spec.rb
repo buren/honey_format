@@ -2,52 +2,52 @@
 
 require 'spec_helper'
 
-require 'honey_format/converters/value_converter'
+require 'honey_format/converters/converter_registry'
 
-RSpec.describe HoneyFormat::ValueConverter do
+RSpec.describe HoneyFormat::ConverterRegistry do
   let(:default_converters) { HoneyFormat.config.default_converters }
 
   describe '#reset!' do
-    it 'returns new instance of value converter' do
-      value_converter = described_class.new(default_converters)
-      value_converter.register(:watman, proc {})
-      value_converter.reset!
+    it 'returns new instance of converter registry' do
+      converter_registry = described_class.new(default_converters)
+      converter_registry.register(:watman, proc {})
+      converter_registry.reset!
 
-      expect(value_converter.type?(:watman)).to eq(false)
+      expect(converter_registry.type?(:watman)).to eq(false)
     end
   end
 
   describe '#unregister' do
     it 'can unregister known type' do
-      value_converter = described_class.new(default_converters)
-      value_converter.register(:watman, proc {})
-      value_converter.unregister(:watman)
+      converter_registry = described_class.new(default_converters)
+      converter_registry.register(:watman, proc {})
+      converter_registry.unregister(:watman)
 
-      expect(value_converter.type?(:watman)).to eq(false)
+      expect(converter_registry.type?(:watman)).to eq(false)
     end
 
     it 'raises UnknownTypeError when trying to unregister unknown type' do
-      value_converter = described_class.new(default_converters)
+      converter_registry = described_class.new(default_converters)
       expect do
-        value_converter.unregister(:watman)
+        converter_registry.unregister(:watman)
       end.to raise_error(HoneyFormat::UnknownTypeError)
     end
   end
 
   describe '#register' do
     it 'can register type' do
-      value_converter = described_class.new(default_converters)
-      value_converter.register(:watman, proc {})
-      expect(value_converter.type?(:watman)).to eq(true)
+      converter_registry = described_class.new(default_converters)
+      converter_registry.register(:watman, proc {})
+      expect(converter_registry.type?(:watman)).to eq(true)
 
       # we must reset the conveter, since its global configuration
-      value_converter.reset!
+      converter_registry.reset!
     end
 
     it 'raises ValueTypeExistsError when trying to register duplicated type' do
-      value_converter = described_class.new(default_converters)
+      converter_registry = described_class.new(default_converters)
       expect do
-        value_converter.register(:datetime!, proc {})
+        converter_registry.register(:datetime!, proc {})
       end.to raise_error(HoneyFormat::ValueTypeExistsError)
     end
   end

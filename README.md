@@ -122,11 +122,11 @@ end
 
 Access registered converters
 ```ruby
-decimal_converter = HoneyFormat.value_converter[:decimal]
+decimal_converter = HoneyFormat.converter[:decimal]
 decimal_converter.call('1.1') # => 1.1
 ```
 
-See [`ValueConverter::DEFAULT_CONVERTERS`](https://github.com/buren/honey_format/tree/master/lib/honey_format/converters/value_converter.rb) for a complete list of the default ones.
+See [`Configuration#default_converters`](https://github.com/buren/honey_format/tree/master/lib/honey_format/configuration.rb#L38) for a complete list of the default ones.
 
 __Row builder__
 
@@ -222,11 +222,11 @@ HoneyFormat.configure do |config|
 end
 
 # you can get the default one with
-header_converter = HoneyFormat.value_converter[:header_column]
+header_converter = HoneyFormat.converter[:header_column]
 header_converter.call('First name') # => "first_name"
 ```
 
-Use any value converter as the header converter
+Use any converter registry as the header converter
 ```ruby
 csv_string = "Id,Username\n1,buren"
 csv = HoneyFormat::CSV.new(csv_string, header_converter: :upcase)
