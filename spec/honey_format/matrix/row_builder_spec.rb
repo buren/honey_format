@@ -2,8 +2,6 @@
 
 require 'spec_helper'
 
-require 'honey_format/row_builder'
-
 describe HoneyFormat::RowBuilder do
   describe '#initialize' do
     it 'fails with HoneyFormat::EmptyRowColumnsError when initialized empty array' do

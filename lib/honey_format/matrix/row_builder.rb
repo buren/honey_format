@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'honey_format/row'
-
 module HoneyFormat
   # Holds data for a single row.
   class RowBuilder
@@ -22,22 +20,21 @@ module HoneyFormat
       end
 
       @type_map = type_map
-      @converter = HoneyFormat.value_converter
+      @converter = HoneyFormat.converter
 
       @row_klass = Row.new(*columns)
       @builder = builder
       @columns = columns
     end
 
-    # rubocop:disable Metrics/LineLength
     # Returns an object representing the row.
     # @return [Row, Object] a new instance of built row.
     # @param row [Array] the row array.
-    # @raise [InvalidRowLengthError] raised when there are more row elements longer than columns
+    # @raise [InvalidRowLengthError]
+    #   raised when there are more row elements longer than columns
     # @example Build new row
     #     r = RowBuilder.new([:id])
     #     r.build(['1']).id #=> '1'
-    # rubocop:enable Metrics/LineLength
     def build(row)
       build_row!(row)
     rescue ArgumentError => e

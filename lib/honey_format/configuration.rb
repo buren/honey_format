@@ -2,30 +2,66 @@
 
 module HoneyFormat
   # Holds HoneyFormat configuration
-  # @attr_reader [#call] header_converter the configured header converter
-  # @attr_reader [#call] converter the configured value converter
-  # @attr_writer [#call] header_converter to use
-  # @attr_writer [#call] converter the value converter to use
   class Configuration
-    attr_accessor :converter
-    attr_reader :header_converter
-
     # Instantiate configuration
     def initialize
-      @converter = ValueConverter.new
-      @header_converter = @converter[:header_column]
+      @converter = nil
+      @header_converter = nil
+    end
+
+    # Returns the header converter
+    # @return [#call] header_converter the configured header converter
+    def header_converter
+      @header_converter ||= converter[:header_column]
     end
 
     # Set the header converter
-    # @param [Symbol, #call] converter for registered value converter or object that
+    # @param [Symbol, #call] converter for registered converter registry or object that
     #                        responds to #call
     # @return [#call] the header converter
     def header_converter=(converter)
       @header_converter = if converter.is_a?(Symbol)
-                            @converter[converter]
+                            self.converter[converter]
                           else
                             converter
                           end
+    end
+
+    # Returns the converter registry
+    # @attr_reader [#call] converter the configured converter registry
+    def converter
+      @converter ||= ConverterRegistry.new
+    end
+
+    # Default converter registry
+    # @return [Hash] hash with default converters
+    def default_converters
+      @default_converters ||= {
+        # strict variants
+        decimal!: StrictConvertDecimal,
+        integer!: StrictConvertInteger,
+        date!: StrictConvertDate,
+        datetime!: StrictConvertDatetime,
+        symbol!: StrictConvertSymbol,
+        downcase!: StrictConvertDowncase,
+        upcase!: StrictConvertUpcase,
+        boolean!: StrictConvertBoolean,
+        # safe variants
+        decimal: ConvertDecimal,
+        decimal_or_zero: ConvertDecimalOrZero,
+        integer: ConvertInteger,
+        integer_or_zero: ConvertIntegerOrZero,
+        date: ConvertDate,
+        datetime: ConvertDatetime,
+        symbol: ConvertSymbol,
+        downcase: ConvertDowncase,
+        upcase: ConvertUpcase,
+        boolean: ConvertBoolean,
+        md5: ConvertMD5,
+        hex: ConvertHex,
+        nil: ConvertNil,
+        header_column: ConvertHeaderColumn
+      }.freeze
     end
   end
 end

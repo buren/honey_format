@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'set'
-require 'honey_format/row_builder'
 
 module HoneyFormat
   # Represents rows.
@@ -48,9 +47,10 @@ module HoneyFormat
     end
     alias_method :size, :length
 
-    # rubocop:disable Metrics/LineLength
-    # @param columns [Array<Symbol>, Set<Symbol>, NilClass] the columns to output, nil means all columns (default: nil)
-    # @yield [row] each row - return truthy if you want the row to be included in the output
+    # @param columns [Array<Symbol>, Set<Symbol>, NilClass]
+    #   the columns to output, nil means all columns (default: nil)
+    # @yield [row]
+    #   each row - return truthy if you want the row to be included in the output
     # @yieldparam [Row] row
     # @return [String] CSV-string representation.
     # @example with selected columns
@@ -59,7 +59,6 @@ module HoneyFormat
     #   rows.to_csv { |row| row.country == 'Sweden' }
     # @example with both selected columns and rows
     #   csv.to_csv(columns: [:id, :country]) { |row| row.country == 'Sweden' }
-    # rubocop:enable Metrics/LineLength
     def to_csv(columns: nil, &block)
       # Convert columns to Set for performance
       columns = Set.new(columns.map(&:to_sym)) if columns

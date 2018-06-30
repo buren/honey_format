@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
-require 'set'
-
 module HoneyFormat
   # Represents a header
-  # @attr_reader [Array<Symbol>]
   class Header
     include Enumerable
 
     # Instantiate a Header
     # @return [Header] a new instance of Header.
     # @param [Array<String>] header array of strings.
-    # @param converter [#call, Symbol] header converter that implements a #call method
-    #                                  that takes one column (string) argument OR
-    #                                  symbol for a registered value converter.
+    # @param converter [#call, Symbol]
+    #   header converter that implements a #call method
+    #   that takes one column (string) argument OR symbol for a registered
+    #   converter registry.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @example Instantiate a header with a custom converter
@@ -27,7 +25,7 @@ module HoneyFormat
 
       @original_header = header
       @converter = if converter.is_a?(Symbol)
-                     HoneyFormat.value_converter[converter]
+                     HoneyFormat.converter[converter]
                    else
                      converter
                    end
@@ -35,6 +33,7 @@ module HoneyFormat
       @columns = build_columns(@original_header)
     end
 
+    # Returns the original header
     # @return [Array<String>] the original header
     def original
       @original_header

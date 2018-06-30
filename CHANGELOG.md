@@ -1,7 +1,7 @@
 # HEAD
 
 * Rename `Errors::UnknownValueTypeError` => `Errors::UnknownTypeError`
-* Add hex value converter
+* Add hex converter registry
 
 ## v0.16.0
 

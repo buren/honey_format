@@ -3,7 +3,6 @@
 require 'spec_helper'
 
 require 'set'
-require 'honey_format/row'
 
 describe HoneyFormat::Row do
   describe '::call' do
