@@ -7,13 +7,13 @@
 * CLI have input file argument on tail instead of head [PR #21](https://github.com/buren/honey_format/pull/21)
   - :warning: Backwards incompatible
 
-# v0.14.0
+## v0.14.0
 
 * Additional converters
   + `integer_or_zero`
   + `decimal_or_zero`
 
-# v0.13.0
+## v0.13.0
 
 :warning: This release contains some backwards compatible changes.
 
@@ -27,21 +27,21 @@
 * Add `--[no-]rows-only` CLI option
 * Rename `--[no-]only-header` CLI option to `--[no-]header-only`
 
-# v0.12.0
+## v0.12.0
 
 * Add `--[no-]only-header` option to CLI
 * _[Bugfix]_: Handle missing --columns argument in CLI
 
-# v0.11.0
+## v0.11.0
 
 * Add CLI: `honey_format` executable
 * Swap `RowBuilder` <> `Row` class names [[#PR12](https://github.com/buren/honey_format/pull/12)]
 
-# v0.10.0
+## v0.10.0
 
 * Add support for filtering what rows are included in `#to_csv` [[#PR11](https://github.com/buren/honey_format/pull/11)]
 
-# v0.9.0
+## v0.9.0
 
 :warning: This release contains some backwards compatible changes.
 
@@ -52,41 +52,41 @@
   - There are now two super classes for errors `HeaderError` and `RowError`
   - All errors are under an `Errors` namespace, which `HoneyFormat` includes
 
-# v0.8.2
+## v0.8.2
 
 * _[Bugfix]_ `#to_csv` now outputs nil values as empty string instead of `""`
 
-# v0.8.1
+## v0.8.1
 
 * _[Bugfix]_ Properly quote cells with special CSV-characters in them. ([PR#7](https://github.com/buren/honey_format/pull/7))
 
-# v0.8.0
+## v0.8.0
 
 * _[Feature]_ Add `#size` and `#length` methods to `Header` and `Rows` objects
 * _[Bugfix]_ Improved Row error handling for when row size differs from header column
 
 
-# v0.7.0
+## v0.7.0
 
 * Don't sanitize each row :rocket: (improves performance from ~1.4x times slower than raw CSV to ~1.1)
 * Fold `Columns` class into `Header`
 * Remove `Sanitize` class
 
-# v0.6.0
+## v0.6.0
 
 * Add `CSV#to_csv` ([PR#2](https://github.com/buren/honey_format/pull/2))
 * `csv#rows` returns an instance of `Rows` instead of `Array`
 
-# v0.3.0 - v0.5.0
+## v0.3.0 - v0.5.0
 
 * Add CSV `row_builder` option
 * ...
 
-# v0.2.0
+## v0.2.0
 
 * More explicit exception classes
 * Restructured internals
 
-## v0.1.0
+### v0.1.0
 
 Initial release
