@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'set'
-require 'honey_format/row_builder'
 
 module HoneyFormat
   # Represents rows.

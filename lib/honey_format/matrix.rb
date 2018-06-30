@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'matrix/row_builder'
-require 'matrix/rows'
-require 'matrix/row'
-require 'matrix/header'
-require 'matrix/matrix'
+require 'honey_format/matrix/row_builder'
+require 'honey_format/matrix/rows'
+require 'honey_format/matrix/row'
+require 'honey_format/matrix/header'
+require 'honey_format/matrix/matrix'
