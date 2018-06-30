@@ -30,6 +30,7 @@ module HoneyFormat
       header_only = false
       rows_only = false
       skip_lines = nil
+      type_map = {}
 
       OptionParser.new do |parser|
         parser.banner = "Usage: honey_format [options] <file.csv>"
@@ -53,6 +54,10 @@ module HoneyFormat
 
         parser.on("--skip-lines=,", String, "Skip lines that match this pattern") do |value|
           skip_lines = value
+        end
+
+        parser.on('--type-map=[key1=val1,key2=val2]', Array, 'Type map') do |value|
+          type_map = option_to_h(value || [])
         end
 
         parser.on("--[no-]header-only", "Print only the header") do |value|
@@ -90,8 +95,13 @@ module HoneyFormat
         delimiter: delimiter,
         header_only: header_only,
         rows_only: rows_only,
-        skip_lines: skip_lines
+        skip_lines: skip_lines,
+        type_map: type_map
       }
+    end
+
+    def option_to_h(option)
+      option.map { |v| v.split('=').map(&:to_sym) }.to_h
     end
   end
 end

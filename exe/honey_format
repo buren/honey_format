@@ -14,6 +14,7 @@ csv_input = File.read(input_path)
 csv = HoneyFormat::CSV.new(
   csv_input,
   delimiter: options[:delimiter],
+  type_map: options[:type_map],
   skip_lines: options[:skip_lines]
 )
 
