@@ -10,6 +10,8 @@ module HoneyFormat
     class MissingHeaderError < HeaderError; end
     # Raised when header column is missing
     class MissingHeaderColumnError < HeaderError; end
+    # Raised when header column duplicate is found
+    class DuplicateHeaderColumnError < HeaderError; end
 
     # Row errors
     # Super class of errors raised when there is a row error

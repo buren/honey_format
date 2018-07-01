@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'honey_format/helpers/helpers'
+
 module HoneyFormat
   # Holds HoneyFormat configuration
   class Configuration
@@ -7,6 +9,7 @@ module HoneyFormat
     def initialize
       @converter = nil
       @header_converter = nil
+      self.deduplicate_header_strategy = :deduplicate
     end
 
     # Returns the header converter
@@ -25,6 +28,49 @@ module HoneyFormat
                           else
                             converter
                           end
+    end
+
+    # Return the deduplication header strategy
+    # @return [#call] the header deduplication strategy
+    def deduplicate_header_strategy
+      @deduplicate_header_strategy
+    end
+
+    # Set the deduplication header strategy
+    # @param [Symbol, #call]
+    #   symbol with known strategy identifier or method that responds
+    #   to #call(colums, key_count)
+    # @return [#call] the header deduplication strategy
+    def deduplicate_header_strategy=(strategy)
+      default = default_deduplicate_header_strategies
+
+      symbol_like = [Symbol, String].detect { |k| strategy.is_a?(k) }
+      if symbol_like && default.key?(strategy.to_sym)
+        @deduplicate_header_strategy = default.fetch(strategy.to_sym)
+      elsif strategy.respond_to?(:call)
+        @deduplicate_header_strategy = strategy
+      else
+        message = "unknown deduplication strategy: '#{strategy}'"
+        raise(Errors::UnknownDeduplicationStrategy, message)
+      end
+    end
+
+    # Default header deduplicate strategies
+    # @return [Hash] the default header deduplicatation strategies
+    def default_deduplicate_header_strategies
+      @default_deduplicate_header_strategies ||= {
+        deduplicate: proc do |columns|
+          Helpers.key_count_to_deduplicated_array(columns)
+        end,
+        raise: proc do |columns|
+          duplicates = Helpers.duplicated_items(columns)
+          if duplicates.any?
+            message = "all columns must be unique, duplicates are: #{duplicates}"
+            raise(Errors::DuplicateHeaderColumnError, message)
+          end
+        end,
+        none: proc { |columns| columns },
+      }.freeze
     end
 
     # Returns the converter registry

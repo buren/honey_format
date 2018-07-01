@@ -49,6 +49,21 @@ describe HoneyFormat::Header do
       header = described_class.new(['first'], converter: :upcase)
       expect(header.to_a).to eq([:FIRST])
     end
+
+    context 'duplicated header column' do
+      it 'can de-duplicate them' do
+        header = described_class.new(%w[first first second])
+
+        expect(header.columns).to eq(%i[first first1 second])
+      end
+
+      it 'raises error' do
+        dep = HoneyFormat.config.default_deduplicate_header_strategies[:raise]
+        expect do
+          described_class.new(%w[first first second], deduplicator: dep)
+        end.to raise_error(HoneyFormat::DuplicateHeaderColumnError)
+      end
+    end
   end
 
   describe 'empty?' do
@@ -106,8 +121,8 @@ describe HoneyFormat::Header do
     end
   end
 
-  one_arity_block = proc { |_v| 'c' }
-  two_arity_block = proc { |_v, i| "c#{i}" }
+  one_arity_block = proc { |v| "#{v}v" }
+  two_arity_block = proc { |v, i| "#{v}#{i}" }
   build_converters = lambda { |block|
     [proc(&block), lambda(&block), Class.new { define_method(:call, &block) }.new]
   }
@@ -121,7 +136,7 @@ describe HoneyFormat::Header do
         it "calls the method with #{arity} arugment(s)" do
           header = described_class.new(%w[column0 column1], converter: converter)
 
-          expected = arity == 1 ? %i[c c] : %i[c0 c1]
+          expected = arity == 1 ? %i[column0v column1v] : %i[column00 column11]
           expect(header.to_a).to eq(expected)
         end
       end
