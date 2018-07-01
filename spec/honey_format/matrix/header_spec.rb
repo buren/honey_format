@@ -78,14 +78,14 @@ describe HoneyFormat::Header do
 
       context 'raise strategy' do
         it 'raises error when duplicates are found' do
-          dep = HoneyFormat.config.default_header_deduplicator_strategies[:raise]
+          dep = HoneyFormat.config.default_header_deduplicators[:raise]
           expect do
             described_class.new(%w[first first second], deduplicator: dep)
           end.to raise_error(HoneyFormat::DuplicateHeaderColumnError)
         end
 
         it 'returns columns untouched if no duplicates are found' do
-          dep = HoneyFormat.config.default_header_deduplicator_strategies[:raise]
+          dep = HoneyFormat.config.default_header_deduplicators[:raise]
           expect do
             described_class.new(%w[first second], deduplicator: dep)
           end.not_to raise_error(HoneyFormat::DuplicateHeaderColumnError)

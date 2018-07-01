@@ -33,7 +33,7 @@ RSpec.describe HoneyFormat::Configuration do
     it 'can set header converter from Symbol' do
       config = described_class.new
       config.header_deduplicator = :none
-      expected = config.default_header_deduplicator_strategies[:none]
+      expected = config.default_header_deduplicators[:none]
 
       expect(config.header_deduplicator).to eq(expected)
     end
