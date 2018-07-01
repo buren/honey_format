@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'honey_format/helpers/helpers'
+
 module HoneyFormat
   # Represents a header
   class Header
@@ -12,24 +14,28 @@ module HoneyFormat
     #   header converter that implements a #call method
     #   that takes one column (string) argument OR symbol for a registered
     #   converter registry.
+    # @param deduplicator [#call, Symbol]
+    #   header deduplicator that implements a #call method
+    #   that takes columns Array<String> argument OR symbol for a registered
+    #   deduplicator registry.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @example Instantiate a header with a custom converter
     #     converter = ->(col) { col == 'username' ? 'handle' : col }
     #     header = HoneyFormat::Header.new(['name', 'username'], converter: converter)
     #     header.to_a # => ['name', 'handle']
-    def initialize(header, converter: HoneyFormat.header_converter)
+    def initialize(
+      header,
+      converter: HoneyFormat.header_converter,
+      deduplicator: HoneyFormat.config.header_deduplicator
+    )
       if header.nil? || header.empty?
         raise(Errors::MissingHeaderError, "CSV header can't be empty.")
       end
 
       @original_header = header
-      @converter = if converter.is_a?(Symbol)
-                     HoneyFormat.converter[converter]
-                   else
-                     converter
-                   end
-
+      self.deduplicator = deduplicator
+      self.converter = converter
       @columns = build_columns(@original_header)
     end
 
@@ -86,15 +92,41 @@ module HoneyFormat
 
     private
 
+    # Set the header converter
+    # @param [Symbol, #call] symbol to known converter or object that responds to #call
+    # @return [nil]
+    def converter=(object)
+      if object.is_a?(Symbol)
+        @converter = HoneyFormat.converter_registry[object]
+        return
+      end
+
+      @converter = object
+    end
+
+    # Set the header deduplicator
+    # @param [Symbol, #call] symbol to known deduplicator or object that responds to #call
+    # @return [nil]
+    def deduplicator=(object)
+      if object.is_a?(Symbol)
+        @deduplicator = HoneyFormat.header_deduplicator_registry[object]
+        return
+      end
+
+      @deduplicator = object
+    end
+
     # Convert original header
     # @param [Array<String>] header the original header
     # @return [Array<String>] converted columns
     def build_columns(header)
-      header.each_with_index.map do |header_column, index|
+      columns = header.each_with_index.map do |header_column, index|
         convert_column(header_column, index).tap do |column|
           maybe_raise_missing_column!(column)
         end
       end
+
+      @deduplicator.call(columns)
     end
 
     # Convert the column value

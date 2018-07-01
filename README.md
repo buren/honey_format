@@ -7,10 +7,10 @@ Proper objects for CSV headers and rows, convert column values, filter columns a
 ## Features
 
 - Proper objects for CSV header and rows
-- Convert column values
+- Convert row and header column values
 - Pass your own custom row builder
-- Convert header column names
 - Filter what columns and rows are included in CSV output
+- Gracefully handle missing and duplicated header columns
 - [CLI](#cli) - Simple command line interface
 - Only ~5-10% overhead from using Ruby CSV, see [benchmarks](#benchmark)
 - Has no dependencies other than Ruby stdlib
@@ -19,7 +19,6 @@ Proper objects for CSV headers and rows, convert column values, filter columns a
 Read the [usage section](#usage),  [RubyDoc](https://www.rubydoc.info/gems/honey_format/) or [examples/ directory](https://github.com/buren/honey_format/tree/master/examples)  for how to use this gem.
 
 ## Quick use
-
 
 ```ruby
 csv_string = <<-CSV
@@ -102,7 +101,7 @@ csv.rows.first.id # => 1
 Add your own converter
 ```ruby
 HoneyFormat.configure do |config|
-  config.converter.register :upcased, proc { |v| v.upcase }
+  config.converter_registry.register :upcased, proc { |v| v.upcase }
 end
 
 csv_string = "Id,Username\n1,buren"
@@ -114,15 +113,15 @@ csv.rows.first.username # => "BUREN"
 Remove registered converter
 ```ruby
 HoneyFormat.configure do |config|
-  config.converter.unregister :upcase
+  config.converter_registry.unregister :upcase
   # now you're free to register your own
-  config.converter.register :upcase, proc { |v| v.upcase if v }
+  config.converter_registry.register :upcase, proc { |v| v.upcase if v }
 end
 ```
 
 Access registered converters
 ```ruby
-decimal_converter = HoneyFormat.converter[:decimal]
+decimal_converter = HoneyFormat.converter_registry[:decimal]
 decimal_converter.call('1.1') # => 1.1
 ```
 
@@ -222,7 +221,7 @@ HoneyFormat.configure do |config|
 end
 
 # you can get the default one with
-header_converter = HoneyFormat.converter[:header_column]
+header_converter = HoneyFormat.converter_registry[:header_column]
 header_converter.call('First name') # => "first_name"
 ```
 
@@ -250,6 +249,23 @@ csv_string = "first,,third\nval0,val1,val2"
 csv = HoneyFormat::CSV.new(csv_string)
 user = csv.rows.first
 user.column1 # => "val1"
+```
+
+Duplicated header values
+```ruby
+csv_string = <<~CSV
+  email,email,name
+  john@example.com,jane@example.com,John
+CSV
+# :deduplicate is the default value
+csv = HoneyFormat::CSV.new(csv_string, header_deduplicator: :deduplicate)
+user = csv.rows.first
+user.email  # => john@example.com
+user.email1 # => jane@example.com
+
+# you can also choose to raise an error instead
+HoneyFormat::CSV.new(csv_string, header_deduplicator: :raise)
+# => HoneyFormat::DuplicateHeaderColumnError
 ```
 
 If your header contains special chars and/or chars that can't be part of Ruby method names,

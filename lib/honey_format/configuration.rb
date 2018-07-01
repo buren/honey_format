@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
+require 'honey_format/helpers/helpers'
+
 module HoneyFormat
   # Holds HoneyFormat configuration
   class Configuration
     # Instantiate configuration
     def initialize
-      @converter = nil
+      @converter_registry = nil
       @header_converter = nil
+      @header_deduplicator = nil
     end
 
     # Returns the header converter
     # @return [#call] header_converter the configured header converter
     def header_converter
-      @header_converter ||= converter[:header_column]
+      @header_converter ||= converter_registry[:header_column]
     end
 
     # Set the header converter
@@ -21,16 +24,64 @@ module HoneyFormat
     # @return [#call] the header converter
     def header_converter=(converter)
       @header_converter = if converter.is_a?(Symbol)
-                            self.converter[converter]
+                            converter_registry[converter]
                           else
                             converter
                           end
     end
 
+    # Return the deduplication header strategy
+    # @return [#call] the header deduplication strategy
+    def header_deduplicator
+      @header_deduplicator ||= header_deduplicator_registry[:deduplicate]
+    end
+
+    # Set the deduplication header strategy
+    # @param [Symbol, #call]
+    #   symbol with known strategy identifier or method that responds
+    #   to #call(colums, key_count)
+    # @return [#call] the header deduplication strategy
+    # @raise [UnknownDeduplicationStrategyError]
+    def header_deduplicator=(strategy)
+      if header_deduplicator_registry.type?(strategy)
+        @header_deduplicator = header_deduplicator_registry[strategy]
+      elsif strategy.respond_to?(:call)
+        @header_deduplicator = strategy
+      else
+        message = "unknown deduplication strategy: '#{strategy}'"
+        raise(Errors::UnknownDeduplicationStrategyError, message)
+      end
+    end
+
+    # Default header deduplicate strategies
+    # @return [Hash] the default header deduplicatation strategies
+    def default_header_deduplicators
+      @default_header_deduplicators ||= {
+        deduplicate: proc do |columns|
+          Helpers.key_count_to_deduplicated_array(columns)
+        end,
+        raise: proc do |columns|
+          duplicates = Helpers.duplicated_items(columns)
+          if duplicates.any?
+            message = "all columns must be unique, duplicates are: #{duplicates}"
+            raise(Errors::DuplicateHeaderColumnError, message)
+          end
+          columns
+        end,
+        none: proc { |columns| columns },
+      }.freeze
+    end
+
+    # Returns the column deduplication registry
+    # @return [#call] column deduplication registry
+    def header_deduplicator_registry
+      @header_deduplicator_registry ||= Registry.new(default_header_deduplicators)
+    end
+
     # Returns the converter registry
-    # @attr_reader [#call] converter the configured converter registry
-    def converter
-      @converter ||= ConverterRegistry.new
+    # @return [#call] converter the configured converter registry
+    def converter_registry
+      @converter_registry ||= Registry.new(default_converters)
     end
 
     # Default converter registry

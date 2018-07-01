@@ -21,6 +21,7 @@ describe HoneyFormat::HeaderColumnConverter do
     ['Value (ex VAT) {SEK} [SE]', :value_ex_vat_sek_se],
     ['VAT1#', :vat1],
     ['   first_name  ', :first_name],
+    ['FirstName', :firstname],
     ['first-name', :first_name],
     ['USeRnaMe', :username],
     ['-username__-', :username],

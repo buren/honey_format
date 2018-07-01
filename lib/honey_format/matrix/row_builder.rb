@@ -20,7 +20,7 @@ module HoneyFormat
       end
 
       @type_map = type_map
-      @converter = HoneyFormat.converter
+      @converter = HoneyFormat.converter_registry
 
       @row_klass = Row.new(*columns)
       @builder = builder

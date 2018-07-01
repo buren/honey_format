@@ -6,11 +6,12 @@ module HoneyFormat
     # Instantiate Matrix.
     # @return [Matrix] a new instance of Matrix.
     # @param [Array<Array<String, nil>>] matrix
-    # @param [Array<String>]
+    # @param header [Array<String>]
     #   header optional argument that represents header, required if the matrix
     #   lacks a header row.
-    # @param [#call] header_converter converts header columns.
-    # @param [#call] row_builder will be called for each parsed row.
+    # @param header_converter [#call] converts header columns.
+    # @param header_deduplicator [#call] deduplicates header columns.
+    # @param row_builder [#call] will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
     # @raise [HeaderError] super class of errors raised when there is a header error.
     # @raise [MissingHeaderError] raised when header is missing (empty or nil).
@@ -34,15 +35,22 @@ module HoneyFormat
     #   rescue HoneyFormat::RowError => e
     #     puts "row error: #{e.class}, #{e.message}"
     #   end
+    # @see Header#initialize
+    # @see Rows#initialize
     def initialize(
       matrix,
       header: nil,
       header_converter: HoneyFormat.header_converter,
+      header_deduplicator: HoneyFormat.config.header_deduplicator,
       row_builder: nil,
       type_map: {}
     )
       header_row = header || matrix.shift
-      @header = Header.new(header_row, converter: header_converter)
+      @header = Header.new(
+        header_row,
+        converter: header_converter,
+        deduplicator: header_deduplicator
+      )
       @rows = Rows.new(matrix, columns, builder: row_builder, type_map: type_map)
     end
 

@@ -3,8 +3,8 @@
 require 'honey_format/version'
 require 'honey_format/configuration'
 require 'honey_format/errors'
+require 'honey_format/registry'
 require 'honey_format/converters/converters'
-require 'honey_format/converters/converter_registry'
 require 'honey_format/csv'
 
 # Main module for HoneyFormat
@@ -35,8 +35,14 @@ module HoneyFormat
   end
 
   # Returns the configured converter registry
-  # @return [#call] the current converter registry
-  def self.converter
-    config.converter
+  # @return [Registry] the current converter registry
+  def self.converter_registry
+    config.converter_registry
+  end
+
+  # Returns the configured deduplicator registry
+  # @return [Registry] the current deduplicator registry
+  def self.header_deduplicator_registry
+    config.header_deduplicator_registry
   end
 end

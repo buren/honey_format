@@ -29,7 +29,7 @@ end
 
 HoneyFormat.configure do |config|
   # Register the country coder
-  config.converter.register :country_code, country_coder
+  config.converter_registry.register :country_code, country_coder
 end
 
 # Convert the country header column to country_code
