@@ -252,6 +252,23 @@ user = csv.rows.first
 user.column1 # => "val1"
 ```
 
+Duplicated header values
+```ruby
+csv_string = <<~CSV
+  email,email,name
+  john@example.com,jane@example.com,John
+CSV
+# :deduplicate is the default value
+csv = HoneyFormat::CSV.new(csv_string, header_deduplicator: :deduplicate)
+user = csv.rows.first
+user.email  # => john@example.com
+user.email1 # => jane@example.com
+
+# you can also choose to raise an error instead
+HoneyFormat::CSV.new(csv_string, header_deduplicator: :raise)
+# => HoneyFormat::DuplicateHeaderColumnError
+```
+
 If your header contains special chars and/or chars that can't be part of Ruby method names,
 things can get a little awkward..
 ```ruby
