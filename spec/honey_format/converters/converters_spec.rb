@@ -325,6 +325,14 @@ RSpec.describe HoneyFormat::ConverterRegistry do
     end
   end
 
+  describe 'blank type' do
+    it 'converts value to empty string' do
+      converter = described_class.new(default_converters)
+      value = converter.call('buren', :blank)
+      expect(value).to eq('')
+    end
+  end
+
   describe 'md5 type' do
     it 'return nil when given nil' do
       converter = described_class.new(default_converters)

@@ -19,6 +19,9 @@ module HoneyFormat
   # Convert to hex or nil
   ConvertHex = proc { |v| SecureRandom.hex if v }
 
+  # Convert to blank string
+  ConvertBlank = proc { '' }
+
   # Convert header column
   ConvertHeaderColumn = HeaderColumnConverter
 
