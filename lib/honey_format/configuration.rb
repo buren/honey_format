@@ -55,8 +55,8 @@ module HoneyFormat
 
     # Default header deduplicate strategies
     # @return [Hash] the default header deduplicatation strategies
-    def default_header_deduplicator_strategies
-      @default_header_deduplicator_strategies ||= {
+    def default_header_deduplicators
+      @default_header_deduplicators ||= {
         deduplicate: proc do |columns|
           Helpers.key_count_to_deduplicated_array(columns)
         end,
@@ -75,7 +75,7 @@ module HoneyFormat
     # Returns the column deduplication registry
     # @return [#call] column deduplication registry
     def header_deduplicator_registry
-      @header_deduplicator_registry ||= Registry.new(default_header_deduplicator_strategies)
+      @header_deduplicator_registry ||= Registry.new(default_header_deduplicators)
     end
 
     # Returns the converter registry
