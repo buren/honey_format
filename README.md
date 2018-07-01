@@ -66,7 +66,7 @@ csv = HoneyFormat::CSV.new(csv_string)
 # Header
 header = csv.header
 header.original # => ["Id", "Username"]
-header.columns # => [:id, :username]
+header.columns  # => [:id, :username]
 
 
 # Rows
@@ -205,7 +205,7 @@ csv = HoneyFormat::CSV.new(csv_string)
 # Header
 header = csv.header
 header.original # => ["Id", "Username"]
-header.columns # => [:id, :username]
+header.columns  # => [:id, :username]
 ```
 
 Define header
@@ -241,7 +241,7 @@ converter = ->(column) { map.fetch(column, column.downcase) }
 csv_string = "ID,First^Name\n1,Jacob"
 user = HoneyFormat::CSV.new(csv_string, header_converter: converter).rows.first
 user.first_name # => "Jacob"
-user.id # => "1"
+user.id         # => "1"
 ```
 
 Missing header values
@@ -289,8 +289,6 @@ end
 
 You can see all [available errors here](https://www.rubydoc.info/gems/honey_format/HoneyFormat/Errors).
 
-If you want to see more usage examples check out the [`examples/`](https://github.com/buren/honey_format/tree/master/examples) and [`spec/`](https://github.com/buren/honey_format/tree/master/spec) directories.
-
 __Skip lines__
 
 > Skip comments and/or other unwanted lines from being parsed.
@@ -307,6 +305,31 @@ csv = HoneyFormat::CSV.new(csv_string, skip_lines: regexp)
 csv.rows.length # => 2
 ```
 
+__Matrix__
+
+> Use whats under the hood.
+
+Actually `HoneyFormat::CSV` is a very thin wrapper around `HoneyFormat::Matrix`.
+You can use `Matrix` directly it support all options that aren't specifically tied to parsing a CSV.
+
+Example
+```ruby
+data = [
+  %w[name id],
+  %w[jacob 1]
+]
+type_map = {
+  id: :integer,
+  name: :upcase
+}
+
+matrix = HoneyFormat::Matrix.new(data, type_map: { id: :integer, name: :upcase })
+matrix.columns   # => [:name, :id]
+matrix.rows.to_a # => [#<Row name="JACOB", id=1>]
+matrix.to_csv    # => "name,id\nJACOB,1\n"
+```
+
+If you want to see more usage examples check out the [`examples/`](https://github.com/buren/honey_format/tree/master/examples) and [`spec/`](https://github.com/buren/honey_format/tree/master/spec) directories and of course [on RubyDoc](https://www.rubydoc.info/gems/honey_format/).
 
 ## CLI
 
