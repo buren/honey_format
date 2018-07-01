@@ -14,16 +14,16 @@ RSpec.describe HoneyFormat::Registry do
   end
 
   it 'can convert custom value' do
-    converter_registry = described_class.new(default_converters)
-    converter_registry.register(:upcased, proc { |v| v.upcase })
-    value = converter_registry.call('buren', :upcased)
+    registry = described_class.new(default_converters)
+    registry.register(:upcased, proc { |v| v.upcase })
+    value = registry.call('buren', :upcased)
     expect(value).to eq('BUREN')
   end
 
   it 'raises ArgumentError if an unknown type is passed' do
-    converter_registry = described_class.new(default_converters)
+    registry = described_class.new(default_converters)
     expect do
-      converter_registry.call(nil, :watman)
+      registry.call(nil, :watman)
     end.to raise_error(ArgumentError)
   end
 end
