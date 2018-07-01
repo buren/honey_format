@@ -6,6 +6,9 @@ module HoneyFormat
     # Bracket character matcher
     BRACKETS = /\(|\[|\{|\)|\]|\}/
 
+    # Separator characters
+    SEPS = /'|"|\||\*|\^|\&|%|\$|€|#/
+
     # Replace map
     REPLACE_MAP = [
       [/\\/, '/'],     # replace "\" with "/"
@@ -21,9 +24,10 @@ module HoneyFormat
       [/-/, '_'],      # replace "-" with "("
       [/::/, '_'],     # replace "::" with "_"
       [%r{/}, '_'],    # replace "/" with "_"
+      [SEPS, '_'],     # replace separator chars with "_"
       [/_+/, '_'],     # replace one or more "_" with single "_"
       [/\A_+/, ''],    # remove leading "_"
-      [/_+\z/, '']     # remove trailing "_"
+      [/_+\z/, ''],    # remove trailing "_"
     ].map(&:freeze).freeze
 
     # Returns converted value and mutates the argument.

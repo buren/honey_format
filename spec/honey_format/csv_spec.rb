@@ -228,15 +228,15 @@ describe HoneyFormat::CSV do
 
     it 'returns correct for diabolical CSV-string that have caused problems in the passed' do
       csv_string = '333333-1,2015-05-24 23:31:16,None,visa,1111111111,1119.00,0000-00-00 00:00:00,IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",john@example.com,1,1119.00,0.00,0.00,1119.00,0.00,23.80,1119.00,0,EUR,9.24140,1099.73,219.95,0.00,0.00,,,,'
-      header = 'order,order_date,paytype,payment_method_code,payment_reference,captured,captured_date,billing_country,billing_name,billing_company,billing_address,billing_coaddress,billing_zipcode,billing_state,billing_city,delivery_country,delivery_name,delivery_company,delivery_address,delivery_coaddress,delivery_zipcode,delivery_state,delivery_city,delivery_email,pcs,product_order_value(ex_vat),shipping_value(ex_vat),voucher_value(ex_vat),total_order_value(ex_vat),vat_deduct,vat,total_order_value(inc_vat),refunded,currency,currency_rate,total_order_value(sek),vat(sek),shipping_value(ex_vat)(sek),voucher_value(ex_vat)(sek),affiliate,ec_vat,vat#,collection'.split(',')
+      header = 'order,order_date,paytype,payment_method_code,payment_reference,captured,captured_date,billing_country,billing_name,billing_company,billing_address,billing_coaddress,billing_zipcode,billing_state,billing_city,delivery_country,delivery_name,delivery_company,delivery_address,delivery_coaddress,delivery_zipcode,delivery_state,delivery_city,delivery_email,pcs,product_order_value(ex_vat),shipping_value(ex_vat),voucher_value(ex_vat),total_order_value(ex_vat),vat_deduct,vat,total_order_value(inc_vat),refunded,currency,currency_rate,total_order_value(sek),vat(sek),shipping_value(ex_vat)(sek),voucher_value(ex_vat)(sek),affiliate,ec_vat,vat1#,collection'.split(',')
 
       csv = described_class.new(csv_string, header: header)
       expected = <<~CSV
-        order,order_date,paytype,payment_method_code,payment_reference,captured,captured_date,billing_country,billing_name,billing_company,billing_address,billing_coaddress,billing_zipcode,billing_state,billing_city,delivery_country,delivery_name,delivery_company,delivery_address,delivery_coaddress,delivery_zipcode,delivery_state,delivery_city,delivery_email,pcs,product_order_value_ex_vat,shipping_value_ex_vat,voucher_value_ex_vat,total_order_value_ex_vat,vat_deduct,vat,total_order_value_inc_vat,refunded,currency,currency_rate,total_order_value_sek,vat_sek,shipping_value_ex_vat_sek,voucher_value_ex_vat_sek,affiliate,ec_vat,vat#,collection
+        order,order_date,paytype,payment_method_code,payment_reference,captured,captured_date,billing_country,billing_name,billing_company,billing_address,billing_coaddress,billing_zipcode,billing_state,billing_city,delivery_country,delivery_name,delivery_company,delivery_address,delivery_coaddress,delivery_zipcode,delivery_state,delivery_city,delivery_email,pcs,product_order_value_ex_vat,shipping_value_ex_vat,voucher_value_ex_vat,total_order_value_ex_vat,vat_deduct,vat,total_order_value_inc_vat,refunded,currency,currency_rate,total_order_value_sek,vat_sek,shipping_value_ex_vat_sek,voucher_value_ex_vat_sek,affiliate,ec_vat,vat1,collection
         333333-1,2015-05-24 23:31:16,None,visa,1111111111,1119.00,0000-00-00 00:00:00,IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",IE,"John ""JD"" Doe ",,51 Some Court,Someville,Dublin 33,,"Sometown,",john@example.com,1,1119.00,0.00,0.00,1119.00,0.00,23.80,1119.00,0,EUR,9.24140,1099.73,219.95,0.00,0.00,,,,
       CSV
       csv_output = csv.to_csv
-      expect(csv_output).to eq(expected)
+      expect(csv_output.split(',')).to match(expected.split(','))
       expect(CSV.parse(csv_output)).to be_a(Array)
     end
 
