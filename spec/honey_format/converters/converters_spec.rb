@@ -178,11 +178,19 @@ RSpec.describe HoneyFormat::ConverterRegistry do
   end
 
   describe 'date type' do
-    it 'can convert' do
+    it 'can convert YYYY-MM-DD' do
       date_string = '2018-01-01'
       converter = described_class.new(default_converters)
-      value = converter.call(date_string, :date!)
+      value = converter.call(date_string, :date)
       expected = Date.parse('2018-01-01')
+      expect(value).to eq(expected)
+    end
+
+    it 'can convert DD/MM/YYYY' do
+      date_string = '31/01/2018'
+      converter = described_class.new(default_converters)
+      value = converter.call(date_string, :date)
+      expected = Date.parse('2018-01-31')
       expect(value).to eq(expected)
     end
 
