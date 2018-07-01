@@ -9,14 +9,15 @@ module HoneyFormat
     # Instantiate CSV.
     # @return [CSV] a new instance of CSV.
     # @param [String] csv the CSV string
-    # @param [String] delimiter the CSV column delimiter
-    # @param [String, Symbol] row_delimiter the CSV row delimiter (default: :auto)
-    # @param [String] quote_character the CSV quote character (default: ")
-    # @param [Array<String>]
+    # @param delimiter [String] the CSV column delimiter
+    # @param row_delimiter [String, Symbol] the CSV row delimiter (default: :auto)
+    # @param quote_character [String] the CSV quote character (default: ")
+    # @param header [Array<String>]
     #   header optional argument that represents CSV header, required if the CSV file
     #   lacks a header row.
-    # @param [#call] header_converter converts header columns.
-    # @param [#call] row_builder will be called for each parsed row.
+    # @param header_converter [#call] converts header columns.
+    # @param header_deduplicator [#call] deduplicates header columns.
+    # @param row_builder [#call] will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
     # @param skip_lines [Regexp, String]
     #   Regexp for determining wheter a line is a comment. See CSV skip_lines option.
@@ -50,6 +51,7 @@ module HoneyFormat
       quote_character: '"',
       header: nil,
       header_converter: HoneyFormat.header_converter,
+      header_deduplicator: HoneyFormat.config.deduplicate_header,
       row_builder: nil,
       type_map: {},
       skip_lines: nil
@@ -66,6 +68,7 @@ module HoneyFormat
         csv,
         header: header,
         header_converter: header_converter,
+        header_deduplicator: header_deduplicator,
         row_builder: row_builder,
         type_map: type_map
       )

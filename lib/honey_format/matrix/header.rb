@@ -14,6 +14,10 @@ module HoneyFormat
     #   header converter that implements a #call method
     #   that takes one column (string) argument OR symbol for a registered
     #   converter registry.
+    # @param deduplicator [#call, Symbol]
+    #   header deduplicator that implements a #call method
+    #   that takes columns Array<String> argument OR symbol for a registered
+    #   deduplicator registry.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
     # @raise [MissingHeaderColumnError] raised when header is missing
     # @example Instantiate a header with a custom converter
