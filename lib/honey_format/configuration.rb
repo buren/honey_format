@@ -76,7 +76,7 @@ module HoneyFormat
     # Returns the converter registry
     # @return [#call] converter the configured converter registry
     def converter
-      @converter ||= ConverterRegistry.new
+      @converter ||= ConverterRegistry.new(default_converters)
     end
 
     # Default converter registry

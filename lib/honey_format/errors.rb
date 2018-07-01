@@ -25,7 +25,7 @@ module HoneyFormat
     # Raised when value type is unknown
     class UnknownTypeError < ArgumentError; end
     # Raised when value type already exists
-    class ValueTypeExistsError < ArgumentError; end
+    class TypeExistsError < ArgumentError; end
   end
 
   include Errors

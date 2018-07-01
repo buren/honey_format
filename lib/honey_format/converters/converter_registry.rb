@@ -1,83 +1,83 @@
 # frozen_string_literal: true
 
 module HoneyFormat
-  # Convert registry that holds value converters
+  # Registry that holds value callers
   class ConverterRegistry
-    # Instantiate a converter registry
-    # @param [Hash] default_converters hash of default converters
-    def initialize(default_converters = HoneyFormat.config.default_converters)
-      @converters = nil
-      @default = default_converters.dup
+    # Instantiate a caller registry
+    # @param [Hash] default hash of defaults
+    def initialize(default = {})
+      @callers = nil
+      @default = default.dup
       reset!
     end
 
     # Returns list of registered types
     # @return [Array<Symbol>] list of registered types
     def types
-      @converters.keys
+      @callers.keys
     end
 
-    # Register a converter
+    # Register a caller
     # @param [Symbol, String] type the name of the type
-    # @param [#call] converter that responds to #call
-    # @return [ConverterRegistry] returns self
-    # @raise [ValueTypeExistsError] if type is already registered
-    def register(type, converter)
-      self[type] = converter
+    # @param [#call] caller that responds to #call
+    # @return [Registry] returns self
+    # @raise [TypeExistsError] if type is already registered
+    def register(type, caller)
+      self[type] = caller
       self
     end
 
-    # Unregister a converter
+    # Unregister a caller
     # @param [Symbol, String] type the name of the type
-    # @return [ConverterRegistry] returns self
+    # @return [Registry] returns self
     # @raise [UnknownTypeError] if type is already registered
     def unregister(type)
       unknown_type_error!(type) unless type?(type)
-      @converters.delete(to_key(type))
+      @callers.delete(to_key(type))
       self
     end
 
-    # Convert value
+    # Call value type
     # @param [Symbol, String] type the name of the type
     # @param [Object] value to be converted
     def call(value, type)
       self[type].call(value)
     end
 
-    # Register a converter
+    # Register a caller
     # @param [Symbol, String] type the name of the type
-    # @param [#call] converter that responds to #call
-    # @return [Object] returns the converter
-    # @raise [ValueTypeExistsError] if type is already registered
-    def []=(type, converter)
+    # @param [#call] caller that responds to #call
+    # @return [Object] returns the caller
+    # @raise [TypeExistsError] if type is already registered
+    def []=(type, caller)
       type = to_key(type)
 
       if type?(type)
-        raise(Errors::ValueTypeExistsError, "type '#{type}' already exists")
+        raise(Errors::TypeExistsError, "type '#{type}' already exists")
       end
 
-      @converters[type] = converter
+      @callers[type] = caller
     end
 
     # Returns the given type or raises error if type doesn't exist
     # @param [Symbol, String] type the name of the type
-    # @return [Object] returns the converter
+    # @return [Object] returns the caller
     # @raise [UnknownTypeError] if type does not exist
     def [](type)
-      @converters.fetch(to_key(type)) { unknown_type_error!(type) }
+      @callers.fetch(to_key(type)) { unknown_type_error!(type) }
     end
 
     # Returns true if the type exists, false otherwise
     # @param [Symbol, String] type the name of the type
     # @return [true, false] true if type exists, false otherwise
     def type?(type)
-      @converters.key?(to_key(type))
+      @callers.key?(to_key(type))
     end
 
-    # Resets the converter registry to its default configuration
-    # @return [ConverterRegistry] returns the converter registry
+    # Resets the caller registry to its default configuration
+    # @return [Registry] returns the caller registry
     def reset!
-      @converters = @default.dup
+      @callers = @default.dup
       self
     end
 

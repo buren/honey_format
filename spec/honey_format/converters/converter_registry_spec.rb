@@ -44,11 +44,11 @@ RSpec.describe HoneyFormat::ConverterRegistry do
       converter_registry.reset!
     end
 
-    it 'raises ValueTypeExistsError when trying to register duplicated type' do
+    it 'raises TypeExistsError when trying to register duplicated type' do
       converter_registry = described_class.new(default_converters)
       expect do
         converter_registry.register(:datetime!, proc {})
-      end.to raise_error(HoneyFormat::ValueTypeExistsError)
+      end.to raise_error(HoneyFormat::TypeExistsError)
     end
   end
 
