@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe HoneyFormat::Configuration do
   describe '#header_converter=' do
     it 'can set header converter from Symbol' do
-      expected = HoneyFormat.converter[:upcase]
+      expected = HoneyFormat.converter_registry[:upcase]
 
       config = described_class.new
       config.header_converter = :upcase
@@ -14,7 +14,7 @@ RSpec.describe HoneyFormat::Configuration do
     end
 
     it 'can set header converter' do
-      expected = HoneyFormat.converter[:upcase]
+      expected = HoneyFormat.converter_registry[:upcase]
 
       config = described_class.new
       config.header_converter = expected
@@ -25,24 +25,24 @@ RSpec.describe HoneyFormat::Configuration do
 
   describe '#converter' do
     it 'returns a converter registry' do
-      expect(described_class.new.converter).to be_a(HoneyFormat::Registry)
+      expect(described_class.new.converter_registry).to be_a(HoneyFormat::Registry)
     end
   end
 
-  describe '#deduplicate_header=' do
+  describe '#header_deduplicator=' do
     it 'can set header converter from Symbol' do
       config = described_class.new
-      config.deduplicate_header = :none
-      expected = config.default_deduplicate_header_strategies[:none]
+      config.header_deduplicator = :none
+      expected = config.default_header_deduplicator_strategies[:none]
 
-      expect(config.deduplicate_header).to eq(expected)
+      expect(config.header_deduplicator).to eq(expected)
     end
 
     it 'raises error for unknown Symbol deduplicator' do
       config = described_class.new
 
       expect do
-        config.deduplicate_header = :invalid_thing
+        config.header_deduplicator = :invalid_thing
       end.to raise_error(HoneyFormat::Errors::UnknownDeduplicationStrategyError)
     end
 
@@ -50,7 +50,7 @@ RSpec.describe HoneyFormat::Configuration do
       config = described_class.new
 
       expect do
-        config.deduplicate_header = 'wat'
+        config.header_deduplicator = 'wat'
       end.to raise_error(HoneyFormat::Errors::UnknownDeduplicationStrategyError)
     end
 
@@ -58,9 +58,9 @@ RSpec.describe HoneyFormat::Configuration do
       expected = proc { |v| v }
 
       config = described_class.new
-      config.deduplicate_header = expected
+      config.header_deduplicator = expected
 
-      expect(config.deduplicate_header).to eq(expected)
+      expect(config.header_deduplicator).to eq(expected)
     end
   end
 end

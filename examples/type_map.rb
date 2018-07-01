@@ -24,11 +24,11 @@ country_code_converter = proc { |v|
 puts '== EXAMPLE: CSV output with filtered columns and rows =='
 puts
 puts 'The type converters available by default are:'
-puts "    #{HoneyFormat.converter.types.join(', ')}"
+puts "    #{HoneyFormat.converter_registry.types.join(', ')}"
 puts
 
 HoneyFormat.configure do |config|
-  config.converter.register(:country_code, country_code_converter)
+  config.converter_registry.register(:country_code, country_code_converter)
 end
 
 # Map columns to types

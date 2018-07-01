@@ -7,15 +7,15 @@ module HoneyFormat
   class Configuration
     # Instantiate configuration
     def initialize
-      @converter = nil
+      @converter_registry = nil
       @header_converter = nil
-      @deduplicate_header = nil
+      @header_deduplicator = nil
     end
 
     # Returns the header converter
     # @return [#call] header_converter the configured header converter
     def header_converter
-      @header_converter ||= converter[:header_column]
+      @header_converter ||= converter_registry[:header_column]
     end
 
     # Set the header converter
@@ -24,7 +24,7 @@ module HoneyFormat
     # @return [#call] the header converter
     def header_converter=(converter)
       @header_converter = if converter.is_a?(Symbol)
-                            self.converter[converter]
+                            converter_registry[converter]
                           else
                             converter
                           end
@@ -32,8 +32,8 @@ module HoneyFormat
 
     # Return the deduplication header strategy
     # @return [#call] the header deduplication strategy
-    def deduplicate_header
-      @deduplicate_header ||= header_deduplicator_registry[:deduplicate]
+    def header_deduplicator
+      @header_deduplicator ||= header_deduplicator_registry[:deduplicate]
     end
 
     # Set the deduplication header strategy
@@ -42,11 +42,11 @@ module HoneyFormat
     #   to #call(colums, key_count)
     # @return [#call] the header deduplication strategy
     # @raise [UnknownDeduplicationStrategyError]
-    def deduplicate_header=(strategy)
+    def header_deduplicator=(strategy)
       if header_deduplicator_registry.type?(strategy)
-        @deduplicate_header = header_deduplicator_registry[strategy]
+        @header_deduplicator = header_deduplicator_registry[strategy]
       elsif strategy.respond_to?(:call)
-        @deduplicate_header = strategy
+        @header_deduplicator = strategy
       else
         message = "unknown deduplication strategy: '#{strategy}'"
         raise(Errors::UnknownDeduplicationStrategyError, message)
@@ -55,8 +55,8 @@ module HoneyFormat
 
     # Default header deduplicate strategies
     # @return [Hash] the default header deduplicatation strategies
-    def default_deduplicate_header_strategies
-      @default_deduplicate_header_strategies ||= {
+    def default_header_deduplicator_strategies
+      @default_header_deduplicator_strategies ||= {
         deduplicate: proc do |columns|
           Helpers.key_count_to_deduplicated_array(columns)
         end,
@@ -75,13 +75,13 @@ module HoneyFormat
     # Returns the column deduplication registry
     # @return [#call] column deduplication registry
     def header_deduplicator_registry
-      @header_deduplicator_registry ||= Registry.new(default_deduplicate_header_strategies)
+      @header_deduplicator_registry ||= Registry.new(default_header_deduplicator_strategies)
     end
 
     # Returns the converter registry
     # @return [#call] converter the configured converter registry
-    def converter
-      @converter ||= Registry.new(default_converters)
+    def converter_registry
+      @converter_registry ||= Registry.new(default_converters)
     end
 
     # Default converter registry

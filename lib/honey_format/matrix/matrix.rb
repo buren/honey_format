@@ -41,7 +41,7 @@ module HoneyFormat
       matrix,
       header: nil,
       header_converter: HoneyFormat.header_converter,
-      header_deduplicator: HoneyFormat.config.deduplicate_header,
+      header_deduplicator: HoneyFormat.config.header_deduplicator,
       row_builder: nil,
       type_map: {}
     )

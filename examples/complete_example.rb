@@ -13,8 +13,8 @@ csv_string = <<~CSV
 CSV
 
 HoneyFormat.configure do |config|
-  config.converter.register(:upcased, proc { |v| v.upcase })
-  config.converter.register(:country, proc { |v| v == 'SE' ? 'SWEDEN' : v })
+  config.converter_registry.register(:upcased, proc { |v| v.upcase })
+  config.converter_registry.register(:country, proc { |v| v == 'SE' ? 'SWEDEN' : v })
 end
 
 puts '== EXAMPLE: CSV complete example =='

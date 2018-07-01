@@ -27,7 +27,7 @@ module HoneyFormat
     def initialize(
       header,
       converter: HoneyFormat.header_converter,
-      deduplicator: HoneyFormat.config.deduplicate_header
+      deduplicator: HoneyFormat.config.header_deduplicator
     )
       if header.nil? || header.empty?
         raise(Errors::MissingHeaderError, "CSV header can't be empty.")
@@ -97,7 +97,7 @@ module HoneyFormat
     # @return [nil]
     def converter=(object)
       if object.is_a?(Symbol)
-        @converter = HoneyFormat.converter[object]
+        @converter = HoneyFormat.converter_registry[object]
         return
       end
 

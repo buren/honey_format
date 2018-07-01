@@ -102,7 +102,7 @@ csv.rows.first.id # => 1
 Add your own converter
 ```ruby
 HoneyFormat.configure do |config|
-  config.converter.register :upcased, proc { |v| v.upcase }
+  config.converter_registry.register :upcased, proc { |v| v.upcase }
 end
 
 csv_string = "Id,Username\n1,buren"
@@ -114,15 +114,15 @@ csv.rows.first.username # => "BUREN"
 Remove registered converter
 ```ruby
 HoneyFormat.configure do |config|
-  config.converter.unregister :upcase
+  config.converter_registry.unregister :upcase
   # now you're free to register your own
-  config.converter.register :upcase, proc { |v| v.upcase if v }
+  config.converter_registry.register :upcase, proc { |v| v.upcase if v }
 end
 ```
 
 Access registered converters
 ```ruby
-decimal_converter = HoneyFormat.converter[:decimal]
+decimal_converter = HoneyFormat.converter_registry[:decimal]
 decimal_converter.call('1.1') # => 1.1
 ```
 
@@ -222,7 +222,7 @@ HoneyFormat.configure do |config|
 end
 
 # you can get the default one with
-header_converter = HoneyFormat.converter[:header_column]
+header_converter = HoneyFormat.converter_registry[:header_column]
 header_converter.call('First name') # => "first_name"
 ```
 
