@@ -3,16 +3,27 @@
 module HoneyFormat
   # Header column converter
   module HeaderColumnConverter
+    # Bracket character matcher
+    BRACKETS = /\(|\[|\{|\)|\]|\}/
+
     # Replace map
     REPLACE_MAP = [
-      [/ \(/, '('],
-      [/ \[/, '['],
-      [/ \{/, '{'],
-      [/\) /, ')'],
-      [/\] /, ']'],
-      [/\} /, '}'],
-      [/ /, '_'],
-      [/-/, '_']
+      [/\\/, '/'],     # replace "\" with "/"
+      [/ \(/, '('],    # replace " (" with "("
+      [/ \[/, '['],    # replace " [" with "["
+      [/ \{/, '{'],    # replace " {" with "{"
+      [/ \{/, '{'],    # replace " {" with "{"
+      [/\) /, ')'],    # replace ") " with ")"
+      [/\] /, ']'],    # replace "] " with "]"
+      [/\} /, '}'],    # replace "} " with "}"
+      [BRACKETS, '_'], # replace (, [, {, ), ] and } with "_"
+      [/ +/, '_'],     # replace one or more spaces with "_"
+      [/-/, '_'],      # replace "-" with "("
+      [/::/, '_'],     # replace "::" with "_"
+      [%r{/}, '_'],    # replace "/" with "_"
+      [/_+/, '_'],     # replace one or more "_" with single "_"
+      [/\A_+/, ''],    # remove leading "_"
+      [/_+\z/, '']     # remove trailing "_"
     ].map(&:freeze).freeze
 
     # Returns converted value and mutates the argument.
