@@ -71,6 +71,7 @@ module HoneyFormat
     # @param [Symbol, String] type the name of the type
     # @return [true, false] true if type exists, false otherwise
     def type?(type)
+      return false unless keyable?(type)
       @callers.key?(to_key(type))
     end
 
@@ -82,6 +83,10 @@ module HoneyFormat
     end
 
     private
+
+    def keyable?(key)
+      key.respond_to?(:to_sym)
+    end
 
     def to_key(key)
       key.to_sym

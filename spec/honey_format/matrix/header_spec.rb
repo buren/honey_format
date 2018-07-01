@@ -51,17 +51,45 @@ describe HoneyFormat::Header do
     end
 
     context 'duplicated header column' do
-      it 'can de-duplicate them' do
+      it 'can set deduplicator from proc' do
+        dedup = proc { %i[first second third] }
+        header = described_class.new(%w[first first second], deduplicator: dedup)
+
+        expect(header.columns).to eq(%i[first second third])
+      end
+
+      it 'can set deduplicator from Symbol' do
+        header = described_class.new(%w[first first second], deduplicator: :none)
+
+        expect(header.columns).to eq(%i[first first second])
+      end
+
+      it 'raises error for unknown/invalid deduplicator' do
+        expect do
+          described_class.new(%w[first last], deduplicator: :invalid_thing)
+        end.to raise_error(HoneyFormat::Errors::UnknownTypeError)
+      end
+
+      it 'can de-duplicate' do
         header = described_class.new(%w[first first second])
 
         expect(header.columns).to eq(%i[first first1 second])
       end
 
-      it 'raises error' do
-        dep = HoneyFormat.config.default_deduplicate_header_strategies[:raise]
-        expect do
-          described_class.new(%w[first first second], deduplicator: dep)
-        end.to raise_error(HoneyFormat::DuplicateHeaderColumnError)
+      context 'raise strategy' do
+        it 'raises error when duplicates are found' do
+          dep = HoneyFormat.config.default_deduplicate_header_strategies[:raise]
+          expect do
+            described_class.new(%w[first first second], deduplicator: dep)
+          end.to raise_error(HoneyFormat::DuplicateHeaderColumnError)
+        end
+
+        it 'returns columns untouched if no duplicates are found' do
+          dep = HoneyFormat.config.default_deduplicate_header_strategies[:raise]
+          expect do
+            described_class.new(%w[first second], deduplicator: dep)
+          end.not_to raise_error(HoneyFormat::DuplicateHeaderColumnError)
+        end
       end
     end
   end

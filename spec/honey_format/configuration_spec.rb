@@ -29,21 +29,38 @@ RSpec.describe HoneyFormat::Configuration do
     end
   end
 
-  describe '#deduplicate_header_strategy=' do
+  describe '#deduplicate_header=' do
     it 'can set header converter from Symbol' do
       config = described_class.new
-      config.deduplicate_header_strategy = :deduplicate
+      config.deduplicate_header = :none
+      expected = config.default_deduplicate_header_strategies[:none]
 
-      expect(config.deduplicate_header_strategy).to be_a(Proc)
+      expect(config.deduplicate_header).to eq(expected)
+    end
+
+    it 'raises error for unknown Symbol deduplicator' do
+      config = described_class.new
+
+      expect do
+        config.deduplicate_header = :invalid_thing
+      end.to raise_error(HoneyFormat::Errors::UnknownDeduplicationStrategyError)
+    end
+
+    it 'raises error in invalid deduplicator' do
+      config = described_class.new
+
+      expect do
+        config.deduplicate_header = 'wat'
+      end.to raise_error(HoneyFormat::Errors::UnknownDeduplicationStrategyError)
     end
 
     it 'can set header converter' do
       expected = proc { |v| v }
 
       config = described_class.new
-      config.deduplicate_header_strategy = expected
+      config.deduplicate_header = expected
 
-      expect(config.deduplicate_header_strategy).to eq(expected)
+      expect(config.deduplicate_header).to eq(expected)
     end
   end
 end

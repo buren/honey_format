@@ -9,7 +9,7 @@ module HoneyFormat
     def initialize
       @converter = nil
       @header_converter = nil
-      self.deduplicate_header_strategy = :deduplicate
+      @deduplicate_header = nil
     end
 
     # Returns the header converter
@@ -32,8 +32,8 @@ module HoneyFormat
 
     # Return the deduplication header strategy
     # @return [#call] the header deduplication strategy
-    def deduplicate_header_strategy
-      @deduplicate_header_strategy
+    def deduplicate_header
+      @deduplicate_header ||= header_deduplicator[:deduplicate]
     end
 
     # Set the deduplication header strategy
@@ -41,17 +41,15 @@ module HoneyFormat
     #   symbol with known strategy identifier or method that responds
     #   to #call(colums, key_count)
     # @return [#call] the header deduplication strategy
-    def deduplicate_header_strategy=(strategy)
-      default = default_deduplicate_header_strategies
-
-      symbol_like = [Symbol, String].detect { |k| strategy.is_a?(k) }
-      if symbol_like && default.key?(strategy.to_sym)
-        @deduplicate_header_strategy = default.fetch(strategy.to_sym)
+    # @raise [UnknownDeduplicationStrategyError]
+    def deduplicate_header=(strategy)
+      if header_deduplicator.type?(strategy)
+        @deduplicate_header = header_deduplicator[strategy]
       elsif strategy.respond_to?(:call)
-        @deduplicate_header_strategy = strategy
+        @deduplicate_header = strategy
       else
         message = "unknown deduplication strategy: '#{strategy}'"
-        raise(Errors::UnknownDeduplicationStrategy, message)
+        raise(Errors::UnknownDeduplicationStrategyError, message)
       end
     end
 
@@ -68,9 +66,16 @@ module HoneyFormat
             message = "all columns must be unique, duplicates are: #{duplicates}"
             raise(Errors::DuplicateHeaderColumnError, message)
           end
+          columns
         end,
         none: proc { |columns| columns },
       }.freeze
+    end
+
+    # Returns the column deduplication registry
+    # @return [#call] column deduplication registry
+    def header_deduplicator
+      @header_deduplicator ||= Registry.new(default_deduplicate_header_strategies)
     end
 
     # Returns the converter registry

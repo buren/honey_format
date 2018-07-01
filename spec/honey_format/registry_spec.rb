@@ -5,6 +5,28 @@ require 'spec_helper'
 RSpec.describe HoneyFormat::Registry do
   let(:default_converters) { HoneyFormat.config.default_converters }
 
+  describe '#type?' do
+    it 'returns false when key is invalid' do
+      registry = described_class.new
+      expect(registry.type?({})).to eq(false)
+    end
+
+    it 'returns fals when key is not present' do
+      registry = described_class.new
+      expect(registry.type?(:watman)).to eq(false)
+    end
+
+    it 'returns true when key is a Symbol and present' do
+      registry = described_class.new(default_converters)
+      expect(registry.type?(:integer)).to eq(true)
+    end
+
+    it 'returns true when key is a String and present' do
+      registry = described_class.new(default_converters)
+      expect(registry.type?('integer')).to eq(true)
+    end
+  end
+
   describe '#reset!' do
     it 'returns new instance of converter registry' do
       converter_registry = described_class.new(default_converters)

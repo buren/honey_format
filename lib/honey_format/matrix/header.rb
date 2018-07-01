@@ -23,20 +23,15 @@ module HoneyFormat
     def initialize(
       header,
       converter: HoneyFormat.header_converter,
-      deduplicator: HoneyFormat.config.deduplicate_header_strategy
+      deduplicator: HoneyFormat.config.deduplicate_header
     )
       if header.nil? || header.empty?
         raise(Errors::MissingHeaderError, "CSV header can't be empty.")
       end
 
       @original_header = header
-      @deduplicator = deduplicator
-      @converter = if converter.is_a?(Symbol)
-                     HoneyFormat.converter[converter]
-                   else
-                     converter
-                   end
-
+      self.deduplicator = deduplicator
+      self.converter = converter
       @columns = build_columns(@original_header)
     end
 
@@ -93,20 +88,41 @@ module HoneyFormat
 
     private
 
+    # Set the header converter
+    # @param [Symbol, #call] symbol to known converter or object that responds to #call
+    # @return [nil]
+    def converter=(object)
+      if object.is_a?(Symbol)
+        @converter = HoneyFormat.converter[object]
+        return
+      end
+
+      @converter = object
+    end
+
+    # Set the header deduplicator
+    # @param [Symbol, #call] symbol to known deduplicator or object that responds to #call
+    # @return [nil]
+    def deduplicator=(object)
+      if object.is_a?(Symbol)
+        @deduplicator = HoneyFormat.header_deduplicator[object]
+        return
+      end
+
+      @deduplicator = object
+    end
+
     # Convert original header
     # @param [Array<String>] header the original header
     # @return [Array<String>] converted columns
     def build_columns(header)
-      cache = Hash.new(0)
-
       columns = header.each_with_index.map do |header_column, index|
         convert_column(header_column, index).tap do |column|
-          cache[column] += 1
           maybe_raise_missing_column!(column)
         end
       end
 
-      @deduplicator.call(columns, cache)
+      @deduplicator.call(columns)
     end
 
     # Convert the column value

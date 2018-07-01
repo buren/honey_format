@@ -39,4 +39,10 @@ module HoneyFormat
   def self.converter
     config.converter
   end
+
+  # Returns the configured deduplicator registry
+  # @return [#call] the current deduplicator registry
+  def self.header_deduplicator
+    config.header_deduplicator
+  end
 end
