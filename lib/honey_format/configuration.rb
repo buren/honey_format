@@ -33,7 +33,7 @@ module HoneyFormat
     # Return the deduplication header strategy
     # @return [#call] the header deduplication strategy
     def deduplicate_header
-      @deduplicate_header ||= header_deduplicator[:deduplicate]
+      @deduplicate_header ||= header_deduplicator_registry[:deduplicate]
     end
 
     # Set the deduplication header strategy
@@ -43,8 +43,8 @@ module HoneyFormat
     # @return [#call] the header deduplication strategy
     # @raise [UnknownDeduplicationStrategyError]
     def deduplicate_header=(strategy)
-      if header_deduplicator.type?(strategy)
-        @deduplicate_header = header_deduplicator[strategy]
+      if header_deduplicator_registry.type?(strategy)
+        @deduplicate_header = header_deduplicator_registry[strategy]
       elsif strategy.respond_to?(:call)
         @deduplicate_header = strategy
       else
@@ -74,8 +74,8 @@ module HoneyFormat
 
     # Returns the column deduplication registry
     # @return [#call] column deduplication registry
-    def header_deduplicator
-      @header_deduplicator ||= Registry.new(default_deduplicate_header_strategies)
+    def header_deduplicator_registry
+      @header_deduplicator_registry ||= Registry.new(default_deduplicate_header_strategies)
     end
 
     # Returns the converter registry

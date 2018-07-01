@@ -109,7 +109,7 @@ module HoneyFormat
     # @return [nil]
     def deduplicator=(object)
       if object.is_a?(Symbol)
-        @deduplicator = HoneyFormat.header_deduplicator[object]
+        @deduplicator = HoneyFormat.header_deduplicator_registry[object]
         return
       end
 

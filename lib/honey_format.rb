@@ -42,7 +42,7 @@ module HoneyFormat
 
   # Returns the configured deduplicator registry
   # @return [Registry] the current deduplicator registry
-  def self.header_deduplicator
-    config.header_deduplicator
+  def self.header_deduplicator_registry
+    config.header_deduplicator_registry
   end
 end
