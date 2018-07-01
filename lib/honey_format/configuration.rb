@@ -60,7 +60,7 @@ module HoneyFormat
         md5: ConvertMD5,
         hex: ConvertHex,
         nil: ConvertNil,
-        header_column: ConvertHeaderColumn
+        header_column: ConvertHeaderColumn,
       }.freeze
     end
   end

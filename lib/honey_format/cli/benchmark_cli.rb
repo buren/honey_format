@@ -119,7 +119,7 @@ module HoneyFormat
         benchmark_time: benchmark_time,
         benchmark_warmup: benchmark_warmup,
         lines_multipliers: lines_multipliers,
-        verbose: verbose
+        verbose: verbose,
       }
     end
   end

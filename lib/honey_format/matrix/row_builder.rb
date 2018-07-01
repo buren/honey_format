@@ -72,7 +72,7 @@ module HoneyFormat
         "Row length #{row.length}",
         "column length #{@columns.length}",
         "row: #{row.inspect}",
-        "orignal message: '#{e.message}'"
+        "orignal message: '#{e.message}'",
       ].join(', ')
       raise(Errors::InvalidRowLengthError, err_msg)
     end

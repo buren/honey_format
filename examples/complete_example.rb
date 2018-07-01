@@ -25,7 +25,7 @@ type_map = {
   name: :upcase,
   country: :country,
   email_address: :hex,
-  age: :integer
+  age: :integer,
 }
 
 begin

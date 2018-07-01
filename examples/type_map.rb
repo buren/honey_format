@@ -16,7 +16,7 @@ country_code_converter = proc { |v|
   {
     'SE' => 'Sweden',
     'DK' => 'Denmark',
-    'NO' => 'Norway'
+    'NO' => 'Norway',
     # ...
   }.fetch(v, v)
 }
@@ -35,7 +35,7 @@ end
 type_map = {
   age: :integer!, # the ! version will raise an exception if the value can't be converted
   country: :country_code,
-  created_date: :date
+  created_date: :date,
 }
 csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 

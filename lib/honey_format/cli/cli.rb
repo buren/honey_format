@@ -101,7 +101,7 @@ module HoneyFormat
         header_only: header_only,
         rows_only: rows_only,
         skip_lines: skip_lines,
-        type_map: type_map
+        type_map: type_map,
       }
     end
 
