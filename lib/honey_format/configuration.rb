@@ -74,7 +74,7 @@ module HoneyFormat
     end
 
     # Returns the converter registry
-    # @attr_reader [#call] converter the configured converter registry
+    # @return [#call] converter the configured converter registry
     def converter
       @converter ||= ConverterRegistry.new
     end
