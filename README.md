@@ -7,10 +7,10 @@ Proper objects for CSV headers and rows, convert column values, filter columns a
 ## Features
 
 - Proper objects for CSV header and rows
-- Convert column values
+- Convert row and header column values
 - Pass your own custom row builder
-- Convert header column names
 - Filter what columns and rows are included in CSV output
+- Gracefully handle missing and duplicated header columns
 - [CLI](#cli) - Simple command line interface
 - Only ~5-10% overhead from using Ruby CSV, see [benchmarks](#benchmark)
 - Has no dependencies other than Ruby stdlib
@@ -19,7 +19,6 @@ Proper objects for CSV headers and rows, convert column values, filter columns a
 Read the [usage section](#usage),  [RubyDoc](https://www.rubydoc.info/gems/honey_format/) or [examples/ directory](https://github.com/buren/honey_format/tree/master/examples)  for how to use this gem.
 
 ## Quick use
-
 
 ```ruby
 csv_string = <<-CSV
