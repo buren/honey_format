@@ -35,13 +35,13 @@ module HoneyFormat
   end
 
   # Returns the configured converter registry
-  # @return [#call] the current converter registry
+  # @return [Registry] the current converter registry
   def self.converter
     config.converter
   end
 
   # Returns the configured deduplicator registry
-  # @return [#call] the current deduplicator registry
+  # @return [Registry] the current deduplicator registry
   def self.header_deduplicator
     config.header_deduplicator
   end
