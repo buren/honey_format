@@ -32,7 +32,7 @@ describe HoneyFormat::HeaderColumnConverter do
     ['model//column', :model_column],
     ['model\column', :model_column],
     [nil, :column3, 3],
-    affected_ruby_version ? ['ÅÄÖ', :'ÅÄÖ'] : ['ÅÄÖ', :'åäö']
+    affected_ruby_version ? ['ÅÄÖ', :'ÅÄÖ'] : ['ÅÄÖ', :'åäö'],
   ].each do |data|
     input, expected, index = data
 

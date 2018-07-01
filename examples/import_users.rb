@@ -22,7 +22,7 @@ end
 country_coder = lambda do |value|
   {
     'Sweden' => 'SE',
-    'Denmark' => 'DK'
+    'Denmark' => 'DK',
     # ...
   }.fetch(value, value)
 end
@@ -42,7 +42,7 @@ end
 # convert column values
 type_map = {
   age: :integer,
-  country_code: :country_code
+  country_code: :country_code,
 }
 
 csv = HoneyFormat::CSV.new(

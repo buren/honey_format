@@ -15,7 +15,7 @@ end
 
 type_map = {
   name: :upcased,
-  country: :country
+  country: :country,
 }
 
 puts '== EXAMPLE: Upcase name & convert country =='

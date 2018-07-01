@@ -127,7 +127,7 @@ module HoneyFormat
       parts = [
         "CSV header column can't be nil or empty!",
         'When you pass your own converter make sure that it never returns nil or an empty string.', # rubocop:disable Metrics/LineLength
-        'Instead generate unique columns names.'
+        'Instead generate unique columns names.',
       ]
       raise(Errors::MissingHeaderColumnError, parts.join(' '))
     end

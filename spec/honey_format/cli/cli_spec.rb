@@ -60,7 +60,7 @@ RSpec.describe HoneyFormat::CLI do
         header_only: false,
         rows_only: false,
         type_map: {},
-        skip_lines: nil
+        skip_lines: nil,
       }
       expect(cli.options).to eq(expected)
     end
@@ -68,7 +68,7 @@ RSpec.describe HoneyFormat::CLI do
     it 'works with csv input path at tail' do
       argv = [
         '--columns=id,name',
-        'input.csv'
+        'input.csv',
       ]
       cli = described_class.new(argv: argv)
       expected = {
@@ -79,7 +79,7 @@ RSpec.describe HoneyFormat::CLI do
         header_only: false,
         rows_only: false,
         type_map: {},
-        skip_lines: nil
+        skip_lines: nil,
       }
       expect(cli.options).to eq(expected)
     end
@@ -93,7 +93,7 @@ RSpec.describe HoneyFormat::CLI do
         '--delimiter=:',
         '--header-only',
         '--no-rows-only',
-        '--type-map=id=integer,name=upcase'
+        '--type-map=id=integer,name=upcase',
       ]
       cli = described_class.new(argv: argv)
       expected = {
@@ -104,7 +104,7 @@ RSpec.describe HoneyFormat::CLI do
         header_only: true,
         rows_only: false,
         type_map: { id: :integer, name: :upcase },
-        skip_lines: 'buren'
+        skip_lines: 'buren',
       }
       expect(cli.options).to eq(expected)
     end

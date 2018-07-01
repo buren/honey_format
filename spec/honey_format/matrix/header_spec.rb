@@ -114,7 +114,7 @@ describe HoneyFormat::Header do
 
   {
     1 => build_converters.call(one_arity_block),
-    2 => build_converters.call(two_arity_block)
+    2 => build_converters.call(two_arity_block),
   }.each do |arity, converters|
     converters.each do |converter|
       describe "when given #{converter.class} converter" do
