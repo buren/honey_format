@@ -2,9 +2,7 @@
 
 require 'spec_helper'
 
-require 'honey_format/converters/converter_registry'
-
-RSpec.describe HoneyFormat::ConverterRegistry do
+RSpec.describe HoneyFormat::Registry do
   let(:default_converters) { HoneyFormat.config.default_converters }
 
   describe '#reset!' do

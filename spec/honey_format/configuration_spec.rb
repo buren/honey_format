@@ -25,7 +25,7 @@ RSpec.describe HoneyFormat::Configuration do
 
   describe '#converter' do
     it 'returns a converter registry' do
-      expect(described_class.new.converter).to be_a(HoneyFormat::ConverterRegistry)
+      expect(described_class.new.converter).to be_a(HoneyFormat::Registry)
     end
   end
 

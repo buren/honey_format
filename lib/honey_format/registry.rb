@@ -2,7 +2,7 @@
 
 module HoneyFormat
   # Registry that holds value callers
-  class ConverterRegistry
+  class Registry
     # Instantiate a caller registry
     # @param [Hash] default hash of defaults
     def initialize(default = {})

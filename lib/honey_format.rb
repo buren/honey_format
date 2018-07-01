@@ -3,8 +3,8 @@
 require 'honey_format/version'
 require 'honey_format/configuration'
 require 'honey_format/errors'
+require 'honey_format/registry'
 require 'honey_format/converters/converters'
-require 'honey_format/converters/converter_registry'
 require 'honey_format/csv'
 
 # Main module for HoneyFormat
