@@ -43,18 +43,21 @@ module HoneyFormat
     #   rescue HoneyFormat::RowError => e
     #     puts "row error: #{e.class}, #{e.message}"
     #   end
+    # @example Skip lines all lines starting with '#'
+    #   csv = HoneyFormat::CSV.new("name,id\n# some comment\njacob,1", skip_lines: '#')
+    #   csv.rows.length # => 1
     # @see Matrix#new
     def initialize(
       csv,
-      delimiter: ',',
-      row_delimiter: :auto,
-      quote_character: '"',
+      delimiter: HoneyFormat.config.delimiter,
+      row_delimiter: HoneyFormat.config.row_delimiter,
+      quote_character: HoneyFormat.config.quote_character,
       header: nil,
       header_converter: HoneyFormat.header_converter,
       header_deduplicator: HoneyFormat.config.header_deduplicator,
       row_builder: nil,
       type_map: {},
-      skip_lines: nil
+      skip_lines: HoneyFormat.config.skip_lines
     )
       csv = ::CSV.parse(
         csv,

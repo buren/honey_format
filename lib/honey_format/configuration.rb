@@ -4,12 +4,22 @@ require 'honey_format/helpers/helpers'
 
 module HoneyFormat
   # Holds HoneyFormat configuration
+  # @attr_accessor [String] delimiter the default column delimiter (default: ,)
+  # @attr_accessor [String, Symbol] row_delimiter the default row delimiter (default: :auto)
+  # @attr_accessor [String] quote_character the default quote character (default: ")
+  # @attr_accessor [String, Regexp] skip_lines skip all lines matching pattern (default: nil)
   class Configuration
+    attr_accessor :delimiter, :row_delimiter, :quote_character, :skip_lines
+
     # Instantiate configuration
     def initialize
       @converter_registry = nil
       @header_converter = nil
       @header_deduplicator = nil
+      @delimiter = ','
+      @row_delimiter = :auto
+      @quote_character = '"'
+      @skip_lines = nil
     end
 
     # Returns the header converter
