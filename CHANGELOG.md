@@ -1,5 +1,7 @@
 # HEAD
 
+## v0.17.0
+
 :warning: This release contains some backwards compatible changes.
 
 * Add global config for CSV `delimiter`, `row_delimiter`, `quote_character` and `skip_lines`
