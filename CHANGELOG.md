@@ -2,14 +2,16 @@
 
 :warning: This release contains some backwards compatible changes.
 
+* Add global config for CSV `delimiter`, `row_delimiter`, `quote_character` and `skip_lines`
+* Add `header_deduplicator` support to Matrix & CSV
 * Make `HeaderColumnConverter` normalization even more aggressive [PR#32](https://github.com/buren/honey_format/pull/32)
   - :warning: Backwards incompatible
 * Add `blank` type [PR#34](https://github.com/buren/honey_format/pull/34)
-* Rename `ValueConverter` => `ConverterRegistry`
+* Rename `ValueConverter` => `Registry` and generalize implementation
 * Rename `UnknownValueTypeError` => `UnknownTypeError`
   - :warning: Backwards incompatible
 * Allow unregister of existing value converters
-* Add `hex` converter to registry
+* Add `hex` and `blank` converters to registry
 
 ## v0.16.0
 
