@@ -45,7 +45,7 @@ module HoneyFormat
         return :"column#{index}"
       end
 
-      column = column.dup.to_s
+      column = column.to_s.dup
       column.strip!
       column.downcase!
       REPLACE_MAP.each do |data|
