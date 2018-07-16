@@ -33,7 +33,7 @@ module HoneyFormat
 
     # Returns converted value and mutates the argument.
     # @return [Symbol] the cleaned header column.
-    # @param [String] column the string to be cleaned.
+    # @param [String, Symbol] column the string to be cleaned.
     # @param [Integer] index the column index.
     # @example Convert simple header
     #     HeaderColumnConverter.call("  User name ") #=> "user_name"
@@ -45,7 +45,7 @@ module HoneyFormat
         return :"column#{index}"
       end
 
-      column = column.dup
+      column = column.dup.to_s
       column.strip!
       column.downcase!
       REPLACE_MAP.each do |data|
