@@ -21,7 +21,8 @@ module HoneyFormat
       [/\} /, '}'],    # replace "} " with "}"
       [BRACKETS, '_'], # replace (, [, {, ), ] and } with "_"
       [/ +/, '_'],     # replace one or more spaces with "_"
-      [/-/, '_'],      # replace "-" with "("
+      [/-/, '_'],      # replace "-" with "_"
+      [/\.|,/, '_'],   # replace "." and "," with "_"
       [/::/, '_'],     # replace "::" with "_"
       [%r{/}, '_'],    # replace "/" with "_"
       [SEPS, '_'],     # replace separator chars with "_"
@@ -32,7 +33,7 @@ module HoneyFormat
 
     # Returns converted value and mutates the argument.
     # @return [Symbol] the cleaned header column.
-    # @param [String] column the string to be cleaned.
+    # @param [String, Symbol] column the string to be cleaned.
     # @param [Integer] index the column index.
     # @example Convert simple header
     #     HeaderColumnConverter.call("  User name ") #=> "user_name"
@@ -44,7 +45,7 @@ module HoneyFormat
         return :"column#{index}"
       end
 
-      column = column.dup
+      column = column.to_s.dup
       column.strip!
       column.downcase!
       REPLACE_MAP.each do |data|
