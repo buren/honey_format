@@ -39,11 +39,11 @@ describe HoneyFormat::HeaderColumnConverter do
     ['"model\column"', :model_column],
     ['model|column', :model_column],
     ['model%|*&$^#€column', :model_column],
-    ['Member.Kontonr', :'member_kontonr'],
+    ['Member.Kontonr', :member_kontonr],
     ['Member.Detaljkoder område 3', :'member_detaljkoder_område_3'],
     ['Member.RFM-värde', :'member_rfm_värde'],
     [nil, :column3, 3],
-    [:'first.name', :first_name],
+    %i[first.name first_name],
     affected_ruby_version ? ['ÅÄÖ', :'ÅÄÖ'] : ['ÅÄÖ', :'åäö'],
   ].each do |data|
     input, expected, index = data
