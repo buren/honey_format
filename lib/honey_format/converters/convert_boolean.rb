@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'set'
+
 module HoneyFormat
   # String values considered truthy
   TRUTHY = Set.new(%w[t T 1 y Y true TRUE]).freeze
