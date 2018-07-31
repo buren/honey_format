@@ -1,5 +1,10 @@
 # HEAD
 
+
+* Require `set` class in `ConvertBoolean` - fixes crash when set is already required in environment
+* Allow symbols to be passed to `HeaderColumnConverter`
+* Replace `.` and `,` with `_` in header column converter
+
 ## v0.17.0
 
 :warning: This release contains some backwards compatible changes.
