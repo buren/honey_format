@@ -403,7 +403,7 @@ Usage: bin/benchmark [file.csv] [options]
         --[no-]verbose               Verbose output
         --lines-multipliers=[1,2,10] Multiply the rows in the CSV file (default: 1)
         --time=[30]                  Benchmark time (default: 30)
-        --warmup=[30]                Benchmark warmup (default: 30)
+        --warmup=[5]                 Benchmark warmup (default: 5)
     -h, --help                       How to use
 ```
 

@@ -1,5 +1,6 @@
 # HEAD
 
+## v0.18.0
 
 * Require `set` class in `ConvertBoolean` - fixes crash when set is already required in environment
 * Allow symbols to be passed to `HeaderColumnConverter`
