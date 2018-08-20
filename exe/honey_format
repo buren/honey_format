@@ -10,7 +10,13 @@ require 'honey_format/cli/cli'
 cli = HoneyFormat::CLI.new
 options = cli.options
 
-input_path = options[:input_path] || raise(ArgumentError, 'input path required')
+input_path = options[:input_path]
+unless input_path
+  puts cli.usage
+  puts
+  puts '[ERROR] input path required'
+  exit 1
+end
 csv_input = File.read(input_path)
 csv = HoneyFormat::CSV.new(
   csv_input,

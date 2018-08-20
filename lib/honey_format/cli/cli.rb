@@ -12,7 +12,12 @@ module HoneyFormat
     # @return [CLI] the CLI
     def initialize(argv: ARGV, io: STDOUT)
       @io = io
+      @parser = nil
       @options = parse_options(argv: argv.dup)
+    end
+
+    def usage
+      @parser.to_s
     end
 
     private
@@ -38,6 +43,8 @@ module HoneyFormat
       type_map = {}
 
       OptionParser.new do |parser|
+        @parser = parser
+
         parser.banner = 'Usage: honey_format [options] <file.csv>'
         parser.default_argv = argv
 
