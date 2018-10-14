@@ -15,6 +15,7 @@ module HoneyFormat
 
         values = Array.new(value) { |i| i }.map do |index|
           next key if index.zero?
+
           :"#{key}#{index}"
         end
         array.concat(values)

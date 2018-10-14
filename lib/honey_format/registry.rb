@@ -72,6 +72,7 @@ module HoneyFormat
     # @return [true, false] true if type exists, false otherwise
     def type?(type)
       return false unless keyable?(type)
+
       @callers.key?(to_key(type))
     end
 

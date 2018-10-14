@@ -98,6 +98,7 @@ module HoneyFormat
       if input_path && argv.last
         raise(ArgumentError, "you can't provide both --csv and <path>")
       end
+
       input_path ||= argv.last
 
       {

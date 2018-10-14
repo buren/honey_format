@@ -78,6 +78,7 @@ module HoneyFormat
       rows.each do |row|
         # ignore empty rows
         next if row.nil? || row.empty? || row == [nil]
+
         built_rows << builder.build(row)
       end
       built_rows

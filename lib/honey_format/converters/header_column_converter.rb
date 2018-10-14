@@ -42,6 +42,7 @@ module HoneyFormat
     def self.call(column, index = nil)
       if column.nil? || column.empty?
         raise(ArgumentError, "column and column index can't be blank/nil") unless index
+
         return :"column#{index}"
       end
 

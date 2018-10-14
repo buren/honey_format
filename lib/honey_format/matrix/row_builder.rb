@@ -39,6 +39,7 @@ module HoneyFormat
       build_row!(row)
     rescue ArgumentError => e
       raise unless e.message == 'struct size differs'
+
       raise_invalid_row_length!(e, row)
     end
 
@@ -60,6 +61,7 @@ module HoneyFormat
       end
 
       return row unless @builder
+
       @builder.call(row)
     end
 

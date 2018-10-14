@@ -147,6 +147,7 @@ module HoneyFormat
     def converter_arity
       # procs and lambdas respond to #arity
       return @converter.arity if @converter.respond_to?(:arity)
+
       @converter.method(:call).arity
     end
 
