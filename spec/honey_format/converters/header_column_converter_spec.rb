@@ -40,7 +40,7 @@ describe HoneyFormat::HeaderColumnConverter do
     ['model\column', :model_column],
     ['"model\column"', :model_column],
     ['model|column', :model_column],
-    ['model%|*&$^#€column', :model_column],
+    ['model%|*&$^#€£column', :model_column],
     ['Member.Kontonr', :member_kontonr],
     ['Member.Detaljkoder område 3', :'member_detaljkoder_område_3'],
     ['Member.RFM-värde', :'member_rfm_värde'],

@@ -7,7 +7,8 @@ module HoneyFormat
     BRACKETS = /\(|\[|\{|\)|\]|\}/
 
     # Separator characters
-    SEPS = /'|"|\||\*|\^|\&|%|\$|€|#/
+    SEPS = /'|"|\||\*|\^|\&|%|\$|€|£|#/
+
 
     # Space characters
     SPACES = /[[:space:]]+/
