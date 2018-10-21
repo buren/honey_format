@@ -22,6 +22,7 @@ module HoneyFormat
       [/\) /, ')'],    # replace ") " with ")"
       [/\] /, ']'],    # replace "] " with "]"
       [/\} /, '}'],    # replace "} " with "}"
+      [/@/, '_at_'],   # replace "@' with "_at_"
       [BRACKETS, '_'], # replace (, [, {, ), ] and } with "_"
       [SPACES, '_'],   # replace one or more space chars with "_"
       [/-/, '_'],      # replace "-" with "_"
