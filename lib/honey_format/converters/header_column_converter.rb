@@ -9,6 +9,9 @@ module HoneyFormat
     # Separator characters
     SEPS = /'|"|\||\*|\^|\&|%|\$|€|#/
 
+    # Space characters
+    SPACES = /[[:space:]]+/
+
     # Replace map
     REPLACE_MAP = [
       [/\\/, '/'],     # replace "\" with "/"
@@ -20,7 +23,7 @@ module HoneyFormat
       [/\] /, ']'],    # replace "] " with "]"
       [/\} /, '}'],    # replace "} " with "}"
       [BRACKETS, '_'], # replace (, [, {, ), ] and } with "_"
-      [/ +/, '_'],     # replace one or more spaces with "_"
+      [SPACES, '_'],   # replace one or more space chars with "_"
       [/-/, '_'],      # replace "-" with "_"
       [/\.|,/, '_'],   # replace "." and "," with "_"
       [/::/, '_'],     # replace "::" with "_"
