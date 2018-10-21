@@ -1,5 +1,10 @@
 # HEAD
 
+* Add £ to header separator character list
+* Replace @ with _at_ in header converter
+* Replace all space like chars in Header converter. Closes #39
+* Improved CLI output when input path is missing
+
 ## v0.18.0
 
 * Require `set` class in `ConvertBoolean` - fixes crash when set is already required in environment
