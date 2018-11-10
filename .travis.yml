@@ -15,7 +15,7 @@ matrix:
     install:
       - gem install bundler
       - bundle install
-  - rvm: 2.6.0-preview3
+  - rvm: 2.6.0-preview1
     install:
       - gem install bundler
       - bundle install
