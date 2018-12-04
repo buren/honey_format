@@ -13,6 +13,12 @@ module HoneyFormat
     # Space characters
     SPACES = /[[:space:]]+/
 
+    # Non-printable characters
+    NON_PRINT = /[^[:print:]]/
+
+    # zero-width characters - see https://stackoverflow.com/q/50647999
+    ZERO_WIDTH = /[\u200B-\u200D\uFEFF]/
+
     # Replace map
     REPLACE_MAP = [
       [/\\/, '/'],     # replace "\" with "/"
@@ -32,6 +38,8 @@ module HoneyFormat
       [%r{/}, '_'],    # replace "/" with "_"
       [SEPS, '_'],     # replace separator chars with "_"
       [/_+/, '_'],     # replace one or more "_" with single "_"
+      [NON_PRINT, ''], # remove non-printable characters
+      [ZERO_WIDTH, ''], # remove zero-width characters
       [/\A_+/, ''],    # remove leading "_"
       [/_+\z/, ''],    # remove trailing "_"
     ].map(&:freeze).freeze
