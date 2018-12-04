@@ -23,6 +23,7 @@ describe HoneyFormat::HeaderColumnConverter do
     ['   first_name  ', :first_name],
     ['   first    name    ', :first_name],
     ["   first  \t  name    ", :first_name],
+    ["﻿candidate_id", :candidate_id], # this line leads with: Unicode Character 'ZERO WIDTH NO-BREAK SPACE' (U+FEFF)
     ['FirstName', :firstname],
     ['first-name', :first_name],
     ['first.name', :first_name],
