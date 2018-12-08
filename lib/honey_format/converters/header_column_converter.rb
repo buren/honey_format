@@ -4,19 +4,19 @@ module HoneyFormat
   # Header column converter
   module HeaderColumnConverter
     # Bracket character matcher
-    BRACKETS = /\(|\[|\{|\)|\]|\}/
+    BRACKETS = /\(|\[|\{|\)|\]|\}/.freeze
 
     # Separator characters
-    SEPS = /'|"|\||\*|\^|\&|%|\$|€|£|#/
+    SEPS = /'|"|\||\*|\^|\&|%|\$|€|£|#/.freeze
 
     # Space characters
-    SPACES = /[[:space:]]+/
+    SPACES = /[[:space:]]+/.freeze
 
     # Non-printable characters
-    NON_PRINT = /[^[:print:]]/
+    NON_PRINT = /[^[:print:]]/.freeze
 
     # zero-width characters - see https://stackoverflow.com/q/50647999
-    ZERO_WIDTH = /[\u200B-\u200D\uFEFF]/
+    ZERO_WIDTH = /[\u200B-\u200D\uFEFF]/.freeze
 
     # Replace map
     REPLACE_MAP = [
@@ -41,7 +41,7 @@ module HoneyFormat
       [ZERO_WIDTH, ''],  # remove zero-width characters
       [/\A_+/, ''],      # remove leading "_"
       [/_+\z/, ''],      # remove trailing "_"
-    ].map(&:freeze).freeze
+    ].map { |e| e.map(&:freeze).freeze }.freeze
 
     # Returns converted value and mutates the argument.
     # @return [Symbol] the cleaned header column.
