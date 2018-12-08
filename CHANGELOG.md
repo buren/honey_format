@@ -1,12 +1,12 @@
 # HEAD
 
-* Add method_name as alias for header_column converter
-* Freeze constants in HeaderColumnConverter
-* Add support for passing a callable object in `type_map` argument
+* Add `method_name` as alias for `header_column` converter
+* Freeze constants in `HeaderColumnConverter`
+* Add support for passing a callable object in `type_map` argument [PR#49](https://github.com/buren/honey_format/pull/49)
 * Remove non-printable & zero-width characters from header columns
-* Add £ to header separator character list
-* Replace @ with _at_ in header converter
-* Replace all space like chars in Header converter. Closes #39
+* Add `£` to header separator character list
+* Replace `@` with `_at_` in header converter
+* Replace all space like chars in Header converter. Closes [Issue#39]([PR#49](https://github.com/buren/honey_format/issues/39))
 * Improved CLI output when input path is missing
 
 ## v0.18.0
