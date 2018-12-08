@@ -123,6 +123,7 @@ module HoneyFormat
         nil: ConvertNil,
         blank: ConvertBlank,
         header_column: ConvertHeaderColumn,
+        method_name: ConvertHeaderColumn,
       }.freeze
     end
   end
