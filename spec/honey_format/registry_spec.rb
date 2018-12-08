@@ -83,4 +83,22 @@ RSpec.describe HoneyFormat::Registry do
       expect(described_class.new(default_converters).types).to eq(expected)
     end
   end
+
+  describe '#call' do
+    it 'calls the registered type' do
+      registry = described_class.new(default_converters)
+      expect(registry.call('1', :integer)).to eq(1)
+    end
+
+    it 'calls #call on type if passed proc' do
+      registry = described_class.new(default_converters)
+      expect(registry.call('1', proc { |v| v.to_i })).to eq(1)
+    end
+
+    it 'calls #call on type if passed object that responds to #call' do
+      registry = described_class.new(default_converters)
+      type = Class.new { define_method(:call) { |v| v.to_i } }.new
+      expect(registry.call('1', type)).to eq(1)
+    end
+  end
 end

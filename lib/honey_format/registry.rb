@@ -38,9 +38,11 @@ module HoneyFormat
     end
 
     # Call value type
-    # @param [Symbol, String] type the name of the type
+    # @param [Symbol, String, #call] type the name of the type
     # @param [Object] value to be converted
     def call(value, type)
+      return type.call(value) if type.respond_to?(:call)
+
       self[type].call(value)
     end
 
