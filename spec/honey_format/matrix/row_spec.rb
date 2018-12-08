@@ -6,12 +6,31 @@ require 'set'
 
 describe HoneyFormat::Row do
   describe '::call' do
-    it 'returns an instantiated Struct' do
+    it 'returns an object representing the row' do
       struct = described_class.call(%i[name age])
       person = struct.new('buren', 28)
 
       expect(person.name).to eq('buren')
       expect(person.age).to eq(28)
+    end
+  end
+
+  describe '#to_h' do
+    it 'returns row as hash' do
+      struct = described_class.call(%i[name age])
+      person = struct.new('buren', 28)
+
+      expect(person.to_h).to eq(name: 'buren', age: 28)
+    end
+  end
+
+  describe 'enumerable' do
+    it 'acts like an enumerable' do
+      struct = described_class.call(%i[name age])
+      person = struct.new('buren', 28)
+      itr = person.each
+      expect(itr.next).to eq('buren')
+      expect(itr.next).to eq(28)
     end
   end
 
