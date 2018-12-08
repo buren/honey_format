@@ -1,5 +1,7 @@
 # HEAD
 
+## v0.19.0
+
 * Add `method_name` as alias for `header_column` converter
 * Freeze constants in `HeaderColumnConverter`
 * Add support for passing a callable object in `type_map` argument [PR#49](https://github.com/buren/honey_format/pull/49)
