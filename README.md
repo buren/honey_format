@@ -99,7 +99,15 @@ csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.id # => 1
 ```
 
-Add your own converter
+Pass your own
+```ruby
+csv_string = "Id,Username\n1,buren"
+type_map = { username: proc { |v| v.upcase } }
+csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
+csv.rows.first.username # => "BUREN"
+```
+
+Register your own converter
 ```ruby
 HoneyFormat.configure do |config|
   config.converter_registry.register :upcased, proc { |v| v.upcase }
@@ -126,7 +134,12 @@ decimal_converter = HoneyFormat.converter_registry[:decimal]
 decimal_converter.call('1.1') # => 1.1
 ```
 
-See [`Configuration#default_converters`](https://github.com/buren/honey_format/tree/master/lib/honey_format/configuration.rb#L38) for a complete list of the default ones.
+Default converter names
+```ruby
+HoneyFormat.config.default_converters.keys
+```
+
+See [`Configuration#default_converters`](https://github.com/buren/honey_format/blob/master/lib/honey_format/configuration.rb#L99) for a complete list of the default ones.
 
 __Row builder__
 
