@@ -78,7 +78,7 @@ RSpec.describe HoneyFormat::Registry do
         decimal! integer! date! datetime! symbol! downcase! upcase! boolean!
         decimal decimal_or_zero integer integer_or_zero
         date datetime symbol downcase upcase boolean md5 hex nil blank
-        header_column
+        header_column method_name
       ]
       expect(described_class.new(default_converters).types).to eq(expected)
     end
