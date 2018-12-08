@@ -1,5 +1,9 @@
 # HEAD
 
+* Add method_name as alias for header_column converter
+* Freeze constants in HeaderColumnConverter
+* Add support for passing a callable object in `type_map` argument
+* Remove non-printable & zero-width characters from header columns
 * Add £ to header separator character list
 * Replace @ with _at_ in header converter
 * Replace all space like chars in Header converter. Closes #39
