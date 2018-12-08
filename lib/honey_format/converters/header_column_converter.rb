@@ -9,7 +9,6 @@ module HoneyFormat
     # Separator characters
     SEPS = /'|"|\||\*|\^|\&|%|\$|€|£|#/
 
-
     # Space characters
     SPACES = /[[:space:]]+/
 
@@ -21,27 +20,27 @@ module HoneyFormat
 
     # Replace map
     REPLACE_MAP = [
-      [/\\/, '/'],     # replace "\" with "/"
-      [/ \(/, '('],    # replace " (" with "("
-      [/ \[/, '['],    # replace " [" with "["
-      [/ \{/, '{'],    # replace " {" with "{"
-      [/ \{/, '{'],    # replace " {" with "{"
-      [/\) /, ')'],    # replace ") " with ")"
-      [/\] /, ']'],    # replace "] " with "]"
-      [/\} /, '}'],    # replace "} " with "}"
-      [/@/, '_at_'],   # replace "@' with "_at_"
-      [BRACKETS, '_'], # replace (, [, {, ), ] and } with "_"
-      [SPACES, '_'],   # replace one or more space chars with "_"
-      [/-/, '_'],      # replace "-" with "_"
-      [/\.|,/, '_'],   # replace "." and "," with "_"
-      [/::/, '_'],     # replace "::" with "_"
-      [%r{/}, '_'],    # replace "/" with "_"
-      [SEPS, '_'],     # replace separator chars with "_"
-      [/_+/, '_'],     # replace one or more "_" with single "_"
-      [NON_PRINT, ''], # remove non-printable characters
-      [ZERO_WIDTH, ''], # remove zero-width characters
-      [/\A_+/, ''],    # remove leading "_"
-      [/_+\z/, ''],    # remove trailing "_"
+      [/\\/, '/'],       # replace "\" with "/"
+      [/ \(/, '('],      # replace " (" with "("
+      [/ \[/, '['],      # replace " [" with "["
+      [/ \{/, '{'],      # replace " {" with "{"
+      [/ \{/, '{'],      # replace " {" with "{"
+      [/\) /, ')'],      # replace ") " with ")"
+      [/\] /, ']'],      # replace "] " with "]"
+      [/\} /, '}'],      # replace "} " with "}"
+      [/@/, '_at_'],     # replace "@' with "_at_"
+      [BRACKETS, '_'],   # replace (, [, {, ), ] and } with "_"
+      [SPACES, '_'],     # replace one or more space chars with "_"
+      [/-/, '_'],        # replace "-" with "_"
+      [/\.|,/, '_'],     # replace "." and "," with "_"
+      [/::/, '_'],       # replace "::" with "_"
+      [%r{/}, '_'],      # replace "/" with "_"
+      [SEPS, '_'],       # replace separator chars with "_"
+      [/_+/, '_'],       # replace one or more "_" with single "_"
+      [NON_PRINT, ''],   # remove non-printable characters
+      [ZERO_WIDTH, ''],  # remove zero-width characters
+      [/\A_+/, ''],      # remove leading "_"
+      [/_+\z/, ''],      # remove trailing "_"
     ].map(&:freeze).freeze
 
     # Returns converted value and mutates the argument.
