@@ -33,17 +33,17 @@ end
 
 # Map columns to types
 type_map = {
+  email: proc { |email| email.downcase }, # you pass any object that respond to #call
   age: :integer!, # the ! version will raise an exception if the value can't be converted
   country: :country_code,
   created_date: :date,
 }
 csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 
-csv_columns = csv.columns - [:email] # include all columns except email
 y2k_date = Date.new(2000, 1, 1)
 
-puts 'Print all columns except email and only records with created_date after 2000-01-01:'
-csv_string = csv.to_csv(columns: csv_columns) do |row|
+puts 'Print only records with created_date after 2000-01-01:'
+csv_string = csv.to_csv do |row|
   row.created_date > y2k_date # Only select records created after 2000-01-01
 end
 puts '== CSV START =='
