@@ -48,6 +48,14 @@ RSpec.describe HoneyFormat::CLI do
     end
   end
 
+  describe '#usage' do
+    it 'returns the usage instructions as a string' do
+      cli = described_class.new(argv: [])
+
+      expect(cli.usage.start_with?('Usage: honey_format')).to eq(true)
+    end
+  end
+
   describe '#options' do
     it 'works with minimal options' do
       argv = ['input.csv']
