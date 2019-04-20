@@ -9,11 +9,11 @@ matrix:
   include:
   - rvm: 2.3.0
     install:
-      - gem install bundler --no-ri --no-rdoc
+      - gem install bundler --no-document
       - bundle install
   - rvm: 2.5.1
     install:
-      - gem install bundler --no-ri --no-rdoc
+      - gem install bundler --no-document
       - bundle install
   - rvm: 2.6.0-preview3
     install:
