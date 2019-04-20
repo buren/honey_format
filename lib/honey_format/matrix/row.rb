@@ -4,7 +4,7 @@ module HoneyFormat
   # Default row builder
   class Row < Struct
     # Create a row
-    # @return [Struct] returns an instantiated Struct representing a row
+    # @return [Row] returns an instantiated Row
     # @example
     #   row_klass = Row.new(:id, :username)
     #   row = row_klass.call('1', 'buren')
