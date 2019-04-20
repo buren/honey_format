@@ -27,8 +27,8 @@ Id,Username,Email
 2,jacob,jacob@example.com
 CSV
 csv = HoneyFormat::CSV.new(csv_string, type_map: { id: :integer })
-csv.columns     # => [:id, :username]
-csv.rows        # => [#<Row id=1, username="buren">]
+csv.columns     # => [:id, :username, :email]
+csv.rows        # => [#<Row id=1, username="buren", email="buren@example.com">, #<Row id=2, username="jacob", email="jacob@example.com">]
 user = csv.rows.first
 user.id         # => 1
 user.username   # => "buren"
