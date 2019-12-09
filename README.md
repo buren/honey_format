@@ -302,7 +302,7 @@ user['first^name'] # => "Jacob"
 
 __Errors__
 
-> When you need that some extra safety.
+> When you need to be extra safe.
 
 If you want to there are some errors you can rescue
 ```ruby
