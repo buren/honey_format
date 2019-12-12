@@ -19,6 +19,7 @@ module HoneyFormat
     # @param header_deduplicator [#call] deduplicates header columns.
     # @param row_builder [#call] will be called for each parsed row.
     # @param type_map [Hash] map of column_name => type conversion to perform.
+    # @param encoding [String] CSV encoding (for example "BOM|UTF-16LE:UTF-8").
     # @param skip_lines [Regexp, String]
     #   Regexp for determining wheter a line is a comment. See CSV skip_lines option.
     # @raise [HeaderError] super class of errors raised when there is a CSV header error.
@@ -46,6 +47,8 @@ module HoneyFormat
     # @example Skip lines all lines starting with '#'
     #   csv = HoneyFormat::CSV.new("name,id\n# some comment\njacob,1", skip_lines: '#')
     #   csv.rows.length # => 1
+    # @example CSV encoding
+    #   csv = HoneyFormat::CSV.new(csv_string, encoding: "BOM|UTF-16LE:UTF-8")
     # @see Matrix#new
     def initialize(
       csv,
@@ -56,6 +59,7 @@ module HoneyFormat
       header_converter: HoneyFormat.header_converter,
       header_deduplicator: HoneyFormat.config.header_deduplicator,
       row_builder: nil,
+      encoding: nil,
       type_map: {},
       skip_lines: HoneyFormat.config.skip_lines
     )
@@ -65,7 +69,8 @@ module HoneyFormat
         row_sep: row_delimiter,
         quote_char: quote_character,
         skip_blanks: true,
-        skip_lines: skip_lines
+        skip_lines: skip_lines,
+        encoding: encoding
       )
       super(
         csv,
