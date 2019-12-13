@@ -1,5 +1,7 @@
 # HEAD
 
+* Add `encoding` option to `CSV`
+
 ## v0.19.0
 
 * Add `method_name` as alias for `header_column` converter
