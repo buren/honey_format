@@ -1,5 +1,13 @@
 # HEAD
 
+* Support additional header variant, pass hash with `String => Symbol` and/or `String => #call` (callable object). Unmapped keys are converted using the default header converter.
+    ```ruby
+    converter = {
+      'First name' => :first_name,
+      'Last name' => -> { :surname }
+    }
+    csv = HoneyFormat::CSV.new(csv_string, header_converter: converter)
+    ```
 * Add `encoding` option to `CSV`
 
 ## v0.19.0
