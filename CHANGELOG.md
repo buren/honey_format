@@ -1,5 +1,7 @@
 # HEAD
 
+## v0.20.0
+
 * Support additional header variant, pass hash with `String => Symbol` and/or `String => #call` (callable object). Unmapped keys are converted using the default header converter.
     ```ruby
     converter = {
