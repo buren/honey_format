@@ -10,10 +10,11 @@ module HoneyFormat
     # Instantiate a Header
     # @return [Header] a new instance of Header.
     # @param [Array<String>] header array of strings.
-    # @param converter [#call, Symbol]
+    # @param converter [#call, Symbol, Hash]
     #   header converter that implements a #call method
     #   that takes one column (string) argument OR symbol for a registered
-    #   converter registry.
+    #   converter registry OR a hash mapped to a symbol or something that responds
+    #   to #call.
     # @param deduplicator [#call, Symbol]
     #   header deduplicator that implements a #call method
     #   that takes columns Array<String> argument OR symbol for a registered
@@ -93,11 +94,16 @@ module HoneyFormat
     private
 
     # Set the header converter
-    # @param [Symbol, #call] symbol to known converter or object that responds to #call
+    # @param [Hash, Symbol, #call] symbol to known converter, object that responds to #call or Hash
     # @return [nil]
     def converter=(object)
       if object.is_a?(Symbol)
         @converter = HoneyFormat.converter_registry[object]
+        return
+      end
+
+      if object.is_a?(Hash)
+        @converter = hash_converter(object)
         return
       end
 
@@ -134,21 +140,17 @@ module HoneyFormat
     # @param [Integer] index the CSV header column index
     # @return [Symbol] the converted column
     def convert_column(column, index)
-      value = if converter_arity == 1
-                @converter.call(column)
-              else
-                @converter.call(column, index)
-              end
-      value.to_sym
+      call_column_builder(@converter, column, index)&.to_sym
     end
 
-    # Returns the converter#call method arity
-    # @return [Integer] the converter#call method arity
-    def converter_arity
+    # Returns the callable object method arity
+    # @param [#arity, #call] callable thing that responds to #call and maybe #arity
+    # @return [Integer] the method arity
+    def callable_arity(callable)
       # procs and lambdas respond to #arity
-      return @converter.arity if @converter.respond_to?(:arity)
+      return callable.arity if callable.respond_to?(:arity)
 
-      @converter.method(:call).arity
+      callable.method(:call).arity
     end
 
     # Raises an error if header column is missing/empty
@@ -163,6 +165,30 @@ module HoneyFormat
         'Instead generate unique columns names.',
       ]
       raise(Errors::MissingHeaderColumnError, parts.join(' '))
+    end
+
+    def hash_converter(hash)
+      lambda { |value, index|
+        # support strings and symbol keys interchangeably
+        column = hash.fetch(value) do
+          key = value.respond_to?(:to_sym) ? value.to_sym : value
+          # if column is unmapped use the default header converter
+          hash.fetch(key) { HoneyFormat.header_converter.call(value, index) }
+        end
+
+        # The hash can contain mixed values, Symbol and procs
+        if column.respond_to?(:call)
+          column = call_column_builder(column, value, index)
+        end
+
+        column&.to_sym
+      }
+    end
+
+    def call_column_builder(callable, value, index)
+      return callable.call if callable_arity(callable).zero?
+      return callable.call(value) if callable_arity(callable) == 1
+      callable.call(value, index)
     end
   end
 end

@@ -40,6 +40,15 @@ describe HoneyFormat::Header do
       end.to raise_error(HoneyFormat::HeaderError)
     end
 
+    it 'fails with HoneyFormat::HeaderError when a header column is nil' do
+      expect do
+        described_class.new(
+          %w[Username FIRST_NAME LAST_NAME FULL_NAME],
+          converter: -> {}
+        )
+      end.to raise_error(HoneyFormat::Errors::MissingHeaderColumnError)
+    end
+
     it 'generates names for missing/empty header columns' do
       header = described_class.new(['first', '', 'third'])
       expect(header.to_a).to eq(%i(first column1 third))
@@ -126,6 +135,53 @@ describe HoneyFormat::Header do
     it 'can return original column names' do
       value = 'My id (string)'
       expect(described_class.new([value]).original).to eq([value])
+    end
+  end
+
+  describe '#columns' do
+    it 'works with mixed hash of symbol and proc converters' do
+      csv = described_class.new(
+        %w[Username FIRST_NAME LAST_NAME FULL_NAME],
+        converter: {
+          Username: :handle,
+          FIRST_NAME: :first_name,
+          LAST_NAME: -> { :surname },
+        }
+      )
+
+      expect(csv.columns).to eq(%i[handle first_name surname full_name])
+    end
+
+    it 'works with default converter' do
+      csv = described_class.new(%w[Username NAME_FIRST NAME(-LAST)])
+      expect(csv.columns).to eq(%i[username name_first name_last])
+    end
+
+    it 'works with Symbol converter' do
+      csv = described_class.new(
+        %w[Username NAME__FIRST NAME__LAST],
+        converter: :downcase
+      )
+
+      expect(csv.columns).to eq(%i[username name__first name__last])
+    end
+
+    it 'works with object converter' do
+      converter = Class.new do
+        def self.call(column)
+          return :handle if column == 'Username'
+          return :first_name if column == 'NAME__FIRST'
+
+          :last_name if column == 'NAME__LAST'
+        end
+      end
+
+      csv = described_class.new(
+        %w[Username NAME__FIRST NAME__LAST],
+        converter: converter
+      )
+
+      expect(csv.columns).to eq(%i[handle first_name last_name])
     end
   end
 
