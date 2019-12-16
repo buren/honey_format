@@ -248,21 +248,36 @@ csv.columns # => [:ID, :USERNAME]
 
 Pass your own header converter
 ```ruby
-map = { 'First^Name' => :first_name }
-converter = ->(column) { map.fetch(column, column.downcase) }
+# unmapped keys use the default header converter,
+# mix simple key => value mapping with key => proc
+converter = {
+  'First^Name' => :first_name,
+  'Username' => -> { :handle }
+}
 
-csv_string = "ID,First^Name\n1,Jacob"
+csv_string = "ID,Username,First^Name\n1,buren,Jacob"
 user = HoneyFormat::CSV.new(csv_string, header_converter: converter).rows.first
 user.first_name # => "Jacob"
+user.handle     # => "buren"
 user.id         # => "1"
+
+# you can also pass a proc or any callable object
+converter = Class.new do
+  define_singleton_method(:call) { |value, index| "#{value}#{index}" }
+end
+# or
+converter = ->(value, index) { "#{value}#{index}"  }
+user = HoneyFormat::CSV.new(csv_string, header_converter: converter)
 ```
 
-Missing header values
+Missing header values are automatically set and deduplicated
 ```ruby
-csv_string = "first,,third\nval0,val1,val2"
+csv_string = "first,,third,third\nval0,val1,val2,val3"
 csv = HoneyFormat::CSV.new(csv_string)
 user = csv.rows.first
 user.column1 # => "val1"
+user.third   # => "val2"
+user.third1  # => "val3"
 ```
 
 Duplicated header values
