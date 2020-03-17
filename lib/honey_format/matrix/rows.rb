@@ -40,6 +40,12 @@ module HoneyFormat
       @rows
     end
 
+    # Return element at given position.
+    # @return [Row] of rows.
+    def [](index)
+      @rows[index]
+    end
+
     # Return the number of rows
     # @return [Integer] the number of rows
     def length

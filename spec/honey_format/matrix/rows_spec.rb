@@ -43,6 +43,22 @@ describe HoneyFormat::Rows do
     expect(rows.length).to eq(2)
   end
 
+  describe '#[]' do
+    it 'can return element at position' do
+      rows = described_class.new(%w[first second], %i[name])
+
+      expect(rows[0].name).to eq('first')
+      expect(rows[1].name).to eq('second')
+      expect(rows[-1].name).to eq('second')
+    end
+
+    it 'returns nil if requesting element outside of length' do
+      rows = described_class.new(%w[first second], %i[name])
+
+      expect(rows[999]).to be_nil
+    end
+  end
+
   describe '#to_csv' do
     it 'returns the rows as a CSV-string' do
       matrix = [%w[first thing], %w[second thing]]
