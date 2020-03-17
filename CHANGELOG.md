@@ -1,5 +1,9 @@
 # HEAD
 
+## v0.21.0
+
+* Add `Rows#[]` method
+
 ## v0.20.0
 
 * Support additional header variant, pass hash with `String => Symbol` and/or `String => #call` (callable object). Unmapped keys are converted using the default header converter.
