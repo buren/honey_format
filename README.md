@@ -91,7 +91,7 @@ __Type converters__
 
 > Type converters are great if you want to convert column values, like numbers and dates.
 
-There are a few default type converters
+There are a bunch of [default type converters](https://github.com/buren/honey_format/blob/master/lib/honey_format/converters/converters.rb)
 ```ruby
 csv_string = "Id,Username\n1,buren"
 type_map = { id: :integer }
@@ -139,7 +139,7 @@ Default converter names
 HoneyFormat.config.default_converters.keys
 ```
 
-See [`Configuration#default_converters`](https://github.com/buren/honey_format/blob/master/lib/honey_format/configuration.rb#L99) for a complete list of the default ones.
+See [`Converters::DEFAULT`](https://github.com/buren/honey_format/blob/master/lib/honey_format/converters.rb) for a complete list of the default converter names.
 
 __Row builder__
 
