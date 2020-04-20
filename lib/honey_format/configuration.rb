@@ -97,34 +97,7 @@ module HoneyFormat
     # Default converter registry
     # @return [Hash] hash with default converters
     def default_converters
-      @default_converters ||= {
-        # strict variants
-        decimal!: StrictConvertDecimal,
-        integer!: StrictConvertInteger,
-        date!: StrictConvertDate,
-        datetime!: StrictConvertDatetime,
-        symbol!: StrictConvertSymbol,
-        downcase!: StrictConvertDowncase,
-        upcase!: StrictConvertUpcase,
-        boolean!: StrictConvertBoolean,
-        # safe variants
-        decimal: ConvertDecimal,
-        decimal_or_zero: ConvertDecimalOrZero,
-        integer: ConvertInteger,
-        integer_or_zero: ConvertIntegerOrZero,
-        date: ConvertDate,
-        datetime: ConvertDatetime,
-        symbol: ConvertSymbol,
-        downcase: ConvertDowncase,
-        upcase: ConvertUpcase,
-        boolean: ConvertBoolean,
-        md5: ConvertMD5,
-        hex: ConvertHex,
-        nil: ConvertNil,
-        blank: ConvertBlank,
-        header_column: ConvertHeaderColumn,
-        method_name: ConvertHeaderColumn,
-      }.freeze
+      @default_converters ||= Converters::DEFAULT
     end
   end
 end
