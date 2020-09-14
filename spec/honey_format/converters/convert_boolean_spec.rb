@@ -29,14 +29,14 @@ end
 
 RSpec.describe HoneyFormat::StrictConvertBoolean do
   describe 'boolean! type' do
-    %w[t T 1 y Y true TRUE].each do |input|
+    (%w[t T 1 y Y true TRUE] + [true]).each do |input|
       it "can convert #{input} to true" do
         value = described_class.call(input)
         expect(value).to eq(true)
       end
     end
 
-    %w[f F 0 n N false FALSE].each do |input|
+    (%w[f F 0 n N false FALSE] + [false]).each do |input|
       it "can convert #{input} to false" do
         value = described_class.call(input)
         expect(value).to eq(false)

@@ -52,6 +52,11 @@ RSpec.describe HoneyFormat::StrictConvertDecimal do
       expect(value).to eq(1.0)
     end
 
+    it 'untouched if passed decimal' do
+      value = described_class.call(1.0)
+      expect(value).to eq(1.0)
+    end
+
     it "raise ArgumentError if value can't be converted" do
       expect do
         described_class.call('aa')
@@ -92,6 +97,11 @@ RSpec.describe HoneyFormat::StrictConvertInteger do
   describe 'integer! type' do
     it 'can convert' do
       value = described_class.call('1')
+      expect(value).to eq(1)
+    end
+
+    it 'untouched if passed integer' do
+      value = described_class.call(1)
       expect(value).to eq(1)
     end
 

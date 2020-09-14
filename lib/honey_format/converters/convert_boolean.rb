@@ -4,9 +4,9 @@ require 'set'
 
 module HoneyFormat
   # String values considered truthy
-  TRUTHY = Set.new(%w[t T 1 y Y true TRUE]).freeze
+  TRUTHY = Set.new(%w[t T 1 y Y true TRUE] + [true]).freeze
   # String values considered falsy
-  FALSY = Set.new(%w[f F 0 n N false FALSE]).freeze
+  FALSY = Set.new(%w[f F 0 n N false FALSE] + [false]).freeze
 
   # Tries to convert value boolean to, returns nil if it can't convert
   ConvertBoolean = proc do |v|

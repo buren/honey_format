@@ -23,6 +23,11 @@ RSpec.describe HoneyFormat::StrictConvertDowncase do
       expect(value).to eq('buren')
     end
 
+    it 'can return unchanged' do
+      value = described_class.call('buren', :downcase!)
+      expect(value).to eq('buren')
+    end
+
     it "raises ArgumentError if type can't be converted" do
       expect do
         described_class.call(nil, :downcase!)
@@ -49,6 +54,11 @@ RSpec.describe HoneyFormat::StrictConvertUpcase do
   describe 'upcase! type' do
     it 'can convert' do
       value = described_class.call('buren', :upcase!)
+      expect(value).to eq('BUREN')
+    end
+
+    it 'can return unchanged' do
+      value = described_class.call('BUREN', :downcase!)
       expect(value).to eq('BUREN')
     end
 
@@ -79,6 +89,11 @@ RSpec.describe HoneyFormat::StrictConvertSymbol do
     it 'can convert' do
       value = described_class.call('1')
       expect(value).to eq(:"1")
+    end
+
+    it 'can return unchanged' do
+      value = described_class.call(:'1')
+      expect(value).to eq(:'1')
     end
 
     it "raises ArgumentError if type can't be converted" do
