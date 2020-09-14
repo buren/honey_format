@@ -23,7 +23,7 @@ module HoneyFormat
   end
 
   # Convert to date or raise error
-  StrictConvertDate = proc { |v| Date.parse(v) }
+  StrictConvertDate = proc { |v| v.is_a?(Date) ? v : Date.parse(v) }
 
   # Convert to datetime or raise error
   StrictConvertDatetime = proc { |v| Time.parse(v) }

@@ -11,6 +11,13 @@ RSpec.describe HoneyFormat::StrictConvertDate do
       expect(value).to eq(expected)
     end
 
+    it 'returns same date if passed date' do
+      date = Date.parse('2018-01-01')
+      value = described_class.call(date)
+      expected = Date.parse('2018-01-01')
+      expect(value).to eq(expected)
+    end
+
     it "raise ArgumentError if value can't be converted" do
       expect do
         described_class.call('aa')
