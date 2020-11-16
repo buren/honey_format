@@ -39,6 +39,12 @@ describe HoneyFormat::RowBuilder do
       expect(result).to eq(1)
     end
 
+    it 'does not break if type_map has a non present column' do
+      row = described_class.new(:id, type_map: { id: :integer, thing: :decimal })
+      result = row.build(['1']).id
+      expect(result).to eq(1)
+    end
+
     it 'can have spec chars column names' do
       expected = 'value'
       row = described_class.new(:ÅÄÖ)

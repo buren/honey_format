@@ -57,12 +57,24 @@ module HoneyFormat
 
       # Convert values
       @type_map.each do |column, type|
-        row[column] = @converter.call(row[column], type)
+        if row.respond_to?(column) && wrap_in_array(@columns).include?(column)
+          row[column] = @converter.call(row[column], type)
+        end
       end
 
       return row unless @builder
 
       @builder.call(row)
+    end
+
+    def wrap_in_array(object)
+      if object.nil?
+        []
+      elsif object.respond_to?(:to_ary)
+        object.to_ary || [object]
+      else
+        [object]
+      end
     end
 
     # Raises invalid row length error
