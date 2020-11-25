@@ -24,6 +24,8 @@ module HoneyFormat
     class InvalidRowLengthError < RowError; end
 
     # Value conversion errors
+    # Raised when type map contains unknown column
+    class UnknownTypeMapColumnError < HeaderError; end
     # Raised when value type is unknown
     class UnknownTypeError < ArgumentError; end
     # Raised when value type already exists

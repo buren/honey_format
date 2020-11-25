@@ -33,6 +33,14 @@ describe HoneyFormat::RowBuilder do
       expect(result).to eq(expected)
     end
 
+    it 'does not break if type_map has a non present column' do
+      row = described_class.new(:id, type_map: { id: :integer, thing: :decimal })
+
+      expect do
+        row.build(['1']).id
+      end.to raise_error(HoneyFormat::Errors::UnknownTypeMapColumnError)
+    end
+
     it 'builds struct from single symbol' do
       row = described_class.new(:id, type_map: { id: :integer })
       result = row.build(['1']).id

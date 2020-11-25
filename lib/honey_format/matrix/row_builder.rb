@@ -57,7 +57,11 @@ module HoneyFormat
 
       # Convert values
       @type_map.each do |column, type|
-        row[column] = @converter.call(row[column], type)
+        begin
+          row[column] = @converter.call(row[column], type)
+        rescue NameError
+          raise Errors::UnknownTypeMapColumnError, "type map defines '#{column}', which doesn't exist in the row"
+        end
       end
 
       return row unless @builder
