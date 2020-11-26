@@ -51,7 +51,8 @@ module HoneyFormat
         converter: header_converter,
         deduplicator: header_deduplicator
       )
-      @rows = Rows.new(matrix, columns, builder: row_builder, type_map: type_map)
+      @type_map = type_map.select { |key, _v| @header.columns.include?(key) }.to_h
+      @rows = Rows.new(matrix, columns, builder: row_builder, type_map: @type_map)
     end
 
     # Original matrix header
@@ -64,6 +65,12 @@ module HoneyFormat
     # @return [Array<Symbol>] of column identifiers.
     def columns
       @header.to_a
+    end
+
+    # Matrix type map used
+    # @return [Hash<Symbol, Symbol>] the type map used.
+    def type_map
+      @type_map
     end
 
     # Return rows
