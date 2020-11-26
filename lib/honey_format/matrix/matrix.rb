@@ -51,7 +51,7 @@ module HoneyFormat
         converter: header_converter,
         deduplicator: header_deduplicator
       )
-      @type_map = type_map
+      @type_map = type_map.select { |key, _v| @header.columns.include?(key) }.to_h
       @rows = Rows.new(matrix, columns, builder: row_builder, type_map: @type_map)
     end
 
