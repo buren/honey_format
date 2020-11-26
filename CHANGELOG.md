@@ -1,5 +1,9 @@
 # HEAD
 
+## v0.22.0
+
+* Add `Matrix#type_map` and ignore non-existing column in the type map. [PR#64](https://github.com/buren/honey_format/pull/64). Thank you [@prem-prakash](https://github.com/prem-prakash).
+
 ## v0.21.1
 
 * Closes [issue #58](https://github.com/buren/honey_format/issues/58). [PR #62](https://github.com/buren/honey_format/pull/62)
