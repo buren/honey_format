@@ -16,8 +16,15 @@ module HoneyFormat
     # @raise [EmptyRowColumnsError] raised when there are no columns.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
     def initialize(rows, columns, builder: nil, type_map: {})
-      builder = RowBuilder.new(columns, builder: builder, type_map: type_map)
+      @columns = columns
+      builder = RowBuilder.new(@columns, builder: builder, type_map: type_map)
       @rows = prepare_rows(builder, rows)
+    end
+
+    # Row columns
+    # @return [Array<Symbol>] of column identifiers.
+    def columns
+      @columns
     end
 
     # Returns true if rows contains no elements.

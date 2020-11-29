@@ -3,6 +3,14 @@
 require 'spec_helper'
 
 describe HoneyFormat::Rows do
+  describe '#columns' do
+    it 'returns given columns' do
+      rows = described_class.new(%w[first second], %i[name])
+
+      expect(rows.columns).to eq(%i[name])
+    end
+  end
+
   describe '#to_a' do
     it 'returns an array of Row instances' do
       expected = 'buren'
