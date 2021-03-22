@@ -412,7 +412,7 @@ Usage example with a fictional "users" database table (schema: `name`, `created_
 ```ruby
 client = DbClient.new(host: '127.0.0.1', username: 'root', password: nil)
 users = client.query(
-  'SELECT * FROM users;',
+  'SELECT * FROM users',
   type_map: { created_at: :datetime! }
 )
 user = users.first
