@@ -376,6 +376,50 @@ matrix.to_csv    # => "name,id\nJACOB,1\n"
 
 If you want to see more usage examples check out the [`examples/`](https://github.com/buren/honey_format/tree/master/examples) and [`spec/`](https://github.com/buren/honey_format/tree/master/spec) directories and of course [on RubyDoc](https://www.rubydoc.info/gems/honey_format/).
 
+
+__SQL example__
+
+When you want the result as an object, with certain columns converted to objects.
+
+```ruby
+require 'mysql2'
+
+class DBClient
+  def initialize(host:, username:, password:, port: 3306)
+    @client = Mysql2::Client.new(
+      host: host,
+      username: username,
+      password: password,
+      port: port
+    )
+  end
+
+  def query(sql, type_map: {})
+    result = @client.query(sql)
+    return if result.first.nil?
+
+    matrix = HoneyFormat::Matrix.new(
+      result.map(&:values),
+      header: result.first.keys,
+      type_map: type_map
+    )
+    matrix.rows
+  end
+end
+```
+
+Usage example with a fictional "users" database table (schema: `name`, `created_at`)
+```ruby
+client = DbClient.new(host: '127.0.0.1', username: 'root', password: nil)
+users = client.query(
+  'SELECT * FROM users;',
+  type_map: { created_at: :datetime! }
+)
+user = users.first
+user.name # => buren
+user.created_at.class # => Time
+```
+
 ## CLI
 
 > Perfect when you want to get something simple done quickly.
