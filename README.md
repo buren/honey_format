@@ -323,6 +323,13 @@ user.public_send(:"first^name") # => "Jacob"
 user['first^name'] # => "Jacob"
 ```
 
+Emoji characters
+```ruby
+csv_string = "😎⛷\nEmoji characters"
+csv = HoneyFormat::CSV.new(csv_string)
+csv.rows.first.😎⛷ # => Emoji characters
+```
+
 __Errors__
 
 > When you need to be extra safe.
