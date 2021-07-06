@@ -5,11 +5,11 @@ require 'honey_format'
 require 'date'
 
 csv_string = <<~CSV
-  email,name,age,country,created_date
-  john@example.com,John Doe,42,SE,2015-03-01
-  jane@example.com,Jane Doe,42,DK,2016-04-20
-  john1@example.com,John Doe,42,NO,2018-01-01
-  jane1@example.com,Jane Doe,42,SE,1999-01-01
+  email,username,name,age,country,created_date
+  john@example.com,  john ,John Doe,42,SE,2015-03-01
+  jane@example.com, Jane,Jane Doe,42,DK,2016-04-20
+  john1@example.com,John1 ,John Doe,42,NO,2018-01-01
+  jane1@example.com,  Jane1,Jane Doe,42,SE,1999-01-01
 CSV
 
 country_code_converter = proc { |v|
@@ -35,6 +35,7 @@ end
 type_map = {
   email: proc { |email| email.downcase }, # you pass any object that respond to #call
   age: :integer!, # the ! version will raise an exception if the value can't be converted
+  username: [:strip, :downcase, proc { |v| "rE-#{v}" }], # you can pass an array of converts to be used
   country: :country_code,
   created_date: :date,
 }
