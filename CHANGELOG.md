@@ -2,7 +2,7 @@
 
 ## v0.23.0
 
-* Add `Rows#columnns` method that returns header columns
+* Add `Rows#columns` method that returns header columns
 
 ## v0.22.0
 
