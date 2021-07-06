@@ -59,7 +59,7 @@ module HoneyFormat
       @type_map.each do |column, type|
         types = type.respond_to?(:each) ? type : [type]
         value = row[column]
-        types.each { |type| value = @converter.call(value, type) }
+        types.each { |t| value = @converter.call(value, t) }
 
         row[column] = value
       end
