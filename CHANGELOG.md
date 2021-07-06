@@ -1,5 +1,14 @@
 # HEAD
 
+* Add support for multiple/chained converters. [PR#69](https://github.com/buren/honey_format/pull/69)
+  ```ruby
+  csv_string = "Id,Username\n1,  BuRen  "
+  type_map = { username: [:strip, :downcase] }
+  csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
+  csv.rows.first.username # => "buren"
+  ```
+* Add `strip` and `strip!` converter
+
 ## v0.23.0
 
 * Add `Rows#columns` method that returns header columns
