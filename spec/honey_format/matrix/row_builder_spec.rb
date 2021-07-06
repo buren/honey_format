@@ -93,7 +93,7 @@ describe HoneyFormat::RowBuilder do
     end
 
     it 'converts cells according to passed type map multiple types' do
-      type_map = { username: [:strip, :downcase] }
+      type_map = { username: %i[strip downcase] }
       row = described_class.new(%i(username), type_map: type_map)
       expect(row.build(['  Buren   ']).username).to eq('buren')
     end
