@@ -1,5 +1,7 @@
 # HEAD
 
+## v0.24.0
+
 * Add support for multiple/chained converters. [PR#69](https://github.com/buren/honey_format/pull/69)
   ```ruby
   csv_string = "Id,Username\n1,  BuRen  "
