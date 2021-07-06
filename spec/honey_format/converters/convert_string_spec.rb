@@ -70,6 +70,40 @@ RSpec.describe HoneyFormat::StrictConvertUpcase do
   end
 end
 
+RSpec.describe HoneyFormat::ConvertStrip do
+  describe 'downcase type' do
+    it 'can convert' do
+      value = described_class.call('  buren  ', :strip)
+      expect(value).to eq('buren')
+    end
+
+    it "returns nil if value can't be converted" do
+      value = described_class.call(nil, :strip)
+      expect(value).to be_nil
+    end
+  end
+end
+
+RSpec.describe HoneyFormat::StrictConvertStrip do
+  describe 'strip! type' do
+    it 'can convert' do
+      value = described_class.call('  buren  ', :strip!)
+      expect(value).to eq('buren')
+    end
+
+    it 'can return unchanged' do
+      value = described_class.call('buren', :strip!)
+      expect(value).to eq('buren')
+    end
+
+    it "raises ArgumentError if type can't be converted" do
+      expect do
+        described_class.call(nil, :strip!)
+      end.to raise_error(ArgumentError)
+    end
+  end
+end
+
 RSpec.describe HoneyFormat::ConvertSymbol do
   describe 'symbol type' do
     it 'can convert' do

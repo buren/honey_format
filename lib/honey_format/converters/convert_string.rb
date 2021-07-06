@@ -10,6 +10,9 @@ module HoneyFormat
   # Convert to upcase or nil
   ConvertUpcase = proc { |v| v&.upcase }
 
+  # Convert to stripped string
+  ConvertStrip = proc { |v| v&.strip }
+
   # Convert to symbol or nil
   ConvertSymbol = proc { |v| v&.to_sym }
 
@@ -35,8 +38,13 @@ module HoneyFormat
     ConvertDowncase.call(v) || raise(ArgumentError, "can't convert nil to downcased string")
   end
 
+  # Convert to downcase or raise error
+  StrictConvertStrip = proc do |v|
+    ConvertStrip.call(v) || raise(ArgumentError, "can't convert nil to downcased string")
+  end
+
   # Convert to symbol or raise error
   StrictConvertSymbol = proc do |v|
-    ConvertSymbol.call(v) || raise(ArgumentError, "can't convert nil to symbol")
+    ConvertSymbol.call(v) || raise(ArgumentError, "can't convert nil to stripped string")
   end
 end
