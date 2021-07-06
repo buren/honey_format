@@ -435,6 +435,30 @@ user.name # => buren
 user.created_at.class # => Time
 ```
 
+## Configuration
+
+Configuration is optional
+```ruby
+HoneyFormat.configure do |config|
+  config.header_converter = proc { |column| column.downcase }
+  config.delimiter = ";"
+  config.row_delimiter = "|"
+  config.quote_character = "'"
+  config.skip_lines = %r{\A#} # Match all lines that start with "#"
+end
+```
+
+Default configuration values
+```ruby
+HoneyFormat.configure do |config|
+  config.header_converter = HoneyFormat::Registry.new(Converters::DEFAULT)[:header_column]
+  config.delimiter = ","
+  config.row_delimiter = :auto
+  config.quote_character = "\""
+  config.skip_lines = nil
+end
+```
+
 ## CLI
 
 > Perfect when you want to get something simple done quickly.
