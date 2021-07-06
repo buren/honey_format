@@ -20,6 +20,7 @@ module HoneyFormat
       symbol!: StrictConvertSymbol,
       downcase!: StrictConvertDowncase,
       upcase!: StrictConvertUpcase,
+      strip!: StrictConvertStrip,
       boolean!: StrictConvertBoolean,
       # safe variants
       decimal: ConvertDecimal,
@@ -31,6 +32,7 @@ module HoneyFormat
       symbol: ConvertSymbol,
       downcase: ConvertDowncase,
       upcase: ConvertUpcase,
+      strip: ConvertStrip,
       boolean: ConvertBoolean,
       md5: ConvertMD5,
       hex: ConvertHex,

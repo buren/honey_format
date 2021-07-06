@@ -107,6 +107,14 @@ csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
 csv.rows.first.username # => "BUREN"
 ```
 
+Combine multiple converters
+```ruby
+csv_string = "Id,Username\n1,  BuRen  "
+type_map = { username: [:strip, :downcase] }
+csv = HoneyFormat::CSV.new(csv_string, type_map: type_map)
+csv.rows.first.username # => "buren"
+```
+
 Register your own converter
 ```ruby
 HoneyFormat.configure do |config|

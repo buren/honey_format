@@ -80,6 +80,29 @@ describe HoneyFormat::RowBuilder do
       expect(row.build([expected]).id).to eq(expected)
       expect(row.build([expected]).username).to eq(nil)
     end
+
+    it 'converts cells according to passed type map' do
+      row = described_class.new(%i(age), type_map: { age: :integer })
+      expect(row.build(['1']).age).to eq(1)
+    end
+
+    it 'converts cells according to passed type map with custom converter' do
+      type_map = { cost: proc { |v| v.to_i * 1.25 } }
+      row = described_class.new(%i(cost), type_map: type_map)
+      expect(row.build(['100']).cost).to eq(125)
+    end
+
+    it 'converts cells according to passed type map multiple types' do
+      type_map = { username: %i[strip downcase] }
+      row = described_class.new(%i(username), type_map: type_map)
+      expect(row.build(['  Buren   ']).username).to eq('buren')
+    end
+
+    it 'converts cells according to passed type map multiple types with custom converter' do
+      type_map = { username: [:strip, :downcase, proc { |v| "rE-#{v}" }] }
+      row = described_class.new(%i(username), type_map: type_map)
+      expect(row.build(['  Buren   ']).username).to eq('rE-buren')
+    end
   end
 
   describe '#to_csv' do
