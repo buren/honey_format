@@ -33,9 +33,9 @@ end
 
 # Map columns to types
 type_map = {
-  email: proc { |email| email.downcase }, # you pass any object that respond to #call
+  email: proc { |email| email.downcase }, # pass any object that respond to #call
   age: :integer!, # the ! version will raise an exception if the value can't be converted
-  username: [:strip, :downcase, proc { |v| "rE-#{v}" }], # you can pass an array of converts to be used
+  username: [:strip, :downcase, proc { |v| "rE-#{v}" }], # pass an array of converters
   country: :country_code,
   created_date: :date,
 }
