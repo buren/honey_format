@@ -28,6 +28,10 @@ module HoneyFormat
     class UnknownTypeError < ArgumentError; end
     # Raised when value type already exists
     class TypeExistsError < ArgumentError; end
+
+    # Converter errors
+    # Rasied when babosa gem is not installed and converter was used
+    class BabosaNotLoadedError < ArgumentError; end
   end
 
   include Errors
