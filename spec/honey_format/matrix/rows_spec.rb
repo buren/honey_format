@@ -97,6 +97,31 @@ describe HoneyFormat::Rows do
     end
   end
 
+  describe '#+' do
+    it 'can be added added with an other compatible Rows object' do
+      expected_x = 'buren'
+      expected_y = 'jacob'
+      row = [expected_x]
+      x = described_class.new([[expected_x]], [:id])
+      y = described_class.new([[expected_y]], [:id])
+
+      result = x + y
+      expect(result[0].id).to eq(expected_x)
+      expect(result[1].id).to eq(expected_y)
+      expect(result.size).to eq(2)
+      # Make sure the x and y are not mutated
+      expect(x.size).to eq(1)
+      expect(y.size).to eq(1)
+    end
+
+    it 'raises ArgumentError when two incompatible sets of rows are added together' do
+      x = described_class.new([['buren', 2]], [:id, :minimum])
+      y = described_class.new([['jacob', 1]], [:id, :maximum])
+
+      expect { x + y }.to raise_error(ArgumentError)
+    end
+  end
+
   describe 'quacks like an Enumerable' do
     it 'has working #map method' do
       matrix = [%w[first thing], %w[second thing]]
