@@ -101,9 +101,8 @@ describe HoneyFormat::Rows do
     it 'can be added added with an other compatible Rows object' do
       expected_x = 'buren'
       expected_y = 'jacob'
-      row = [expected_x]
-      x = described_class.new([[expected_x]], [:id])
-      y = described_class.new([[expected_y]], [:id])
+      x = described_class.new([[expected_x]], %i[id])
+      y = described_class.new([[expected_y]], %i[id])
 
       result = x + y
       expect(result[0].id).to eq(expected_x)
@@ -115,8 +114,8 @@ describe HoneyFormat::Rows do
     end
 
     it 'raises ArgumentError when two incompatible sets of rows are added together' do
-      x = described_class.new([['buren', 2]], [:id, :minimum])
-      y = described_class.new([['jacob', 1]], [:id, :maximum])
+      x = described_class.new([['buren', 2]], %i[id minimum])
+      y = described_class.new([['jacob', 1]], %i[id maximum])
 
       expect { x + y }.to raise_error(ArgumentError)
     end
