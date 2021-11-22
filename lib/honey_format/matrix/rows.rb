@@ -12,13 +12,18 @@ module HoneyFormat
     # @param [Array] rows the array of rows.
     # @param [Array<Symbol>] columns the array of column symbols.
     # @param type_map [Hash] map of column_name => type conversion to perform.
+    # @param pre_built_rows [boolean] whether the rows come pre-built
     # @raise [RowError] super class of errors raised when there is a row error.
     # @raise [EmptyRowColumnsError] raised when there are no columns.
     # @raise [InvalidRowLengthError] raised when row has more columns than header columns.
-    def initialize(rows, columns, builder: nil, type_map: {})
+    def initialize(rows, columns, builder: nil, type_map: {}, pre_built_rows: false)
       @columns = columns
-      builder = RowBuilder.new(@columns, builder: builder, type_map: type_map)
-      @rows = prepare_rows(builder, rows)
+      if pre_built_rows
+        @rows = rows
+      else
+        builder = RowBuilder.new(@columns, builder: builder, type_map: type_map)
+        @rows = prepare_rows(builder, rows)
+      end
     end
 
     # Row columns
@@ -31,6 +36,18 @@ module HoneyFormat
     # @return [true, false] true if rows contains no elements.
     def empty?
       @rows.empty?
+    end
+
+    # Returns the rows added together.
+    # @return [Rows] the two sets of Rows added together.
+    # @param [Rows] the other Rows object.
+    def +(other)
+      if columns != columns.union(other.columns)
+        raise ArgumentError, "can't added two sets of rows with different columns"
+      end
+
+      rows = @rows + other.rows_data
+      self.class.new(rows, columns, pre_built_rows: true)
     end
 
     # @yield [row] The given block will be passed for every row.
@@ -49,6 +66,7 @@ module HoneyFormat
 
     # Return element at given position.
     # @return [Row] of rows.
+    # @param [Integer] the index to return.
     def [](index)
       @rows[index]
     end
@@ -82,6 +100,12 @@ module HoneyFormat
         end
       end
       csv_rows.join
+    end
+
+    protected
+
+    def rows_data
+      @rows
     end
 
     private
