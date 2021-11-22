@@ -40,12 +40,13 @@ module HoneyFormat
 
     # Returns the rows added together.
     # @return [Rows] the two sets of Rows added together.
-    def +(other_rows)
-      if columns != columns.union(other_rows.columns)
+    # @param [Rows] the other Rows object.
+    def +(other)
+      if columns != columns.union(other.columns)
         raise ArgumentError, "can't added two sets of rows with different columns"
       end
 
-      rows = @rows + other_rows.rows_data
+      rows = @rows + other.rows_data
       self.class.new(rows, columns, pre_built_rows: true)
     end
 
@@ -65,6 +66,7 @@ module HoneyFormat
 
     # Return element at given position.
     # @return [Row] of rows.
+    # @param [Integer] the index to return.
     def [](index)
       @rows[index]
     end
