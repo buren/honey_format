@@ -1,5 +1,9 @@
 # HEAD
 
+## v0.25.0
+
+* Add support for adding multiple `Rows` together, `Rows#+`
+
 ## v0.24.0
 
 * Add support for multiple/chained converters. [PR#69](https://github.com/buren/honey_format/pull/69)
