@@ -138,6 +138,42 @@ describe HoneyFormat::CSV do
       expect(csv.to_a.last.ids).to eq('73')
     end
 
+    it 'returns CSV rows and ignores empty lines with types converted' do
+      csv_string = <<~CSV
+        id,team_id,team_name,name,duration_months,start_months_ago,weekly_goal,historic_weekly_goal,unit,fill_percent,description_required,description,definition_of_done,note_percentage,user_ids
+        14,50,Sales team,Customer email reachout,6,2,10,2,emails,80,FALSE
+
+
+
+        15,64,Backend team,Backend interview,6,2,1,8,meetings,83,FALSE,have interviews with potential candidates,meeting conducted,78,"73,42"
+
+      CSV
+
+      type_map = {
+        duration_months: :integer!,
+        start_months_ago: :integer!,
+        weekly_goal: :decimal!,
+        historic_weekly_goal: :decimal,
+        fill_percent: :decimal!,
+        description_required: :boolean!,
+        note_percentage: proc { |v| v.to_f },
+        user_ids: proc do |o|
+          (o || "").split(",").map { |o| o.strip.to_i }.sort.uniq
+        end
+      }
+      csv = described_class.new(csv_string, type_map: type_map).rows
+      first = csv.first
+      last = csv.to_a.last
+      expect(first.team_name).to eq('Sales team')
+      expect(first.name).to eq('Customer email reachout')
+      expect(first.fill_percent).to eq(80.0)
+      expect(first.user_ids).to eq([])
+      expect(last.team_name).to eq('Backend team')
+      expect(last.name).to eq('Backend interview')
+      expect(last.fill_percent).to eq(83.0)
+      expect(last.user_ids).to eq([42, 73])
+    end
+
     it 'works for a diabolical example' do
       result = described_class.new(diabolical_csv).rows.first
       expect(result.confirm_time).to eq('2015-03-16 14:40:47')
