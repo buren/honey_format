@@ -208,7 +208,7 @@ describe HoneyFormat::Header do
   one_arity_block = proc { |v| "#{v}v" }
   two_arity_block = proc { |v, i| "#{v}#{i}" }
   build_converters = lambda { |block|
-    [proc(&block), lambda(&block), Class.new { define_method(:call, &block) }.new]
+    [proc(&block), Class.new { define_method(:call, &block) }.new]
   }
 
   {

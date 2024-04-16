@@ -22,6 +22,8 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.3.0'
 
+  spec.add_dependency 'base64'
+
   spec.add_development_dependency 'benchmark-ips'
   spec.add_development_dependency 'bundler', '> 1.10', '< 3'
   spec.add_development_dependency 'byebug'
